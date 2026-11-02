@@ -34,7 +34,7 @@ export function PlannerNav({ step, onStartOver }: Props) {
 
   return (
     <header className="plan-nav">
-      <a href="/start" onClick={go("/start")} aria-label="Back to all options"><img src="/brand/logo-light.png" alt="roomset" /></a>
+      <a href="/" onClick={go("/")} aria-label="Roomset home"><img src="/brand/logo-dark.png" alt="roomset" /></a>
 
       {step !== null && (
         <ol className="plan-steps" aria-label="Your progress">

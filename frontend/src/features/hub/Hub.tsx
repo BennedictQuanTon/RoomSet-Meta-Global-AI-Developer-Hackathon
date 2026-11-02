@@ -62,11 +62,10 @@ export function Hub() {
   }, []);
   return (
     <div className="hub">
-      <h1 className="hub-question">Where would you like to <em>begin?</em></h1>
+      <h1 className="hub-title-hidden">Where would you like to begin?</h1>
       <header className="hub-top">
         <a href="/" onClick={go("/")} aria-label="Roomset home"><img src="/brand/logo-light.png" alt="roomset" /></a>
-                <a className="hub-about" href="/" onClick={go("/")}>About Roomset</a>
-      </header>
+              </header>
       <span className="hub-line" aria-hidden="true" />
       <main className="hub-doors">
         <Door
@@ -82,11 +81,11 @@ export function Hub() {
         />
         <Door
           href="/app"
-          image="/landing/hero-lounge.webp"
-          alt="A bright lounge with armchairs, a sofa and a chandelier"
+          image="/landing/hub-plan.webp"
+          alt="A 3D model of a furnished three-room apartment, seen from above"
           index="02"
           kicker="Your room"
-          title={<>Plan <em>your own</em><br />space</>}
+          title={<>Plan <em>your</em><br /><em>own</em> space</>}
           body={hasPlan ? "Your plan is saved on this device." : "Your sofa, your room, your layout."}
           points={[[Sofa, "Confirm a sofa"], [ScanLine, "Show the room"], [Ruler, "Check the fit"]]}
           action={hasPlan ? "Continue your plan" : "Start a plan"}

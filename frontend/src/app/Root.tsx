@@ -20,6 +20,7 @@ export function Root() {
   const [path, setPath] = useState(window.location.pathname);
   const curtain = useAnimationControls();
   const busy = useRef(false);
+  const shown = useRef(path);
   // A click during a transition runs right after it, so no click is lost. The latest one wins.
   const queued = useRef<{ next: string; push: boolean } | null>(null);
 
@@ -42,6 +43,7 @@ export function Root() {
         await curtain.start({ clipPath: FULL, transition: { duration: DURATION_S, ease: EASE_INOUT } });
       }
       if (push) window.history.pushState({}, "", next);
+      shown.current = next;
       setPath(next);
       window.scrollTo(0, 0);
       if (!reduced) await curtain.start({ clipPath: GONE, transition: { duration: DURATION_S, ease: EASE_INOUT, delay: 0.12 } });
@@ -49,7 +51,7 @@ export function Root() {
       finished();
       const waiting = queued.current;
       queued.current = null;
-      if (waiting && waiting.next !== window.location.pathname) void go(waiting.next, waiting.push);
+      if (waiting && waiting.next !== shown.current) void go(waiting.next, waiting.push);
     },
     [curtain],
   );

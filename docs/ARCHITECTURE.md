@@ -85,6 +85,7 @@ frontend/
     main.tsx                            Entry point, loads brand tokens
     app/Root.tsx, app/nav.ts            Routes /, /start, /studio and /app, with the curtain transition
     features/hub/                       /start, the page Try opens, leading to the studio and the planner
+    features/planner/                   The planner top bar and the full-window step layout
     app/App.tsx                         The product flow; picks the screen from server state
     landing/                            Landing page: content.ts (all copy and statuses), Intro, Hero, Landing
     studio/                             Sample apartment: apartment.data.json (rooms, catalog, layout),
