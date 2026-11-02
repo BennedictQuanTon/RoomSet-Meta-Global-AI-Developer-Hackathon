@@ -5,7 +5,7 @@
 Good for showing the landing page, the start page and the 3D sample apartment. These are static files.
 
 1. Vercel → Add New → Project → import this repository, and pick the branch to deploy.
-2. Leave the settings alone. `vercel.json` already sets the build. Deploy.
+2. Leave the build settings alone, and leave Root Directory empty. `vercel.json` already sets the build, and a Root Directory of `frontend` also works. Deploy.
 3. If you deploy a branch other than the repository's default, make it the project's production branch, then redeploy. Share the production domain: on new projects, Standard Protection asks for a Vercel login on preview and generated URLs.
 4. Open the link in a private window to confirm it opens without a login.
 
