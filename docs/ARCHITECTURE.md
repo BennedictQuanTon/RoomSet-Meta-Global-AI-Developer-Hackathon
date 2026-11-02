@@ -72,6 +72,7 @@ backend/
       retention.py                      Deletes old sessions and their files
     geometry/
       meshes.py, sofa.py, room.py       Deterministic GLB generation
+      assets/sofa_base.glb              CC0 photoscanned sofa, stretched to confirmed dimensions
     api/
       deps.py                           Session ownership and upload limits
       presenters.py                     Rows into API views
@@ -79,9 +80,13 @@ backend/
   tests/                                API flow, security, geometry, provider request shapes
 
 frontend/
+  public/landing, public/demo           CC0 renders, panorama, sofa and floor (see landing/CREDITS.md)
   src/
     main.tsx                            Entry point, loads brand tokens
-    app/App.tsx                         Picks the screen from server state
+    app/Root.tsx, app/nav.ts            Routes / and /app, with the curtain transition
+    app/App.tsx                         The product flow; picks the screen from server state
+    landing/                            Landing page: content.ts (all copy and statuses), motion.tsx
+                                        (reveal vocabulary), Intro, Hero, LiveDemo, Landing, landing.css
     app/sessionStore.ts                 Remembers the session across reloads
     api/contracts.ts, client.ts         Types, contract check, typed calls
     editor/
@@ -98,6 +103,7 @@ frontend/
 worker/
   blender_build.py                      Trusted Blender builders with the same geometry contract
   modal_app.py                          Modal functions, including the VGGT slot for issue #4
+  renders/render_scene.py               Blender Cycles script for the landing page images
 
 Dockerfile, render.yaml                 Single-container image and free Render blueprint
 .github/workflows/ci.yml                Tests, lint and image build
@@ -117,6 +123,7 @@ brand/, proposal/                       Existing brand kit and proposal
 | modal (optional) | Blender and GPU jobs |
 | React, Vite, TypeScript | App |
 | three | Editor |
+| motion | Landing page reveals and page transitions |
 
 ## API
 

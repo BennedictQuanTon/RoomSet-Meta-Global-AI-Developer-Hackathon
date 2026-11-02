@@ -42,9 +42,15 @@ def test_sofa_nodes_are_not_scaled():
 
 def test_sofa_back_faces_negative_z():
     scene = _load(build_sofa_glb(2.0, 0.8, 0.9))
-    back = scene.geometry["back"].bounds
-    assert back[0][2] == pytest.approx(-0.45, abs=1e-4)
-    assert back[1][1] == pytest.approx(0.8, abs=1e-4)
+    vertices = np.vstack([mesh.vertices for mesh in scene.geometry.values()])
+    backrest = vertices[vertices[:, 1] > 0.6]
+    assert backrest[:, 2].mean() < 0, "the tall part of the sofa sits toward -Z"
+
+
+def test_sofa_keeps_its_photoscanned_textures():
+    scene = _load(build_sofa_glb(2.0, 0.8, 0.9))
+    textured = [mesh for mesh in scene.geometry.values() if mesh.visual.kind == "texture"]
+    assert textured and textured[0].visual.material.baseColorTexture is not None
 
 
 def test_room_walls_have_their_inner_faces_on_the_floor_edges():
@@ -59,6 +65,13 @@ def test_room_walls_have_their_inner_faces_on_the_floor_edges():
     assert b[1][0] == pytest.approx(0, abs=1e-4)
     assert b[0][0] == pytest.approx(-0.1, abs=1e-4)
     assert (b[0][2], b[1][2]) == (pytest.approx(0, abs=1e-4), pytest.approx(3, abs=1e-4))
+
+
+def test_building_a_scene_logs_no_errors(caplog):
+    answers = RoomAnswers(room_width_m=4, room_depth_m=3, dimensions_measured=True)
+    build_room_glb(*assisted_layout(answers))
+    build_sofa_glb(2.0, 0.8, 0.9)
+    assert not [record for record in caplog.records if record.levelname == "ERROR"]
 
 
 def test_shared_fixture_matches_scene_v1():

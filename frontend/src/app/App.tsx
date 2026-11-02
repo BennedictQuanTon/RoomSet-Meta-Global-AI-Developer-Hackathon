@@ -9,6 +9,7 @@ import { Landing } from "../features/landing/Landing";
 import { ProductStep } from "../features/product/ProductStep";
 import { ProgressStep } from "../features/progress/ProgressStep";
 import { ResultStep } from "../features/result/ResultStep";
+import { navigate } from "./nav";
 import { loadAuth, saveAuth } from "./sessionStore";
 
 type Override = "product" | "capture" | null;
@@ -100,6 +101,7 @@ export function App() {
         <button className="logo-button" onClick={startOver} aria-label="Roomset, start over" disabled={!auth}>
           <img src="/roomset-logo.png" alt="roomset" height={44} />
         </button>
+        <a className="app-about" href="/" onClick={(event) => { event.preventDefault(); navigate("/"); }}>About Roomset</a>
       </header>
       <main className="app-main">
         {error && <p className="error-note" role="alert">{error}</p>}

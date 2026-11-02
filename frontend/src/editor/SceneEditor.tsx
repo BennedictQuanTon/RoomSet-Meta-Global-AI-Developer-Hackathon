@@ -40,7 +40,7 @@ export const SceneEditor = forwardRef<SceneEditorHandle, Props>(function SceneEd
     engine.current = instance;
     let alive = true;
     instance
-      .load(scene, assets, headers, initialPlacement.current)
+      .load(scene, assets, initialPlacement.current, { headers, environment: "/demo/env.hdr", floorTexture: "/demo/floor.jpg" })
       .then((warning) => {
         if (!alive) return;
         if (warning) handlers.current.onWarning(warning);

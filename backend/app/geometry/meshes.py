@@ -36,11 +36,15 @@ def box(
     return mesh
 
 
-def export_glb(parts: dict[str, trimesh.Trimesh]) -> bytes:
-    """Geometry stays in world units and every node transform stays identity."""
+def export_glb(parts: dict[str, trimesh.Trimesh], include_normals: bool = False) -> bytes:
+    """Geometry stays in world units and every node transform stays identity.
+
+    Flat boxes shade correctly without normals. Only pass include_normals for meshes that already
+    carry them: computing them here needs scipy, which is not a dependency.
+    """
     scene = trimesh.Scene()
     for name, mesh in parts.items():
         scene.add_geometry(mesh, node_name=name, geom_name=name, transform=np.eye(4))
     buffer = io.BytesIO()
-    scene.export(buffer, file_type="glb")
+    scene.export(buffer, file_type="glb", include_normals=include_normals)
     return buffer.getvalue()

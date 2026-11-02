@@ -1,7 +1,7 @@
 export function Landing({ onStart, onSample }: { onStart: () => void; onSample: () => void }) {
   return (
     <section className="hero">
-      <h1>Make room for what fits.</h1>
+      <h1>Plan your sofa.</h1>
       <p className="intro">
         Plan your sofa in your space. Explore a 3D arrangement built from your photos and confirmed dimensions.
       </p>
