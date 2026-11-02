@@ -1,5 +1,6 @@
 // "Show it in my style": restyles the current 3D view through Muse Image. Decoration only.
 
+import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError, api, type Auth } from "../../api/client";
 import type { RenderView, SessionView } from "../../api/contracts";
@@ -24,7 +25,7 @@ function RenderImage({ auth, render }: { auth: Auth; render: RenderView }) {
   return (
     <figure className="render">
       {src ? <img src={src} alt={`Style preview: ${render.style_prompt}`} /> : <div className="thumb-placeholder" />}
-      <figcaption className="rs-note">{render.style_prompt}. {render.label}</figcaption>
+      <figcaption className="plan-note">{render.style_prompt}. {render.label}</figcaption>
     </figure>
   );
 }
@@ -56,9 +57,9 @@ export function StylePanel({ auth, session, enabled, snapshot, onSession }: Prop
   };
 
   return (
-    <div className="rs-card stack style-panel">
+    <div className="panel-section">
       <h3>See it in a style</h3>
-      <p className="rs-note">Tell us the look you want. We restyle this view as an AI preview. Size and fit still come from the plan above.</p>
+      <p className="plan-note">Tell us the look you want. We restyle this view as an AI preview. Size and fit still come from the plan above.</p>
       <div className="chips">
         {PRESETS.map((preset) => (
           <button key={preset} type="button" className={style === preset ? "chip is-active" : "chip"} onClick={() => setStyle(preset)}>{preset}</button>
@@ -66,9 +67,10 @@ export function StylePanel({ auth, session, enabled, snapshot, onSession }: Prop
       </div>
       <input className="rs-input" aria-label="Describe a style" maxLength={300} placeholder="Or describe it: linen curtains, oak floor…" value={style} onChange={(e) => setStyle(e.target.value)} />
       <button className="rs-button rs-button--secondary" disabled={!enabled || busy || style.trim().length < 2} onClick={generate}>
+        <Sparkles size={18} strokeWidth={1.5} />
         {busy ? "Creating preview…" : "Create style preview"}
       </button>
-      {!enabled && <p className="rs-note">Style previews aren't switched on yet.</p>}
+      {!enabled && <p className="plan-note">Style previews aren't switched on yet.</p>}
       {error && <p className="error-note" role="alert">{error}</p>}
       {session.renders.map((render) => <RenderImage key={render.id} auth={auth} render={render} />)}
     </div>

@@ -1,8 +1,10 @@
 // Guided photo or video capture, with per-photo feedback and replacement.
 
+import { ArrowLeft, ArrowRight, Camera, Images, MoveLeft, MoveRight, ScanLine, Video, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError, api, type Auth } from "../../api/client";
 import type { Capabilities, PhotoFlag, PhotoView, SessionView } from "../../api/contracts";
+import { StepLayout } from "../planner/StepLayout";
 import { extractFrames } from "./videoFrames";
 
 const FLAG_COPY: Record<PhotoFlag, string> = {
@@ -30,7 +32,7 @@ function Thumb({ auth, photo, onRemove }: { auth: Auth; photo: PhotoView; onRemo
   return (
     <li className={photo.quality.flags.length ? "thumb thumb--flagged" : "thumb"}>
       {src ? <img src={src} alt="" /> : <div className="thumb-placeholder" />}
-      <button className="thumb-remove" onClick={onRemove} aria-label="Remove this photo">×</button>
+      <button className="thumb-remove" onClick={onRemove} aria-label="Remove this photo"><X size={18} strokeWidth={1.6} /></button>
       {photo.quality.flags.map((flag) => <p key={flag} className="thumb-flag">{FLAG_COPY[flag]}</p>)}
     </li>
   );
@@ -86,32 +88,32 @@ export function CaptureStep({ auth, session, capabilities, onSession, onDone, on
       onDone(await api.check(auth).catch((cause: ApiError) => { throw cause; }));
     });
 
+  const off = remaining <= 0 ? " is-disabled" : "";
+
   return (
-    <section className="step">
-      <p className="step-count">Step 2 of 4</p>
-      <h2>Show us the corner</h2>
-      <ol className="guide">
-        <li>Stand back so the whole empty spot is visible.</li>
-        <li>Take a few steps left, keeping the corner in view.</li>
-        <li>Now a few steps right. Overlap is what helps.</li>
+    <StepLayout image="/landing/hero-reading.webp" title="Show us the corner" lead="Overlapping photos help the most.">
+      <ol className="plan-guide">
+        <li><ScanLine size={26} strokeWidth={1.3} />Stand back so the whole empty spot is visible.</li>
+        <li><MoveLeft size={26} strokeWidth={1.3} />Take a few steps left, keeping the corner in view.</li>
+        <li><MoveRight size={26} strokeWidth={1.3} />Now a few steps right. Overlap is what helps.</li>
       </ol>
 
-      <div className="capture-actions">
-        <label className={`rs-button${remaining <= 0 ? " is-disabled" : ""}`}>
-          Take photo
+      <div className="plan-tiles">
+        <label className={`plan-tile${off}`}>
+          <Camera size={30} strokeWidth={1.3} />Take photo
           <input type="file" accept="image/*" capture="environment" hidden disabled={remaining <= 0 || !!busy} onChange={(e) => addFiles(e.target.files)} />
         </label>
-        <label className={`rs-button rs-button--secondary${remaining <= 0 ? " is-disabled" : ""}`}>
-          Upload photos
+        <label className={`plan-tile${off}`}>
+          <Images size={30} strokeWidth={1.3} />Upload photos
           <input type="file" accept="image/jpeg,image/png,image/webp" multiple hidden disabled={remaining <= 0 || !!busy} onChange={(e) => addFiles(e.target.files)} />
         </label>
-        <label className={`rs-button rs-button--secondary${remaining <= 0 ? " is-disabled" : ""}`}>
-          Use a short video
+        <label className={`plan-tile${off}`}>
+          <Video size={30} strokeWidth={1.3} />Use a short video
           <input type="file" accept="video/*" capture="environment" hidden disabled={remaining <= 0 || !!busy} onChange={(e) => addVideo(e.target.files?.[0])} />
         </label>
       </div>
 
-      {busy && <p className="rs-note" role="status">{busy}</p>}
+      {busy && <p className="plan-note" role="status">{busy}</p>}
       {error && <p className="error-note" role="alert">{error}</p>}
 
       <ul className="thumbs">
@@ -120,12 +122,18 @@ export function CaptureStep({ auth, session, capabilities, onSession, onDone, on
             onRemove={() => void run("Removing…", () => api.deletePhoto(auth, photo.id))} />
         ))}
       </ul>
-      <p className="rs-note">{photos.length} of {capabilities.max_photos} photos. At least {capabilities.min_photos} needed.</p>
 
-      <div className="actions">
-        <button className="rs-button rs-button--secondary" onClick={onBack}>Back</button>
-        <button className="rs-button" disabled={photos.length < capabilities.min_photos || !!busy} onClick={proceed}>Continue</button>
+      <div className="plan-count">
+        <span className="plan-dots" aria-hidden="true">
+          {Array.from({ length: capabilities.max_photos }, (_, index) => <span key={index} className={index < photos.length ? "is-on" : ""} />)}
+        </span>
+        <p className="plan-note">{photos.length} of {capabilities.max_photos} photos. At least {capabilities.min_photos} needed.</p>
       </div>
-    </section>
+
+      <div className="plan-actions">
+        <button className="plan-round" onClick={onBack} aria-label="Back" title="Back"><ArrowLeft size={22} strokeWidth={1.5} /></button>
+        <button className="rs-button" disabled={photos.length < capabilities.min_photos || !!busy} onClick={proceed}>Continue<ArrowRight size={20} strokeWidth={1.5} /></button>
+      </div>
+    </StepLayout>
   );
 }

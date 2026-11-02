@@ -5,9 +5,10 @@
 .st-stage canvas { display: block; touch-action: none; cursor: grab; }
 .st-stage canvas:active { cursor: grabbing; }
 
-.st-loading { position: absolute; inset: 0; z-index: 30; display: grid; place-content: center; justify-items: center; gap: 24px; background: var(--rs-ivory); color: var(--rs-forest); }
-.st-loading-track { width: 150px; height: 1px; background: var(--rs-linen); }
-.st-loading-track span { display: block; height: 100%; background: var(--rs-forest); transform-origin: left center; transition: transform 300ms ease-out; }
+.st-loading { position: absolute; inset: 0; z-index: 30; display: grid; place-content: center; justify-items: center; gap: 24px; background: var(--rs-forest); color: var(--rs-ivory); opacity: 1; transition: opacity 650ms ease; }
+.st-loading.is-done { opacity: 0; pointer-events: none; }
+.st-loading-track { width: 190px; height: 1px; background: rgba(247, 244, 237, .25); }
+.st-loading-track span { display: block; height: 100%; background: var(--rs-ivory); transform-origin: left center; transition: transform 300ms ease-out; }
 
 /* Top bar */
 .st-top { position: absolute; z-index: 10; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 18px 24px; background: linear-gradient(to bottom, rgba(20, 28, 24, .55), rgba(20, 28, 24, 0)); pointer-events: none; }

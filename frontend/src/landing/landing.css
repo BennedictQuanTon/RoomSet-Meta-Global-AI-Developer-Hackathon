@@ -205,6 +205,7 @@ html.lenis, html.lenis body { height: auto; }
 .lp-intro-track span { display: block; height: 100%; background: var(--rs-forest); transform-origin: left center; }
 .page-curtain { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: var(--rs-forest); pointer-events: none; }
 .page-curtain img { width: 190px; height: auto; }
+.page-hold { position: fixed; inset: 0; background: var(--rs-forest); }
 
 @media (max-width: 1720px) { .lp-hero-title h1 { font-size: 180px; } }
 @media (max-width: 1180px) {

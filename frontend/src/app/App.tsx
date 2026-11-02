@@ -1,10 +1,13 @@
 // Chooses the screen from server state, so a reload always lands in the right place.
 
+import { ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, api, type Auth } from "../api/client";
 import type { Capabilities, SessionView } from "../api/contracts";
 import { CaptureStep } from "../features/capture/CaptureStep";
 import { ClarifyStep } from "../features/clarify/ClarifyStep";
+import { PlannerNav } from "../features/planner/PlannerNav";
+import { StepLayout } from "../features/planner/StepLayout";
 import { ProductStep } from "../features/product/ProductStep";
 import { ProgressStep } from "../features/progress/ProgressStep";
 import { ResultStep } from "../features/result/ResultStep";
@@ -74,15 +77,18 @@ export function App() {
   const content = () => {
     if (serverMissing) {
       return (
-        <section className="step app-offline">
-          <h2>Planning your own room needs the Roomset server.</h2>
-          <p className="rs-note">This preview runs without it. The 3D sample apartment works fully here.</p>
-          <button className="rs-button" onClick={() => navigate("/studio")}>Enter the sample apartment</button>
-        </section>
+        <StepLayout image="/landing/hero-kitchen.webp" title="Planning your own room needs the Roomset server." lead="This preview runs without it.">
+          <div className="plan-group">
+            <p className="plan-note">The 3D sample apartment works fully here.</p>
+            <div className="plan-actions">
+              <button className="rs-button" onClick={() => navigate("/studio")}>Enter the sample apartment<ArrowRight size={20} strokeWidth={1.5} /></button>
+            </div>
+          </div>
+        </StepLayout>
       );
     }
-    if (!auth && error) return <button className="rs-button" onClick={() => void begin()}>Try again</button>;
-    if (restoring || !capabilities || !auth || !session) return <p className="rs-note">Loading…</p>;
+    if (!auth && error) return <div className="plan-center"><button className="rs-button" onClick={() => void begin()}>Try again</button></div>;
+    if (restoring || !capabilities || !auth || !session) return <div className="plan-center" role="status">Loading…</div>;
     if (override === "product" || !session.product?.confirmed) {
       return <ProductStep auth={auth} session={session} capabilities={capabilities} onDone={update} />;
     }
@@ -110,21 +116,19 @@ export function App() {
     );
   };
 
+  const step = () => {
+    if (serverMissing || !session) return null;
+    if (override === "product" || !session.product?.confirmed) return 0;
+    if (session.status === "needs_input") return override === "capture" ? 1 : 2;
+    return ["ready", "reconstructing", "building", "failed"].includes(session.status) ? 3 : 1;
+  };
+
   return (
     <div className="app">
-      <header className="app-header">
-        <a className="app-logo" href="/start" onClick={(event) => { event.preventDefault(); navigate("/start"); }} aria-label="Back to all options">
-          <img src="/brand/logo-dark.png" alt="roomset" height={32} />
-        </a>
-        <nav className="app-links" aria-label="Pages">
-          <a href="/start" onClick={(event) => { event.preventDefault(); navigate("/start"); }}>All options</a>
-          <a href="/studio" onClick={(event) => { event.preventDefault(); navigate("/studio"); }}>Sample apartment</a>
-          {auth && <button onClick={startOver}>Start over</button>}
-        </nav>
-      </header>
+      <PlannerNav step={step()} onStartOver={auth ? startOver : undefined} />
       <main className="app-main">
-        {error && <p className="error-note" role="alert">{error}</p>}
         {content()}
+        {error && <p className="error-note app-toast" role="alert">{error}</p>}
       </main>
     </div>
   );

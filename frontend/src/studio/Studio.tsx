@@ -4,7 +4,7 @@ import {
   ArrowUpRight, Box, Compass, Copy, Eye, LayoutGrid, Minus, Plus, RotateCcw, RotateCw, Trash2, Undo2, X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { navigate } from "../app/nav";
+import { afterTransition, navigate } from "../app/nav";
 import { layoutFacts, measureItem, reviewLayout, itemOf, summarizeRooms, type ReviewNote } from "./analysis";
 import { CATALOG, CATEGORIES, ROOMS, ROOM_BY_ID, clampToRoom, startingLayout, type CatalogItem, type PlacedItem } from "./apartment";
 import type { StudioEngine, StudioMode } from "./engine";
@@ -45,23 +45,33 @@ interface AiAdvice {
   model: string;
 }
 
+const REVEAL_MS = 700;
+
 export function Studio() {
   const host = useRef<HTMLDivElement>(null);
   const engine = useRef<EditorHandle | null>(null);
   const labels = useRef(new Map<string, HTMLDivElement>());
   const [items, setItems] = useState<PlacedItem[]>(loadLayout);
   const [selectedUid, setSelectedUid] = useState<string | null>(null);
-  const [mode, setMode] = useState<StudioMode>("room");
+  const [mode, setMode] = useState<StudioMode>("model");
   const [roomId, setRoomId] = useState(ROOMS[0].id);
   const [panel, setPanel] = useState<"none" | "catalog" | "advisor">("none");
   const [progress, setProgress] = useState({ loaded: 0, total: 1 });
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => {
+    if (!ready) return;
+    const timer = setTimeout(() => setRevealed(true), REVEAL_MS);
+    return () => clearTimeout(timer);
+  }, [ready]);
 
   useEffect(() => {
     let instance: StudioEngine | null = null;
     let cancelled = false;
-    void import("./engine")
+    void afterTransition()
+      .then(() => import("./engine"))
       .then(async ({ StudioEngine: Engine }) => {
         if (cancelled) return;
         instance = new Engine(host.current!, {
@@ -73,9 +83,8 @@ export function Studio() {
           onProgress: (loaded, total) => setProgress({ loaded, total }),
         });
         engine.current = instance;
-        void instance.loadLighting();
-        await instance.setItems(items);
-        instance.setMode("room", ROOMS[0].id);
+        await Promise.all([instance.loadLighting().catch(() => undefined), instance.setItems(items)]);
+        await instance.prepare("model");
         if (!cancelled) setReady(true);
       })
       .catch(() => !cancelled && setFailed(true));
@@ -186,9 +195,9 @@ export function Studio() {
         </div>
       )}
 
-      {!ready && (
-        <div className="st-loading" role="status">
-          <img src="/brand/logo-dark.png" alt="" width={150} />
+      {!revealed && (
+        <div className={ready ? "st-loading is-done" : "st-loading"} role="status">
+          <img src="/brand/logo-light.png" alt="" width={190} />
           {failed ? <p>3D could not start on this device.</p> : (
             <div className="st-loading-track"><span style={{ transform: `scaleX(${progress.loaded / Math.max(progress.total, 1)})` }} /></div>
           )}

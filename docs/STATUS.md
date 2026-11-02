@@ -11,7 +11,7 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 | Sofa GLB outer size equals confirmed dimensions; node scale stays 1 | Automated tests on trimesh output |
 | Blender builders match the same geometry contract | Run locally with `bpy` 4.2, not on Modal. They still output a box-style sofa; the default CPU builder uses the photoscanned model |
 | Landing page at `/`, Try button to the `/start` page, which leads to the studio and the planner, curtain transition | Chromium browser run against the production bundle |
-| Studio at `/studio`: 3D rooms with real photos projected on them, room, model and top-down views, drag kept on the measured floor, add, remove, reset, numbers per piece, rule-based review | Chromium browser run and unit tests; drag tested with a mouse |
+| Studio at `/studio`, opening on the whole apartment: 3D rooms with real photos projected on them, room, model and top-down views, drag kept on the measured floor, add, remove, reset, numbers per piece, rule-based review | Chromium browser run and unit tests; drag tested with a mouse |
 | One session cannot read another's data; uploads strip metadata; bad files fail safely | Automated tests |
 | Private addresses, redirects and DNS tricks are blocked by the URL guard | Automated tests with a mock network |
 

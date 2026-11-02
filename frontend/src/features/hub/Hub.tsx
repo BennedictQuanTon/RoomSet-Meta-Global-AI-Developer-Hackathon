@@ -1,10 +1,12 @@
 // The doorway after "Try": two full-height rooms to walk into. Every part of the product starts here.
 
 import { ArrowUpRight, Box, Compass, Move, Ruler, ScanLine, Sofa, type LucideIcon } from "lucide-react";
-import type { MouseEvent, ReactNode } from "react";
+import { useEffect, type MouseEvent, type ReactNode } from "react";
 import { navigate } from "../../app/nav";
 import { loadAuth } from "../../app/sessionStore";
 import "./hub.css";
+
+const WARM_AFTER_MS = 1200;
 
 function go(path: string) {
   return (event: MouseEvent) => {
@@ -42,15 +44,30 @@ function Door({ href, image, alt, index, kicker, title, body, points, action }: 
   );
 }
 
+// Fetches the studio ahead of the click, so the door opens without a wait.
+function warmStudio() {
+  void import("../../studio/Studio");
+  void import("../../studio/engine");
+  void import("../../studio/apartment").then(({ ROOMS }) => {
+    for (const room of ROOMS) void fetch(`/studio/rooms/${room.pano}.jpg`).catch(() => undefined);
+  });
+  void fetch("/studio/rooms/environment.hdr").catch(() => undefined);
+}
+
 export function Hub() {
   const hasPlan = Boolean(loadAuth());
+  useEffect(() => {
+    const timer = setTimeout(warmStudio, WARM_AFTER_MS);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <div className="hub">
+      <h1 className="hub-question">Where would you like to <em>begin?</em></h1>
       <header className="hub-top">
         <a href="/" onClick={go("/")} aria-label="Roomset home"><img src="/brand/logo-light.png" alt="roomset" /></a>
-        <h1>Where would you like to <em>begin?</em></h1>
-        <a className="hub-about" href="/" onClick={go("/")}>About Roomset</a>
+                <a className="hub-about" href="/" onClick={go("/")}>About Roomset</a>
       </header>
+      <span className="hub-line" aria-hidden="true" />
       <main className="hub-doors">
         <Door
           href="/studio"
@@ -58,8 +75,8 @@ export function Hub() {
           alt="Furniture inside a 3D room built from real photographs"
           index="01"
           kicker="Sample apartment"
-          title={<>Walk through a <em>furnished</em> home</>}
-          body="Real rooms in true 3D. Nothing to set up."
+          title={<>Walk through a<br /><em>furnished</em> home</>}
+          body="Real rooms in true 3D, ready now."
           points={[[Box, "Orbit in 3D"], [Move, "Move anything"], [Compass, "Architect's review"]]}
           action="Enter the apartment"
         />
@@ -69,8 +86,8 @@ export function Hub() {
           alt="A bright lounge with armchairs, a sofa and a chandelier"
           index="02"
           kicker="Your room"
-          title={<>Plan <em>your own</em> space</>}
-          body={hasPlan ? "Your plan is saved on this device." : "Your sofa, your measurements, your layout."}
+          title={<>Plan <em>your own</em><br />space</>}
+          body={hasPlan ? "Your plan is saved on this device." : "Your sofa, your room, your layout."}
           points={[[Sofa, "Confirm a sofa"], [ScanLine, "Show the room"], [Ruler, "Check the fit"]]}
           action={hasPlan ? "Continue your plan" : "Start a plan"}
         />

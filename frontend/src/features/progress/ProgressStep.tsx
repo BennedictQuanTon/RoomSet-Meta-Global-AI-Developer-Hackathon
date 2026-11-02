@@ -32,8 +32,8 @@ export function ProgressStep({ auth, session, onSession, onDone }: Props) {
 
   if (busy) {
     return (
-      <section className="step" role="status">
-        <p className="step-count">Step 4 of 4</p>
+      <section className="plan-full" role="status">
+        <img src="/landing/hero-kitchen.webp" alt="" />
         <h2>{STATUS_COPY[session.status]}</h2>
         <div className="progress-bar"><span /></div>
         {error && <p className="error-note">{error}</p>}
@@ -42,7 +42,8 @@ export function ProgressStep({ auth, session, onSession, onDone }: Props) {
   }
 
   return (
-    <section className="step">
+    <section className="plan-full">
+      <img src="/landing/hero-kitchen.webp" alt="" />
       <h2>That didn't finish</h2>
       <p className="error-note" role="alert">{session.error?.message ?? "We could not finish this model."}</p>
       {error && <p className="error-note">{error}</p>}

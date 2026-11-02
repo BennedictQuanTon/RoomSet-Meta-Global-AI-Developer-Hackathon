@@ -5,7 +5,7 @@ import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react"
 import { Hub } from "../features/hub/Hub";
 import { Landing } from "../landing/Landing";
 import { EASE_INOUT } from "../landing/motion";
-import { onNavigate } from "./nav";
+import { onNavigate, trackTransition } from "./nav";
 
 const AppPage = lazy(() => import("./App").then((module) => ({ default: module.App })));
 
@@ -34,6 +34,8 @@ export function Root() {
         return;
       }
       busy.current = true;
+      let finished = () => {};
+      trackTransition(new Promise((resolve) => { finished = resolve; }));
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!reduced) {
         curtain.set({ clipPath: COVER });
@@ -44,6 +46,7 @@ export function Root() {
       window.scrollTo(0, 0);
       if (!reduced) await curtain.start({ clipPath: GONE, transition: { duration: DURATION_S, ease: EASE_INOUT, delay: 0.12 } });
       busy.current = false;
+      finished();
       const waiting = queued.current;
       queued.current = null;
       if (waiting && waiting.next !== window.location.pathname) void go(waiting.next, waiting.push);
@@ -67,7 +70,7 @@ export function Root() {
       ) : path.startsWith("/start") ? (
         <Hub />
       ) : path.startsWith("/studio") ? (
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className="page-hold" />}>
           <StudioPage />
         </Suspense>
       ) : (

@@ -114,6 +114,9 @@ export class StudioEngine {
   private frame = 0;
   private observer: ResizeObserver;
   private disposed = false;
+  private roomPhotos: Promise<void>[] = [];
+  /** Nothing is drawn until prepare() has the whole first view on the GPU. */
+  private holding = true;
 
   constructor(private container: HTMLElement, private events: StudioEvents) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -175,6 +178,40 @@ export class StudioEngine {
     hdr.dispose();
     pmrem.dispose();
     this.invalidate();
+  }
+
+  /** Loads the first view fully onto the GPU, so the page opens on a finished picture instead of hitching. */
+  async prepare(mode: StudioMode): Promise<void> {
+    await Promise.all(this.roomPhotos);
+    if (this.disposed) return;
+    this.setMode(mode);
+    await this.renderer.compileAsync(this.scene, this.camera);
+    const textures = new Set<THREE.Texture>();
+    this.scene.traverse((node) => {
+      const { material } = node as THREE.Mesh;
+      for (const entry of Array.isArray(material) ? material : material ? [material] : []) {
+        const shader = entry as THREE.ShaderMaterial;
+        const values = [...Object.values(entry), ...Object.values(shader.uniforms ?? {}).map((uniform) => uniform.value)];
+        for (const value of values) if ((value as THREE.Texture | null)?.isTexture) textures.add(value as THREE.Texture);
+      }
+    });
+    for (const texture of textures) {
+      if (this.disposed) return;
+      this.renderer.initTexture(texture);
+      await new Promise(requestAnimationFrame);
+    }
+    if (this.disposed) return;
+    this.renderer.shadowMap.needsUpdate = true;
+    this.renderer.render(this.scene, this.camera);
+    // GPU work runs after this call returns. Reading a pixel waits for it, so the cost lands behind the loading screen.
+    const gl = this.renderer.getContext();
+    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
+    await new Promise(requestAnimationFrame);
+    if (this.disposed) return;
+    this.holding = false;
+    this.renderer.render(this.scene, this.camera);
+    gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
+    await new Promise(requestAnimationFrame);
   }
 
   registerLabel(element: HTMLElement, x: number, z: number): void {
@@ -316,7 +353,9 @@ export class StudioEngine {
   private buildRooms(): void {
     for (const room of ROOMS) {
       const [minX, maxX, minZ, maxZ] = room.rect;
-      const texture = new THREE.TextureLoader().load(`/studio/rooms/${room.pano}.jpg`, this.invalidate);
+      let settled = () => {};
+      this.roomPhotos.push(new Promise((resolve) => { settled = resolve; }));
+      const texture = new THREE.TextureLoader().load(`/studio/rooms/${room.pano}.jpg`, () => { settled(); this.invalidate(); }, undefined, () => settled());
       // Sampling by direction has a seam, so this samples the full-size photo without mipmaps.
       texture.generateMipmaps = false;
       texture.minFilter = THREE.LinearFilter;
@@ -449,7 +488,7 @@ export class StudioEngine {
   }
 
   private invalidate = () => {
-    if (this.disposed) return;
+    if (this.disposed || this.holding) return;
     cancelAnimationFrame(this.frame);
     this.frame = requestAnimationFrame(() => {
       const moving = this.controls.update();
