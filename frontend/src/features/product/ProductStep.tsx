@@ -86,7 +86,7 @@ export function ProductStep({ auth, session, capabilities, onDone }: Props) {
         <div className="plan-field">
           <label className="plan-label" htmlFor="listing"><Link2 size={20} strokeWidth={1.5} />Sofa listing link</label>
           <div className="plan-inline">
-            <input id="listing" className="rs-input" type="url" required placeholder="https://" value={url} onChange={(e) => setUrl(e.target.value)} />
+            <input id="listing" className="rs-input" type="url" inputMode="url" autoCapitalize="off" autoCorrect="off" enterKeyHint="go" required placeholder="https://" value={url} onChange={(e) => setUrl(e.target.value)} />
             <button className="plan-round plan-round--solid" disabled={busy} aria-label={busy ? "Reading" : "Read this listing"} title="Read this listing">
               {busy ? <Loader2 className="spin" size={22} /> : <ArrowRight size={22} strokeWidth={1.5} />}
             </button>
@@ -111,13 +111,13 @@ export function ProductStep({ auth, session, capabilities, onDone }: Props) {
         <h3>Confirm the size</h3>
         <div className="plan-field">
           <label className="plan-label" htmlFor="name"><Armchair size={20} strokeWidth={1.5} />Name</label>
-          <input id="name" className="rs-input" required maxLength={200} value={name} onChange={(e) => setName(e.target.value)} />
+          <input id="name" className="rs-input" enterKeyHint="next" required maxLength={200} value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="plan-sizes">
           {DIMENSIONS.map(({ id, Icon }) => (
             <div key={id} className="plan-field">
               <label className="plan-label" htmlFor={id}><Icon size={20} strokeWidth={1.5} />{id[0].toUpperCase() + id.slice(1)} (cm)</label>
-              <input id={id} className="rs-input" type="number" inputMode="decimal" step="0.1" required min={id === "height" ? 21 : 31} max={id === "width" ? 599 : id === "depth" ? 399 : 249}
+              <input id={id} className="rs-input" type="number" inputMode="decimal" enterKeyHint="next" step="0.1" required min={id === "height" ? 21 : 31} max={id === "width" ? 599 : id === "depth" ? 399 : 249}
                 value={sizes[id]} onChange={(e) => setSizes({ ...sizes, [id]: e.target.value })} />
               {draft && <p className="field-source">{SOURCE_LABEL[draft[id].source]}</p>}
             </div>

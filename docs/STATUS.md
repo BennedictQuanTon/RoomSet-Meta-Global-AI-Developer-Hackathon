@@ -7,6 +7,7 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 | Behavior | How |
 |---|---|
 | Full manual flow on a phone viewport: sofa, photos, questions, build, touch drag, rotate, save, reload, delete | Chromium browser run against the production bundle |
+| Planner screens at desktop and phone widths, with no keys set | Same browser run. Screenshots reviewed |
 | Same flow in the Docker image, with Postgres and S3 API, at 512 MB and 0.5 CPU | Local containers; S3 was the moto emulator |
 | Sofa GLB outer size equals confirmed dimensions; node scale stays 1 | Automated tests on trimesh output |
 | Blender builders match the same geometry contract | Run locally with `bpy` 4.2, not on Modal. They still output a box-style sofa; the default CPU builder uses the photoscanned model |

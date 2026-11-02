@@ -178,7 +178,7 @@ export function Landing() {
 
         <section className="lp-studio">
           <div className="lp-studio-media">
-            <img src="/landing/studio-poster.webp" alt="Furniture inside a 3D room built from real photographs" loading="lazy" decoding="async" />
+            <img src="/landing/studio-overview.webp" alt="A 3D model of a furnished three-room apartment, seen from above" loading="lazy" decoding="async" />
           </div>
           <div className="lp-studio-copy">
             <Reveal>
@@ -257,7 +257,7 @@ export function Landing() {
                       <b>{row.name}{row.refs.map((ref) => <a key={ref} href={`#cmp-${ref}`} className="lp-ref">{ref}</a>)}</b>
                       <span>{row.detail}</span>
                     </th>
-                    {row.marks.map((mark, index) => <td key={index}><MarkIcon mark={mark} /></td>)}
+                    {row.marks.map((mark, index) => <td key={index} data-label={COMPARE_COLUMNS[index]}><MarkIcon mark={mark} /></td>)}
                   </tr>
                 ))}
               </tbody>

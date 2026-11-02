@@ -70,8 +70,8 @@ export function Hub() {
       <main className="hub-doors">
         <Door
           href="/studio"
-          image="/landing/hub-studio.webp"
-          alt="Furniture inside a 3D room built from real photographs"
+          image="/landing/hub-plan.webp"
+          alt="A 3D model of a furnished three-room apartment, seen from above"
           index="01"
           kicker="Sample apartment"
           title={<>Walk through a<br /><em>furnished</em> home</>}
@@ -81,8 +81,8 @@ export function Hub() {
         />
         <Door
           href="/app"
-          image="/landing/hub-plan.webp"
-          alt="A 3D model of a furnished three-room apartment, seen from above"
+          image="/landing/hero-lounge.webp"
+          alt="A bright lounge with armchairs, a sofa and a chandelier"
           index="02"
           kicker="Your room"
           title={<>Plan <em>your</em><br /><em>own</em> space</>}

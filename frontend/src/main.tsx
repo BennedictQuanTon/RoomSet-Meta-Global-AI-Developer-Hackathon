@@ -6,6 +6,10 @@ import "../../brand/theme/roomset.css";
 import "./styles/app.css";
 import "./landing/landing.css";
 
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => void navigator.serviceWorker.register("/sw.js").catch(() => undefined));
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Root />

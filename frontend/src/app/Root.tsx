@@ -15,6 +15,9 @@ const COVER = "inset(100% 0% 0% 0%)";
 const FULL = "inset(0% 0% 0% 0%)";
 const GONE = "inset(0% 0% 100% 0%)";
 const DURATION_S = 0.7;
+const TOUCH_DURATION_S = 0.4;
+const THEME: [string, string][] = [["/app", "#F7F4ED"], ["/studio", "#1d2e26"]];
+const THEME_DEFAULT = "#273D32";
 
 export function Root() {
   const [path, setPath] = useState(window.location.pathname);
@@ -38,15 +41,16 @@ export function Root() {
       let finished = () => {};
       trackTransition(new Promise((resolve) => { finished = resolve; }));
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const duration = window.matchMedia("(pointer: coarse)").matches ? TOUCH_DURATION_S : DURATION_S;
       if (!reduced) {
         curtain.set({ clipPath: COVER });
-        await curtain.start({ clipPath: FULL, transition: { duration: DURATION_S, ease: EASE_INOUT } });
+        await curtain.start({ clipPath: FULL, transition: { duration, ease: EASE_INOUT } });
       }
       if (push) window.history.pushState({}, "", next);
       shown.current = next;
       setPath(next);
       window.scrollTo(0, 0);
-      if (!reduced) await curtain.start({ clipPath: GONE, transition: { duration: DURATION_S, ease: EASE_INOUT, delay: 0.12 } });
+      if (!reduced) await curtain.start({ clipPath: GONE, transition: { duration, ease: EASE_INOUT, delay: 0.08 } });
       busy.current = false;
       finished();
       const waiting = queued.current;
@@ -55,6 +59,11 @@ export function Root() {
     },
     [curtain],
   );
+
+  useEffect(() => {
+    const color = THEME.find(([prefix]) => path.startsWith(prefix))?.[1] ?? THEME_DEFAULT;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
+  }, [path]);
 
   useEffect(() => onNavigate((next) => void go(next, true)), [go]);
   useEffect(() => {

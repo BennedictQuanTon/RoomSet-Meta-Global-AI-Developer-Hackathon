@@ -70,7 +70,7 @@ export class EditorEngine {
 
   constructor(private container: HTMLElement, private events: EngineEvents) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: false });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.matchMedia("(pointer: coarse)").matches ? 1.6 : 2));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.VSMShadowMap;
     this.renderer.toneMapping = THREE.NeutralToneMapping;
@@ -80,7 +80,8 @@ export class EditorEngine {
 
     this.sun.position.set(3.5, 6, 3);
     this.sun.castShadow = true;
-    this.sun.shadow.mapSize.set(2048, 2048);
+    const shadowSize = window.matchMedia("(pointer: coarse)").matches ? 1024 : 2048;
+    this.sun.shadow.mapSize.set(shadowSize, shadowSize);
     this.sun.shadow.radius = 9;
     this.sun.shadow.blurSamples = 16;
     this.sun.shadow.bias = -0.0004;
@@ -243,6 +244,7 @@ export class EditorEngine {
       (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach((m) => m?.dispose());
     });
     this.renderer.dispose();
+    this.renderer.forceContextLoss();
     canvas.remove();
   }
 

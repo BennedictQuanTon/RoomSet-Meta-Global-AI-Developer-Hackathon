@@ -6,6 +6,8 @@ Good for showing the landing page, the start page and the 3D sample apartment. T
 
 1. Vercel → Add New → Project → import this repository, and pick the branch to deploy.
 2. Leave the settings alone. `vercel.json` already sets the build. Deploy.
+3. If you deploy a branch other than the repository's default, make it the project's production branch, then redeploy. Share the production domain: on new projects, Standard Protection asks for a Vercel login on preview and generated URLs.
+4. Open the link in a private window to confirm it opens without a login.
 
 What does not run there: planning your own room (`/app`) and the AI architect. They need the FastAPI server, whose build jobs run in background threads and write files, which does not fit serverless functions as written. `/app` says so and points to the sample apartment; the architect's review falls back to its built-in rules.
 

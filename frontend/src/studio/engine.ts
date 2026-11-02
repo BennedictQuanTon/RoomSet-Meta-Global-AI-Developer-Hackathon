@@ -16,9 +16,13 @@ export interface StudioEvents {
   onSelect: (uid: string | null) => void;
   onItemsChange: (items: PlacedItem[], final: boolean) => void;
   onProgress: (loaded: number, total: number) => void;
+  onContextLost: () => void;
 }
 
 const BACKGROUND = 0x1d2e26;
+const TOUCH = window.matchMedia("(pointer: coarse)").matches;
+const TAP_SLOP_PX = 10;
+const SHEET_CLEARANCE_PX = 72;
 const CAP_COLOR = 0xf7f4ed;
 const SELECT = 0xc66b48;
 const BLOCKED = 0x9d3e35;
@@ -117,10 +121,13 @@ export class StudioEngine {
   private roomPhotos: Promise<void>[] = [];
   /** Nothing is drawn until prepare() has the whole first view on the GPU. */
   private holding = true;
+  private lift = 0;
+  private liftTarget = 0;
+  private lifting = 0;
 
   constructor(private container: HTMLElement, private events: StudioEvents) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, TOUCH ? 1.6 : 1.75));
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.shadowMap.autoUpdate = false;
@@ -129,7 +136,7 @@ export class StudioEngine {
     this.scene.background = new THREE.Color(BACKGROUND);
 
     this.sun.castShadow = true;
-    this.sun.shadow.mapSize.set(2048, 2048);
+    this.sun.shadow.mapSize.set(TOUCH ? 1024 : 2048, TOUCH ? 1024 : 2048);
     this.sun.shadow.bias = -0.0005;
     this.sun.shadow.radius = 5;
     Object.assign(this.sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 0.5, far: 30 });
@@ -149,6 +156,7 @@ export class StudioEngine {
 
     const canvas = this.renderer.domElement;
     canvas.addEventListener("pointerdown", this.onPointerDown);
+    canvas.addEventListener("webglcontextlost", this.onContextLost);
     canvas.addEventListener("pointermove", this.onPointerMove);
     canvas.addEventListener("pointerup", this.onPointerUp);
     canvas.addEventListener("pointercancel", this.onPointerUp);
@@ -157,7 +165,7 @@ export class StudioEngine {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.09;
     this.controls.minDistance = 0.8;
-    this.controls.maxDistance = 22;
+    this.controls.maxDistance = 40;
     this.controls.maxPolarAngle = Math.PI / 2 - 0.015;
     this.controls.addEventListener("change", this.invalidate);
 
@@ -224,6 +232,7 @@ export class StudioEngine {
   }
 
   setMode(mode: StudioMode, roomId?: string): void {
+    this.clearLift();
     this.mode = mode;
     if (roomId) this.room = ROOM_BY_ID.get(roomId) ?? this.room;
     this.setWallHeight(mode === "room" ? ROOM_HEIGHT + 1 : MODEL_WALL_HEIGHT);
@@ -241,10 +250,12 @@ export class StudioEngine {
       this.controls.target.copy(center);
     } else if (mode === "model") {
       const center = new THREE.Vector3(APARTMENT.width / 2, 0.4, APARTMENT.depth / 2);
-      const distance = 13.5 * Math.max(1, 1.2 / aspect);
+      // A tall screen looks along the apartment's short side, so its length fills the height.
+      const direction = aspect < 1 ? new THREE.Vector3(0.2, 0.86, 0.47) : new THREE.Vector3(0.62, 0.76, 0.34);
       this.camera = this.perspective;
-      this.perspective.fov = 40;
-      this.perspective.position.set(center.x + distance * 0.62, distance * 0.76, center.z + distance * 0.34);
+      this.perspective.fov = aspect < 1 ? 46 : 40;
+      this.perspective.aspect = aspect;
+      this.perspective.position.copy(center).addScaledVector(direction, this.fitDistance(center, direction));
       this.controls.object = this.perspective;
       this.controls.enableRotate = true;
       this.controls.target.copy(center);
@@ -269,6 +280,68 @@ export class StudioEngine {
     this.controls.update();
     this.renderer.shadowMap.needsUpdate = true;
     this.invalidate();
+  }
+
+  /** The nearest camera distance that keeps the whole apartment clear of the screen edges and controls. */
+  private fitDistance(center: THREE.Vector3, direction: THREE.Vector3): number {
+    const probe = this.perspective.clone();
+    const corners = [0, APARTMENT.width].flatMap((x) => [0, APARTMENT.depth].flatMap((z) => [0, MODEL_WALL_HEIGHT].map((y) => new THREE.Vector3(x, y, z))));
+    const fits = (distance: number) => {
+      probe.position.copy(center).addScaledVector(direction, distance);
+      probe.lookAt(center);
+      probe.updateMatrixWorld();
+      probe.updateProjectionMatrix();
+      return corners.every((corner) => {
+        const point = corner.clone().project(probe);
+        return Math.abs(point.x) < 0.94 && Math.abs(point.y) < 0.76;
+      });
+    };
+    let near = 4;
+    let far = this.controls.maxDistance;
+    for (let step = 0; step < 18; step += 1) {
+      const middle = (near + far) / 2;
+      if (fits(middle)) far = middle;
+      else near = middle;
+    }
+    return far;
+  }
+
+  /** Slides the picture up so a selected piece is not hidden behind a phone sheet. Null clears it. */
+  revealAbove(uid: string | null, sheetTop: number | null): void {
+    const item = this.items.find((entry) => entry.uid === uid);
+    let target = 0;
+    if (item && sheetTop !== null) {
+      const height = this.container.clientHeight;
+      const y = ((1 - new THREE.Vector3(item.x, 0.3, item.z).project(this.camera).y) / 2) * height + this.lift;
+      target = THREE.MathUtils.clamp(y - (sheetTop - SHEET_CLEARANCE_PX), 0, height * 0.45);
+    }
+    if (target === this.liftTarget) return;
+    this.liftTarget = target;
+    cancelAnimationFrame(this.lifting);
+    const step = () => {
+      if (this.disposed) return;
+      this.lift += (this.liftTarget - this.lift) * 0.2;
+      if (Math.abs(this.liftTarget - this.lift) < 0.5) this.lift = this.liftTarget;
+      this.applyLift();
+      this.invalidate();
+      if (this.lift !== this.liftTarget) this.lifting = requestAnimationFrame(step);
+    };
+    this.lifting = requestAnimationFrame(step);
+  }
+
+  private applyLift(): void {
+    const { clientWidth: width, clientHeight: height } = this.container;
+    const camera = this.camera as THREE.PerspectiveCamera | THREE.OrthographicCamera;
+    if (this.lift) camera.setViewOffset(width, height, 0, this.lift, width, height);
+    else camera.clearViewOffset();
+  }
+
+  private clearLift(): void {
+    cancelAnimationFrame(this.lifting);
+    this.lift = 0;
+    this.liftTarget = 0;
+    this.perspective.clearViewOffset();
+    this.ortho.clearViewOffset();
   }
 
   /** Reconciles the scene with a layout, reusing what is already loaded. */
@@ -338,15 +411,24 @@ export class StudioEngine {
     this.controls.dispose();
     const canvas = this.renderer.domElement;
     canvas.removeEventListener("pointerdown", this.onPointerDown);
+    canvas.removeEventListener("webglcontextlost", this.onContextLost);
     canvas.removeEventListener("pointermove", this.onPointerMove);
     canvas.removeEventListener("pointerup", this.onPointerUp);
     canvas.removeEventListener("pointercancel", this.onPointerUp);
     this.scene.traverse((node) => {
       const mesh = node as THREE.Mesh;
       mesh.geometry?.dispose();
-      (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach((material) => material?.dispose());
+      for (const material of Array.isArray(mesh.material) ? mesh.material : mesh.material ? [mesh.material] : []) {
+        // Phones run out of GPU memory across page changes unless textures go too.
+        const shader = material as THREE.ShaderMaterial;
+        const values = [...Object.values(material), ...Object.values(shader.uniforms ?? {}).map((uniform) => uniform.value)];
+        for (const value of values) if ((value as THREE.Texture | null)?.isTexture) (value as THREE.Texture).dispose();
+        material.dispose();
+      }
     });
+    this.scene.environment?.dispose();
     this.renderer.dispose();
+    this.renderer.forceContextLoss();
     canvas.remove();
   }
 
@@ -510,6 +592,7 @@ export class StudioEngine {
   private resize = () => {
     const { clientWidth: width, clientHeight: height } = this.container;
     if (!width || !height) return;
+    this.clearLift();
     this.renderer.setSize(width, height);
     this.perspective.aspect = width / height;
     this.perspective.updateProjectionMatrix();
@@ -540,10 +623,24 @@ export class StudioEngine {
     return (solid ?? hits[0])?.object.userData.uid ?? null;
   }
 
+  private onContextLost = (event: Event) => {
+    event.preventDefault();
+    if (!this.disposed) this.events.onContextLost();
+  };
+
   private onPointerDown = (event: PointerEvent) => {
+    // A second finger means pinch or pan, never a move.
+    if (!event.isPrimary) {
+      if (this.press?.offset && this.renderer.domElement.hasPointerCapture(event.pointerId)) this.renderer.domElement.releasePointerCapture(event.pointerId);
+      this.press = null;
+      this.controls.enabled = true;
+      return;
+    }
     const uid = this.pickItem(event);
     let offset: THREE.Vector3 | null = null;
-    if (uid) {
+    // On touch a piece must be selected before it moves, so a finger can orbit a full room.
+    const movable = uid && (event.pointerType !== "touch" || uid === this.selected);
+    if (movable) {
       const hit = this.floorHit(event);
       const item = this.items.find((entry) => entry.uid === uid)!;
       if (hit) offset = new THREE.Vector3(item.x, 0, item.z).sub(hit);
@@ -555,7 +652,8 @@ export class StudioEngine {
 
   private onPointerMove = (event: PointerEvent) => {
     if (!this.press?.uid || !this.press.offset) return;
-    if (!this.press.dragging && Math.hypot(event.clientX - this.press.x, event.clientY - this.press.y) < 4) return;
+    if (!this.press.dragging && Math.hypot(event.clientX - this.press.x, event.clientY - this.press.y) < (event.pointerType === "touch" ? TAP_SLOP_PX : 4)) return;
+    if (!this.press.dragging) navigator.vibrate?.(8);
     this.press.dragging = true;
     const hit = this.floorHit(event);
     if (!hit) return;
@@ -583,10 +681,10 @@ export class StudioEngine {
       this.renderer.shadowMap.needsUpdate = true;
       this.invalidate();
       this.events.onItemsChange(this.items, true);
-    } else if (press.uid) {
-      this.select(press.uid);
-    } else if (Math.hypot(event.clientX - press.x, event.clientY - press.y) < 4) {
-      this.select(null);
+      return;
     }
+    const slop = event.pointerType === "touch" ? TAP_SLOP_PX : 4;
+    if (Math.hypot(event.clientX - press.x, event.clientY - press.y) >= slop) return;
+    this.select(press.uid);
   };
 }

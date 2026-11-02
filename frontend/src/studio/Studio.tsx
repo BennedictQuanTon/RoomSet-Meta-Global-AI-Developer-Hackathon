@@ -1,10 +1,9 @@
 // The studio page: step into three real rooms, or see the whole apartment as a model.
 
-import {
-  ArrowUpRight, Box, Compass, Copy, Eye, LayoutGrid, Minus, Plus, RotateCcw, RotateCw, Trash2, Undo2, X,
-} from "lucide-react";
+import { Armchair, ArrowUpRight, Box, Compass, Copy, Eye, LayoutGrid, Minus, Plus, RotateCcw, RotateCw, Trash2, Undo2, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { afterTransition, navigate } from "../app/nav";
+import { useSheetDrag } from "./Sheet";
 import { layoutFacts, measureItem, reviewLayout, itemOf, summarizeRooms, type ReviewNote } from "./analysis";
 import { CATALOG, CATEGORIES, ROOMS, ROOM_BY_ID, clampToRoom, startingLayout, type CatalogItem, type PlacedItem } from "./apartment";
 import type { StudioEngine, StudioMode } from "./engine";
@@ -46,6 +45,7 @@ interface AiAdvice {
 }
 
 const REVEAL_MS = 700;
+const TOUCH = window.matchMedia("(pointer: coarse)").matches;
 
 export function Studio() {
   const host = useRef<HTMLDivElement>(null);
@@ -60,6 +60,8 @@ export function Studio() {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [lost, setLost] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (!ready) return;
@@ -81,6 +83,7 @@ export function Studio() {
             if (final) saveLayout(next);
           },
           onProgress: (loaded, total) => setProgress({ loaded, total }),
+          onContextLost: () => setLost(true),
         });
         engine.current = instance;
         await Promise.all([instance.loadLighting().catch(() => undefined), instance.setItems(items)]);
@@ -178,6 +181,21 @@ export function Studio() {
     }
   }, [mode, ready]);
 
+  useEffect(() => {
+    const instance = engine.current;
+    if (!instance || !ready) return;
+    if (!selectedUid) setExpanded(false);
+    const sheet = document.querySelector<HTMLElement>(".st-inspector");
+    const onPhone = window.matchMedia("(max-width: 760px)").matches;
+    instance.revealAbove(selectedUid, sheet && onPhone ? window.innerHeight - sheet.offsetHeight : null);
+  }, [selectedUid, expanded, panel, ready]);
+
+  const inspectorDrag = useSheetDrag(
+    () => (expanded ? setExpanded(false) : engine.current?.select(null)),
+    () => setExpanded(true),
+  );
+  const catalogDrag = useSheetDrag(() => setPanel("none"));
+
   const room = ROOM_BY_ID.get(roomId)!;
   const roomSummary = rooms.find((entry) => entry.id === roomId);
 
@@ -188,7 +206,7 @@ export function Studio() {
       {mode !== "room" && (
         <div className="st-labels" aria-hidden="true">
           {rooms.map((entry) => (
-            <div key={entry.id} ref={(element) => { if (element) labels.current.set(entry.id, element); }} className="st-label">
+            <div key={entry.id} ref={(element) => { if (element) labels.current.set(entry.id, element); }} className="st-label" onClick={() => go("room", entry.id)}>
               <b>{entry.name}</b><span>{entry.areaM2} m²</span>
             </div>
           ))}
@@ -214,10 +232,21 @@ export function Studio() {
           ))}
         </nav>
         <div className="st-end">
-          <a href="/start" onClick={(event) => { event.preventDefault(); navigate("/start"); }}>All options</a>
-          <a href="/app" onClick={(event) => { event.preventDefault(); navigate("/app"); }}>Plan my own room <ArrowUpRight size={16} strokeWidth={1.5} /></a>
+          <a href="/start" aria-label="All options" title="All options" onClick={(event) => { event.preventDefault(); navigate("/start"); }}>
+            <LayoutGrid className="st-end-icon" size={20} strokeWidth={1.4} /><span>All options</span>
+          </a>
+          <a href="/app" aria-label="Plan my own room" title="Plan my own room" onClick={(event) => { event.preventDefault(); navigate("/app"); }}>
+            <Armchair className="st-end-icon" size={20} strokeWidth={1.4} /><span>Plan my own room</span> <ArrowUpRight className="st-end-arrow" size={16} strokeWidth={1.5} />
+          </a>
         </div>
       </header>
+
+      {lost && (
+        <div className="st-loading" role="alert">
+          <p>The 3D view stopped to save memory. Your layout is saved.</p>
+          <button className="st-primary" onClick={() => window.location.reload()}>Reload</button>
+        </div>
+      )}
 
       <aside className="st-rail" aria-label="Tools">
         <IconButton label="In the room" active={mode === "room"} onClick={() => go("room", roomId)}><Eye size={20} strokeWidth={1.4} /></IconButton>
@@ -227,7 +256,7 @@ export function Studio() {
         <IconButton label="Add furniture" active={panel === "catalog"} onClick={() => setPanel(panel === "catalog" ? "none" : "catalog")}><Plus size={20} strokeWidth={1.4} /></IconButton>
         <IconButton label="Ask the architect" active={panel === "advisor"} onClick={() => setPanel(panel === "advisor" ? "none" : "advisor")}><Compass size={20} strokeWidth={1.4} /></IconButton>
         <IconButton label="Reset the layout" onClick={reset}><Undo2 size={20} strokeWidth={1.4} /></IconButton>
-        <span className="st-rail-gap" />
+        <span className="st-rail-gap st-zoom" />
         <IconButton label="Zoom in" onClick={() => engine.current?.zoomBy(-5)}><Plus size={16} strokeWidth={1.4} /></IconButton>
         <IconButton label="Zoom out" onClick={() => engine.current?.zoomBy(5)}><Minus size={16} strokeWidth={1.4} /></IconButton>
       </aside>
@@ -238,13 +267,17 @@ export function Studio() {
           <span>{roomSummary.areaM2} m²</span>
           <span>{roomSummary.items} pieces</span>
           <span>{roomSummary.coveragePct}% floor used</span>
-          <span className="st-caption-hint">Drag furniture to move it. Drag anywhere else to orbit. Scroll to zoom.</span>
+          <span className="st-caption-hint">{TOUCH ? "Tap a piece, then drag it. Pinch to zoom." : "Drag furniture to move it. Drag anywhere else to orbit. Scroll to zoom."}</span>
         </footer>
       )}
 
+      {mode === "model" && !selected && panel === "none" && ready && (
+        <footer className="st-caption st-caption--plain"><span className="st-caption-hint">Choose a room to step inside.</span></footer>
+      )}
+
       {selected && metrics && panel === "none" && (
-        <section className="st-panel st-inspector" aria-label={`${itemOf(selected).name} details`}>
-          <header>
+        <section className={expanded ? "st-panel st-inspector is-expanded" : "st-panel st-inspector"} aria-label={`${itemOf(selected).name} details`}>
+          <header {...inspectorDrag}>
             {itemOf(selected).model && <img src={`/studio/thumbs/${itemOf(selected).model}.webp`} alt="" width={72} height={72} />}
             <div>
               <h2>{itemOf(selected).name}</h2>
@@ -276,7 +309,7 @@ export function Studio() {
 
       {panel === "catalog" && (
         <section className="st-panel st-catalog" aria-label="Add furniture">
-          <header>
+          <header {...catalogDrag}>
             <div><h2>Add to the {room.name.toLowerCase()}</h2><p>Real-world sizes. Models are samples.</p></div>
             <button className="st-close" onClick={() => setPanel("none")} aria-label="Close"><X size={18} strokeWidth={1.4} /></button>
           </header>
@@ -316,6 +349,7 @@ type EditorHandle = StudioEngine;
 function Advisor({ notes, items, onClose, onSelect }: { notes: ReviewNote[]; items: PlacedItem[]; onClose: () => void; onSelect: (uid: string) => void }) {
   const [state, setState] = useState<"idle" | "asking" | "off" | "error">("idle");
   const [advice, setAdvice] = useState<AiAdvice | null>(null);
+  const drag = useSheetDrag(onClose);
 
   const ask = async () => {
     setState("asking");
@@ -339,7 +373,7 @@ function Advisor({ notes, items, onClose, onSelect }: { notes: ReviewNote[]; ite
 
   return (
     <section className="st-panel st-advisor" aria-label="Architect review">
-      <header>
+      <header {...drag}>
         <div><h2>Architect's review</h2><p>Measured from this layout</p></div>
         <button className="st-close" onClick={onClose} aria-label="Close"><X size={18} strokeWidth={1.4} /></button>
       </header>
