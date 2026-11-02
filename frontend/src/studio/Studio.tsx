@@ -51,7 +51,7 @@ export function Studio() {
   const labels = useRef(new Map<string, HTMLDivElement>());
   const [items, setItems] = useState<PlacedItem[]>(loadLayout);
   const [selectedUid, setSelectedUid] = useState<string | null>(null);
-  const [mode, setMode] = useState<StudioMode>("inside");
+  const [mode, setMode] = useState<StudioMode>("room");
   const [roomId, setRoomId] = useState(ROOMS[0].id);
   const [panel, setPanel] = useState<"none" | "catalog" | "advisor">("none");
   const [progress, setProgress] = useState({ loaded: 0, total: 1 });
@@ -73,8 +73,9 @@ export function Studio() {
           onProgress: (loaded, total) => setProgress({ loaded, total }),
         });
         engine.current = instance;
+        void instance.loadLighting();
         await instance.setItems(items);
-        await instance.setMode("inside", ROOMS[0].id);
+        instance.setMode("room", ROOMS[0].id);
         if (!cancelled) setReady(true);
       })
       .catch(() => !cancelled && setFailed(true));
@@ -96,7 +97,7 @@ export function Studio() {
   const go = useCallback((nextMode: StudioMode, nextRoom?: string) => {
     setMode(nextMode);
     if (nextRoom) setRoomId(nextRoom);
-    void engine.current?.setMode(nextMode, nextRoom);
+    engine.current?.setMode(nextMode, nextRoom);
   }, []);
 
   const selected = items.find((item) => item.uid === selectedUid) ?? null;
@@ -160,7 +161,7 @@ export function Studio() {
     const instance = engine.current;
     if (!instance || !ready) return;
     instance.clearLabels();
-    if (mode !== "inside") {
+    if (mode !== "room") {
       for (const room of ROOMS) {
         const element = labels.current.get(room.id);
         if (element) instance.registerLabel(element, (room.rect[0] + room.rect[1]) / 2, (room.rect[2] + room.rect[3]) / 2);
@@ -173,9 +174,9 @@ export function Studio() {
 
   return (
     <div className="st">
-      <div className="st-stage" ref={host} role="application" aria-label="Three photographed rooms with movable furniture. Drag a piece to move it. Drag elsewhere to look around." />
+      <div className="st-stage" ref={host} role="application" aria-label="A 3D apartment with real photographed rooms and movable furniture. Drag a piece to move it. Drag elsewhere to orbit." />
 
-      {mode !== "inside" && (
+      {mode !== "room" && (
         <div className="st-labels" aria-hidden="true">
           {rooms.map((entry) => (
             <div key={entry.id} ref={(element) => { if (element) labels.current.set(entry.id, element); }} className="st-label">
@@ -200,7 +201,7 @@ export function Studio() {
         </a>
         <nav className="st-rooms" aria-label="Rooms">
           {ROOMS.map((entry) => (
-            <button key={entry.id} className={mode === "inside" && roomId === entry.id ? "is-active" : ""} onClick={() => go("inside", entry.id)}>{entry.name}</button>
+            <button key={entry.id} className={mode === "room" && roomId === entry.id ? "is-active" : ""} onClick={() => go("room", entry.id)}>{entry.name}</button>
           ))}
         </nav>
         <a className="st-own" href="/app" onClick={(event) => { event.preventDefault(); navigate("/app"); }}>
@@ -209,9 +210,9 @@ export function Studio() {
       </header>
 
       <aside className="st-rail" aria-label="Tools">
-        <IconButton label="Inside the room" active={mode === "inside"} onClick={() => go("inside", roomId)}><Eye size={20} strokeWidth={1.4} /></IconButton>
+        <IconButton label="In the room" active={mode === "room"} onClick={() => go("room", roomId)}><Eye size={20} strokeWidth={1.4} /></IconButton>
         <IconButton label="Whole apartment" active={mode === "model"} onClick={() => go("model")}><Box size={20} strokeWidth={1.4} /></IconButton>
-        <IconButton label="Floor plan" active={mode === "plan"} onClick={() => go("plan")}><LayoutGrid size={20} strokeWidth={1.4} /></IconButton>
+        <IconButton label="Top-down plan" active={mode === "plan"} onClick={() => go("plan")}><LayoutGrid size={20} strokeWidth={1.4} /></IconButton>
         <span className="st-rail-gap" />
         <IconButton label="Add furniture" active={panel === "catalog"} onClick={() => setPanel(panel === "catalog" ? "none" : "catalog")}><Plus size={20} strokeWidth={1.4} /></IconButton>
         <IconButton label="Ask the architect" active={panel === "advisor"} onClick={() => setPanel(panel === "advisor" ? "none" : "advisor")}><Compass size={20} strokeWidth={1.4} /></IconButton>
@@ -221,13 +222,13 @@ export function Studio() {
         <IconButton label="Zoom out" onClick={() => engine.current?.zoomBy(5)}><Minus size={16} strokeWidth={1.4} /></IconButton>
       </aside>
 
-      {mode === "inside" && roomSummary && !selected && panel === "none" && (
+      {mode === "room" && roomSummary && !selected && panel === "none" && (
         <footer className="st-caption">
           <span className="st-caption-name">{room.name}</span>
           <span>{roomSummary.areaM2} m²</span>
           <span>{roomSummary.items} pieces</span>
           <span>{roomSummary.coveragePct}% floor used</span>
-          <span className="st-caption-hint">Drag furniture. Drag the room to look around.</span>
+          <span className="st-caption-hint">Drag furniture to move it. Drag anywhere else to orbit. Scroll to zoom.</span>
         </footer>
       )}
 

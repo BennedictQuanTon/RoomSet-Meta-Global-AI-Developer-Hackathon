@@ -6,20 +6,16 @@
    "pano": "small_empty_room_2",
    "captureHeight": 1.45,
    "local": [
-    -2.7,
-    2.5,
-    -1.75,
-    1.55
+    -2.49,
+    2.25,
+    -1.47,
+    1.32
    ],
    "origin": [
-    3.9,
-    1.75
+    3.69,
+    1.47
    ],
-   "floor": "parquet",
-   "look": [
-    -1,
-    0
-   ]
+   "floor": "wood"
   },
   {
    "id": "bedroom",
@@ -27,20 +23,16 @@
    "pano": "small_empty_room_1",
    "captureHeight": 1.45,
    "local": [
-    -3.1,
-    2.2,
-    -1.9,
-    1.6
+    -2.49,
+    2.25,
+    -1.47,
+    1.32
    ],
    "origin": [
-    4.3,
-    5.2
+    3.69,
+    4.26
    ],
-   "floor": "wood",
-   "look": [
-    -1,
-    -0.42
-   ]
+   "floor": "wood"
   },
   {
    "id": "dining",
@@ -48,20 +40,16 @@
    "pano": "small_empty_room_4",
    "captureHeight": 1.45,
    "local": [
-    -2.7,
-    2.7,
-    -1.8,
-    1.5
+    -2.49,
+    2.25,
+    -1.47,
+    1.32
    ],
    "origin": [
-    3.9,
-    8.6
+    3.69,
+    7.05
    ],
-   "floor": "stone",
-   "look": [
-    -1,
-    -0.1
-   ]
+   "floor": "wood"
   }
  ],
  "catalog": [
@@ -313,155 +301,162 @@
   {
    "room": "living",
    "id": "rug",
-   "x": -1.3,
-   "z": -0.05,
-   "yaw": 90
+   "x": 0,
+   "z": -0.3,
+   "yaw": 0
   },
   {
    "room": "living",
    "id": "sofa-fabric",
-   "x": -2.28,
-   "z": -0.05,
-   "yaw": 90
+   "x": 0,
+   "z": -1.05,
+   "yaw": 0
   },
   {
    "room": "living",
    "id": "coffee-long",
-   "x": -1.3,
-   "z": -0.05,
-   "yaw": 90
-  },
-  {
-   "room": "living",
-   "id": "side-table",
-   "x": -2.35,
-   "z": 1.2,
-   "yaw": 90
-  },
-  {
-   "room": "living",
-   "id": "lamp",
-   "x": -2.35,
-   "z": 1.2,
-   "yaw": 90
-  },
-  {
-   "room": "living",
-   "id": "plant",
-   "x": -2.3,
-   "z": -1.35,
+   "x": 0,
+   "z": -0.1,
    "yaw": 0
   },
   {
    "room": "living",
    "id": "armchair",
-   "x": 1.45,
+   "x": -1.35,
+   "z": -0.1,
+   "yaw": 70
+  },
+  {
+   "room": "living",
+   "id": "side-table",
+   "x": 1.15,
+   "z": -1.16,
+   "yaw": 0
+  },
+  {
+   "room": "living",
+   "id": "lamp",
+   "x": 1.15,
+   "z": -1.16,
+   "yaw": 200
+  },
+  {
+   "room": "living",
+   "id": "plant",
+   "x": 1.85,
    "z": -1.05,
-   "yaw": -40
+   "yaw": 0
   },
   {
    "room": "living",
    "id": "sideboard",
-   "x": 0.95,
-   "z": 1.26,
+   "x": 0,
+   "z": 1.0,
    "yaw": 180
   },
   {
    "room": "bedroom",
    "id": "bed",
-   "x": -2.05,
-   "z": -0.82,
+   "x": 0.1,
+   "z": -0.38,
    "yaw": 0
   },
   {
    "room": "bedroom",
    "id": "nightstand",
-   "x": -0.98,
-   "z": -1.65,
+   "x": -0.96,
+   "z": -1.16,
    "yaw": 0
   },
   {
    "room": "bedroom",
-   "id": "lounge",
-   "x": -2.2,
-   "z": 0.9,
-   "yaw": 170
-  },
-  {
-   "room": "bedroom",
-   "id": "drawers",
-   "x": 0.75,
-   "z": -1.62,
+   "id": "nightstand",
+   "x": 1.16,
+   "z": -1.16,
    "yaw": 0
   },
   {
    "room": "bedroom",
-   "id": "desk",
-   "x": 0.75,
-   "z": 1.3,
+   "id": "display",
+   "x": 0.05,
+   "z": 1.05,
    "yaw": 180
   },
   {
    "room": "bedroom",
+   "id": "desk",
+   "x": 1.75,
+   "z": 1.0,
+   "yaw": 180
+  },
+  {
+   "room": "bedroom",
+   "id": "lounge",
+   "x": -1.85,
+   "z": 0.45,
+   "yaw": 100
+  },
+  {
+   "room": "bedroom",
    "id": "plant",
-   "x": 1.8,
-   "z": -1.5,
+   "x": 1.9,
+   "z": -1.05,
    "yaw": 0
   },
   {
    "room": "dining",
    "id": "dining-table",
-   "x": -1.45,
-   "z": -0.3,
+   "x": -0.3,
+   "z": -0.15,
    "yaw": 0
   },
   {
    "room": "dining",
    "id": "dining-chair",
-   "x": -1.75,
-   "z": -0.98,
+   "x": -0.6,
+   "z": -0.83,
    "yaw": 0
   },
   {
    "room": "dining",
    "id": "dining-chair",
-   "x": -1.15,
-   "z": -0.98,
+   "x": 0.0,
+   "z": -0.83,
    "yaw": 0
   },
   {
    "room": "dining",
    "id": "dining-chair",
-   "x": -1.75,
-   "z": 0.38,
+   "x": -0.6,
+   "z": 0.5,
    "yaw": 180
   },
   {
    "room": "dining",
    "id": "dining-chair",
-   "x": -1.15,
-   "z": 0.38,
+   "x": 0.0,
+   "z": 0.5,
    "yaw": 180
   },
   {
    "room": "dining",
    "id": "sofa-leather",
-   "x": 1.2,
-   "z": -1.3,
+   "x": 1.3,
+   "z": -0.95,
    "yaw": 0
   },
   {
    "room": "dining",
    "id": "display",
-   "x": 0.8,
-   "z": 1.25,
+   "x": -0.3,
+   "z": 1.05,
    "yaw": 180
   },
   {
    "room": "dining",
    "id": "plant",
-   "x": -2.35,
-   "z": 1.13,
+   "x": -2.0,
+   "z": 0.92,
    "yaw": 0
   }
  ]

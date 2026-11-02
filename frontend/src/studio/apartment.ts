@@ -1,16 +1,17 @@
-// The sample apartment: three real rooms photographed in 360° and measured from those photos.
-// Meters, floor on XZ. Item positions are world coordinates. All assets are CC0 from Poly Haven.
+// The sample apartment: a real room photographed in 360° in three finishes, assembled into a three-room
+// plan. Sizes come from fitting a box to the walls, floor and ceiling in the photos, using the door
+// height to set the camera height. Meters, floor on XZ. All assets are CC0 from Poly Haven.
 
 import type { Vec2 } from "../api/contracts";
 import data from "./apartment.data.json";
 
-export const WALL_HEIGHT = 2.7;
+export const ROOM_HEIGHT = 2.5;
 export const INTERIOR_WALL = 0.1;
 export const EXTERIOR_WALL = 0.16;
 export const HALL_WIDTH = 1.2;
 /** Plan walls straddle the measured room edges, so furniture keeps this far inside them. */
 const WALL_MARGIN = 0.09;
-export const APARTMENT = { width: 6.6, depth: 10.1 };
+export const APARTMENT = { width: 5.94, depth: 8.37 };
 
 export type FloorKind = "parquet" | "wood" | "stone";
 
@@ -26,8 +27,8 @@ export interface Room {
   /** Measured floor in world coordinates: minX, maxX, minZ, maxZ. */
   rect: [number, number, number, number];
   floor: FloorKind;
-  /** Direction the view opens toward: along the room's length, at its main piece. */
-  look: Vec2;
+  /** Radians that turn this room's axes to line up with its photo. */
+  photoRotation: number;
 }
 
 export const ROOMS: Room[] = data.rooms.map((room) => ({
@@ -38,7 +39,7 @@ export const ROOMS: Room[] = data.rooms.map((room) => ({
   origin: room.origin as Vec2,
   rect: [room.origin[0] + room.local[0], room.origin[0] + room.local[1], room.origin[1] + room.local[2], room.origin[1] + room.local[3]],
   floor: room.floor as FloorKind,
-  look: room.look as Vec2,
+  photoRotation: (40 * Math.PI) / 180,
 }));
 
 export const ROOM_BY_ID = new Map(ROOMS.map((room) => [room.id, room]));
@@ -61,7 +62,9 @@ export interface WallDef {
   openings: Opening[];
 }
 
-// A simplified plan assembled from the three measured rooms and a connecting hall.
+// A simplified plan: the rooms side by side along a hall. Each has its door on the hall side, as in the photo.
+const DOORS = ROOMS.map((room) => ({ from: room.rect[2] + 0.07, to: room.rect[2] + 0.97, kind: "door" as const }));
+
 export const WALLS: WallDef[] = [
   { id: "north", a: [0, 0], b: [APARTMENT.width, 0], exterior: true, outward: [0, -1], openings: [] },
   {
@@ -70,27 +73,13 @@ export const WALLS: WallDef[] = [
     b: [APARTMENT.width, APARTMENT.depth],
     exterior: true,
     outward: [1, 0],
-    openings: [
-      { from: 0.75, to: 2.75, kind: "window", sill: 0.45, head: 2.4 },
-      { from: 4.2, to: 6.2, kind: "window", sill: 0.08, head: 2.4 },
-      { from: 7.7, to: 9.5, kind: "window", sill: 0.08, head: 2.4 },
-    ],
+    openings: ROOMS.map((room) => ({ from: room.origin[1] - 0.6, to: room.origin[1] + 0.75, kind: "window" as const, sill: 0.08, head: 2.3 })),
   },
   { id: "south", a: [0, APARTMENT.depth], b: [APARTMENT.width, APARTMENT.depth], exterior: true, outward: [0, 1], openings: [] },
-  { id: "west", a: [0, 0], b: [0, APARTMENT.depth], exterior: true, outward: [-1, 0], openings: [{ from: 4.6, to: 5.6, kind: "door" }] },
-  {
-    id: "hall",
-    a: [HALL_WIDTH, 0],
-    b: [HALL_WIDTH, APARTMENT.depth],
-    exterior: false,
-    openings: [
-      { from: 2.2, to: 3.1, kind: "door" },
-      { from: 5.0, to: 5.9, kind: "door" },
-      { from: 8.3, to: 9.2, kind: "door" },
-    ],
-  },
-  { id: "living-bedroom", a: [HALL_WIDTH, 3.3], b: [APARTMENT.width, 3.3], exterior: false, openings: [] },
-  { id: "bedroom-dining", a: [HALL_WIDTH, 6.8], b: [APARTMENT.width, 6.8], exterior: false, openings: [] },
+  { id: "west", a: [0, 0], b: [0, APARTMENT.depth], exterior: true, outward: [-1, 0], openings: [{ from: 3.7, to: 4.6, kind: "door" }] },
+  { id: "hall", a: [HALL_WIDTH, 0], b: [HALL_WIDTH, APARTMENT.depth], exterior: false, openings: DOORS },
+  { id: "living-bedroom", a: [HALL_WIDTH, 2.79], b: [APARTMENT.width, 2.79], exterior: false, openings: [] },
+  { id: "bedroom-dining", a: [HALL_WIDTH, 5.58], b: [APARTMENT.width, 5.58], exterior: false, openings: [] },
 ];
 
 export type Category = "Seating" | "Tables" | "Sleep" | "Storage" | "Accents";

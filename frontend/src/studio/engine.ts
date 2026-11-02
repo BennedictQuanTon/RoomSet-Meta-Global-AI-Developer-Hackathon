@@ -1,29 +1,16 @@
-// Studio 3D. "inside" sits at a real room's 360° capture point, so the photo is never distorted and
-// furniture lands on the real floor at true scale. "model" and "plan" show the whole apartment.
-// Renders on demand only: an idle studio draws nothing.
+// Studio 3D. Each room is a real box at measured size, and its 360° photo is projected onto the walls,
+// floor and ceiling from the point it was shot. That makes it a true 3D space: walk the camera around,
+// look from above, and furniture stands in the room. Walls facing away from the viewer are not drawn,
+// so a room opens up as you orbit. Renders on demand only: an idle studio draws nothing.
 
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { itemPolygon, measureItem, roomAt } from "./analysis";
-import {
-  APARTMENT,
-  CATALOG_BY_ID,
-  EXTERIOR_WALL,
-  HALL_WIDTH,
-  INTERIOR_WALL,
-  ROOM_BY_ID,
-  ROOMS,
-  WALLS,
-  WALL_HEIGHT,
-  clampToRoom,
-  type PlacedItem,
-  type Room,
-  type WallDef,
-} from "./apartment";
+import { APARTMENT, CATALOG_BY_ID, HALL_WIDTH, ROOMS, ROOM_BY_ID, ROOM_HEIGHT, clampToRoom, type PlacedItem, type Room } from "./apartment";
 
-export type StudioMode = "model" | "plan" | "inside";
+export type StudioMode = "room" | "model" | "plan";
 
 export interface StudioEvents {
   onSelect: (uid: string | null) => void;
@@ -31,12 +18,38 @@ export interface StudioEvents {
   onProgress: (loaded: number, total: number) => void;
 }
 
-const CANVAS = 0x1d2e26;
-const WALL_COLOR = 0xf1ebe0;
-const FRAME_COLOR = 0x273d32;
+const BACKGROUND = 0x1d2e26;
+const CAP_COLOR = 0xf7f4ed;
 const SELECT = 0xc66b48;
 const BLOCKED = 0x9d3e35;
-const TILE_M = 2.4;
+const MODEL_WALL_HEIGHT = 1.45;
+
+const ROOM_VERTEX = /* glsl */ `
+  varying vec3 vWorld;
+  void main() {
+    vec4 world = modelMatrix * vec4(position, 1.0);
+    vWorld = world.xyz;
+    gl_Position = projectionMatrix * viewMatrix * world;
+  }
+`;
+
+const ROOM_FRAGMENT = /* glsl */ `
+  uniform sampler2D photo;
+  uniform vec3 capture;
+  uniform float cosRot;
+  uniform float sinRot;
+  uniform float clipY;
+  varying vec3 vWorld;
+  const float PI = 3.14159265358979;
+  void main() {
+    if (vWorld.y > clipY) discard;
+    vec3 d = normalize(vWorld - capture);
+    float x = d.x * cosRot - d.z * sinRot;
+    float z = d.x * sinRot + d.z * cosRot;
+    vec2 uv = vec2(0.5 + atan(z, x) / (2.0 * PI), 0.5 + asin(clamp(d.y, -1.0, 1.0)) / PI);
+    gl_FragColor = vec4(texture2D(photo, uv).rgb, 1.0);
+  }
+`;
 
 interface Live {
   group: THREE.Group;
@@ -58,9 +71,9 @@ function rugTexture(): THREE.CanvasTexture {
   canvas.width = 512;
   canvas.height = 360;
   const c = canvas.getContext("2d")!;
-  c.fillStyle = "#8f8778";
+  c.fillStyle = "#a59c8b";
   c.fillRect(0, 0, 512, 360);
-  c.strokeStyle = "#6a6253";
+  c.strokeStyle = "#7c7362";
   c.lineWidth = 3;
   c.strokeRect(22, 22, 468, 316);
   c.strokeRect(34, 34, 444, 292);
@@ -76,37 +89,31 @@ function rugTexture(): THREE.CanvasTexture {
 export class StudioEngine {
   private renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
-  private perspective = new THREE.PerspectiveCamera(36, 1, 0.05, 120);
+  private perspective = new THREE.PerspectiveCamera(52, 1, 0.05, 120);
   private ortho = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 60);
   private camera: THREE.Camera = this.perspective;
   private controls: OrbitControls;
-  private model = new THREE.Group();
-  private walls = new THREE.Group();
   private furniture = new THREE.Group();
-  private sun = new THREE.DirectionalLight(0xfff2e2, 1.5);
-  private catcher: THREE.Mesh;
+  private sun = new THREE.DirectionalLight(0xfff2e2, 1.1);
   private raycaster = new THREE.Raycaster();
   private floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   private loader = new GLTFLoader();
   private templates = new Map<string, Promise<THREE.Object3D>>();
-  private panoCache = new Map<string, Promise<{ background: THREE.Texture; environment: THREE.Texture }>>();
-  private skyEnv: Promise<THREE.Texture> | null = null;
-  private pmrem: THREE.PMREMGenerator;
   private shadowTexture = softShadowTexture();
   private live = new Map<string, Live>();
   private items: PlacedItem[] = [];
   private selected: string | null = null;
   private outline: THREE.LineLoop;
   private outlineMaterial = new THREE.LineBasicMaterial({ color: SELECT, depthTest: false, transparent: true });
-  private exterior: { wall: WallDef; meshes: THREE.Mesh[]; center: THREE.Vector3 }[] = [];
+  private roomMaterials: THREE.ShaderMaterial[] = [];
+  private caps: THREE.Mesh[] = [];
   private labels: { element: HTMLElement; position: THREE.Vector3 }[] = [];
   private press: { x: number; y: number; uid: string | null; offset: THREE.Vector3 | null; dragging: boolean } | null = null;
-  private mode: StudioMode = "model";
+  private mode: StudioMode = "room";
   private room: Room = ROOMS[0];
   private frame = 0;
   private observer: ResizeObserver;
   private disposed = false;
-  private loadToken = 0;
 
   constructor(private container: HTMLElement, private events: StudioEvents) {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -116,21 +123,21 @@ export class StudioEngine {
     this.renderer.shadowMap.autoUpdate = false;
     this.renderer.toneMapping = THREE.NeutralToneMapping;
     container.appendChild(this.renderer.domElement);
-    this.pmrem = new THREE.PMREMGenerator(this.renderer);
-    this.scene.background = new THREE.Color(CANVAS);
+    this.scene.background = new THREE.Color(BACKGROUND);
 
     this.sun.castShadow = true;
     this.sun.shadow.mapSize.set(2048, 2048);
     this.sun.shadow.bias = -0.0005;
     this.sun.shadow.radius = 5;
-    Object.assign(this.sun.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 0.5, far: 34 });
-    this.scene.add(this.sun, this.sun.target, this.model, this.furniture);
+    Object.assign(this.sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 0.5, far: 30 });
+    this.sun.position.set(APARTMENT.width + 2.5, 13, APARTMENT.depth / 2 - 1.5);
+    this.sun.target.position.set(APARTMENT.width / 2, 0, APARTMENT.depth / 2);
+    this.scene.add(this.sun, this.sun.target, this.furniture);
 
-    this.catcher = new THREE.Mesh(new THREE.PlaneGeometry(60, 60).rotateX(-Math.PI / 2), new THREE.ShadowMaterial({ opacity: 0.3, color: 0x17110c }));
-    this.catcher.position.set(APARTMENT.width / 2, 0.002, APARTMENT.depth / 2);
-    this.catcher.receiveShadow = true;
-    this.catcher.visible = false;
-    this.scene.add(this.catcher);
+    const catcher = new THREE.Mesh(new THREE.PlaneGeometry(APARTMENT.width - HALL_WIDTH, APARTMENT.depth).rotateX(-Math.PI / 2), new THREE.ShadowMaterial({ opacity: 0.26, color: 0x17110c }));
+    catcher.position.set((APARTMENT.width + HALL_WIDTH) / 2, 0.003, APARTMENT.depth / 2);
+    catcher.receiveShadow = true;
+    this.scene.add(catcher);
 
     this.outline = new THREE.LineLoop(new THREE.BufferGeometry(), this.outlineMaterial);
     this.outline.renderOrder = 10;
@@ -142,22 +149,32 @@ export class StudioEngine {
     canvas.addEventListener("pointermove", this.onPointerMove);
     canvas.addEventListener("pointerup", this.onPointerUp);
     canvas.addEventListener("pointercancel", this.onPointerUp);
-    canvas.addEventListener("wheel", this.onWheel, { passive: false });
 
     this.controls = new OrbitControls(this.perspective, canvas);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.09;
+    this.controls.minDistance = 0.8;
+    this.controls.maxDistance = 22;
+    this.controls.maxPolarAngle = Math.PI / 2 - 0.015;
     this.controls.addEventListener("change", this.invalidate);
 
     this.observer = new ResizeObserver(this.resize);
     this.observer.observe(container);
-    this.buildApartment();
+    this.buildRooms();
     this.resize();
   }
 
-  async start(items: PlacedItem[]): Promise<void> {
-    await this.setItems(items);
-    await this.setMode("model");
+  /** Lighting comes from a real room photo, so furniture sits in the same light as the walls. */
+  async loadLighting(): Promise<void> {
+    const hdr = await new RGBELoader().loadAsync("/studio/rooms/environment.hdr");
+    if (this.disposed) return;
+    hdr.mapping = THREE.EquirectangularReflectionMapping;
+    const pmrem = new THREE.PMREMGenerator(this.renderer);
+    this.scene.environment = pmrem.fromEquirectangular(hdr).texture;
+    this.scene.environmentIntensity = 1.05;
+    hdr.dispose();
+    pmrem.dispose();
+    this.invalidate();
   }
 
   registerLabel(element: HTMLElement, x: number, z: number): void {
@@ -169,87 +186,52 @@ export class StudioEngine {
     this.labels = [];
   }
 
-  getMode(): StudioMode {
-    return this.mode;
-  }
-
-  async setMode(mode: StudioMode, roomId?: string): Promise<void> {
+  setMode(mode: StudioMode, roomId?: string): void {
     this.mode = mode;
     if (roomId) this.room = ROOM_BY_ID.get(roomId) ?? this.room;
-    const token = ++this.loadToken;
-    const inside = mode === "inside";
-    this.model.visible = !inside;
-    // Lower walls in the model view, so you see into every room.
-    this.walls.scale.y = mode === "model" ? 0.6 : 1;
-    this.catcher.visible = inside;
-    this.applyItemVisibility();
+    this.setWallHeight(mode === "room" ? ROOM_HEIGHT + 1 : MODEL_WALL_HEIGHT);
+    const aspect = this.container.clientWidth / Math.max(this.container.clientHeight, 1);
 
-    if (inside) {
-      const { background, environment } = await this.loadPano(this.room);
-      if (this.disposed || token !== this.loadToken) return;
-      this.scene.background = background;
-      this.scene.environment = environment;
-      this.scene.environmentIntensity = 1.05;
-      this.sun.position.set(this.room.origin[0] + 3.6, 3.4, this.room.origin[1] + 0.6);
-      this.sun.target.position.set(this.room.origin[0], 0, this.room.origin[1]);
-      this.sun.intensity = 0.9;
-      this.camera = this.perspective;
-      this.perspective.fov = 60;
-      this.controls.object = this.perspective;
-      this.controls.enabled = true;
-      this.controls.enableRotate = true;
-      this.controls.enableZoom = false;
-      this.controls.enablePan = false;
-      this.controls.rotateSpeed = -0.32;
-      this.controls.minPolarAngle = 0.55;
-      this.controls.maxPolarAngle = Math.PI - 0.5;
-      const eye = new THREE.Vector3(this.room.origin[0], this.room.captureHeight, this.room.origin[1]);
-      this.perspective.position.copy(eye);
-      // Open along the room's length, at its main piece and slightly downward, like a room photograph.
-      this.controls.target.copy(eye).add(new THREE.Vector3(this.room.look[0] * 0.01, -0.0028, this.room.look[1] * 0.01));
-    } else {
-      const environment = await this.loadSky();
-      if (this.disposed || token !== this.loadToken) return;
-      this.scene.background = new THREE.Color(CANVAS);
-      this.scene.environment = environment;
-      this.scene.environmentIntensity = 0.82;
-      this.sun.position.set(APARTMENT.width + 7, 11, 2);
-      this.sun.target.position.set(APARTMENT.width / 2, 0, APARTMENT.depth / 2);
-      this.sun.intensity = 1.5;
-      this.controls.rotateSpeed = 0.7;
-      this.controls.enableZoom = true;
-      this.controls.enablePan = false;
-      this.controls.minPolarAngle = 0;
-      this.controls.maxPolarAngle = Math.PI / 2 - 0.1;
-      this.controls.minDistance = 4;
-      this.controls.maxDistance = 26;
+    if (mode === "plan") {
       const center = new THREE.Vector3(APARTMENT.width / 2, 0, APARTMENT.depth / 2);
-      if (mode === "plan") {
-        this.camera = this.ortho;
-        this.ortho.position.set(center.x, 30, center.z);
-        this.ortho.up.set(0, 0, -1);
-        this.ortho.lookAt(center);
-        this.controls.object = this.ortho;
-        this.controls.enableRotate = false;
-        this.controls.target.copy(center);
-      } else {
-        this.camera = this.perspective;
-        this.perspective.fov = 34;
-        const aspect = this.container.clientWidth / Math.max(this.container.clientHeight, 1);
-        const distance = 17 * Math.max(1, 1.25 / aspect);
-        this.perspective.position.set(center.x + distance * 0.62, distance * 0.72, center.z + distance * 0.42);
-        this.controls.object = this.perspective;
-        this.controls.enableRotate = true;
-        this.controls.target.copy(center);
+      this.camera = this.ortho;
+      this.ortho.zoom = 1;
+      this.ortho.position.set(center.x, 30, center.z);
+      this.ortho.up.set(0, 0, -1);
+      this.ortho.lookAt(center);
+      this.controls.object = this.ortho;
+      this.controls.enableRotate = false;
+      this.controls.target.copy(center);
+    } else if (mode === "model") {
+      const center = new THREE.Vector3(APARTMENT.width / 2, 0.4, APARTMENT.depth / 2);
+      const distance = 13.5 * Math.max(1, 1.2 / aspect);
+      this.camera = this.perspective;
+      this.perspective.fov = 40;
+      this.perspective.position.set(center.x + distance * 0.62, distance * 0.76, center.z + distance * 0.34);
+      this.controls.object = this.perspective;
+      this.controls.enableRotate = true;
+      this.controls.target.copy(center);
+    } else {
+      const [minX, maxX, minZ, maxZ] = this.room.rect;
+      const pull = Math.max(1, 1.15 / aspect);
+      const middleZ = (minZ + maxZ) / 2;
+      this.camera = this.perspective;
+      this.perspective.fov = 62;
+      // Standing at the window end, eye height, looking down the room's length.
+      this.perspective.position.set(maxX - 0.12, 1.5, middleZ + 0.08);
+      this.controls.object = this.perspective;
+      this.controls.enableRotate = true;
+      this.controls.target.set(minX + 1.5, 0.75, middleZ - 0.05);
+      if (pull > 1) {
+        const offset = this.perspective.position.clone().sub(this.controls.target).multiplyScalar(pull);
+        this.perspective.position.copy(this.controls.target).add(offset);
       }
     }
     this.perspective.updateProjectionMatrix();
-    this.updateCutaway();
     this.resize();
     this.controls.update();
     this.renderer.shadowMap.needsUpdate = true;
     this.invalidate();
-    this.select(this.selected && this.isShown(this.selected) ? this.selected : null);
   }
 
   /** Reconciles the scene with a layout, reusing what is already loaded. */
@@ -276,7 +258,6 @@ export class StudioEngine {
       }),
     );
     this.syncTransforms();
-    this.applyItemVisibility();
     this.select(this.selected && wanted.has(this.selected) ? this.selected : null);
     this.renderer.shadowMap.needsUpdate = true;
     this.invalidate();
@@ -291,40 +272,25 @@ export class StudioEngine {
     this.invalidate();
   }
 
-  /** Points the view at an item, entering its room when inside. */
   frameItem(uid: string): void {
     const item = this.items.find((entry) => entry.uid === uid);
     if (!item) return;
     this.select(uid);
-    if (this.mode === "inside") this.lookAt(item.x, item.z);
-  }
-
-  private lookAt(x: number, z: number): void {
-    const eye = this.perspective.position;
-    const direction = new THREE.Vector3(x, 0.35, z).sub(eye).normalize();
-    this.controls.target.copy(eye).addScaledVector(direction, 0.01);
+    this.controls.target.set(item.x, 0.5, item.z);
     this.controls.update();
     this.invalidate();
   }
 
-  resetView(): void {
-    void this.setMode(this.mode);
-  }
-
   zoomBy(delta: number): void {
-    if (this.mode === "inside") {
-      this.perspective.fov = THREE.MathUtils.clamp(this.perspective.fov + delta, 28, 78);
-      this.perspective.updateProjectionMatrix();
-    } else if (this.mode === "plan") {
-      this.ortho.zoom = THREE.MathUtils.clamp(this.ortho.zoom * (1 - delta * 0.01), 0.6, 4);
+    if (this.mode === "plan") {
+      this.ortho.zoom = THREE.MathUtils.clamp(this.ortho.zoom * (1 - delta * 0.04), 0.6, 4);
       this.ortho.updateProjectionMatrix();
     } else {
       const offset = this.perspective.position.clone().sub(this.controls.target);
-      offset.multiplyScalar(1 + delta * 0.012);
+      offset.multiplyScalar(1 + delta * 0.04);
       offset.setLength(THREE.MathUtils.clamp(offset.length(), this.controls.minDistance, this.controls.maxDistance));
       this.perspective.position.copy(this.controls.target).add(offset);
     }
-    this.updateCutaway();
     this.invalidate();
   }
 
@@ -338,27 +304,73 @@ export class StudioEngine {
     canvas.removeEventListener("pointermove", this.onPointerMove);
     canvas.removeEventListener("pointerup", this.onPointerUp);
     canvas.removeEventListener("pointercancel", this.onPointerUp);
-    canvas.removeEventListener("wheel", this.onWheel);
     this.scene.traverse((node) => {
       const mesh = node as THREE.Mesh;
       mesh.geometry?.dispose();
       (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).forEach((material) => material?.dispose());
     });
-    this.pmrem.dispose();
     this.renderer.dispose();
     canvas.remove();
   }
 
-  private isShown(uid: string): boolean {
-    const item = this.items.find((entry) => entry.uid === uid);
-    return Boolean(item) && (this.mode !== "inside" || roomAt(item!.x, item!.z)?.id === this.room.id);
+  private buildRooms(): void {
+    for (const room of ROOMS) {
+      const [minX, maxX, minZ, maxZ] = room.rect;
+      const texture = new THREE.TextureLoader().load(`/studio/rooms/${room.pano}.jpg`, this.invalidate);
+      // Sampling by direction has a seam, so this samples the full-size photo without mipmaps.
+      texture.generateMipmaps = false;
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.colorSpace = THREE.NoColorSpace;
+      const material = new THREE.ShaderMaterial({
+        vertexShader: ROOM_VERTEX,
+        fragmentShader: ROOM_FRAGMENT,
+        side: THREE.BackSide,
+        toneMapped: false,
+        uniforms: {
+          photo: { value: texture },
+          capture: { value: new THREE.Vector3(room.origin[0], room.captureHeight, room.origin[1]) },
+          cosRot: { value: Math.cos(room.photoRotation) },
+          sinRot: { value: Math.sin(room.photoRotation) },
+          clipY: { value: ROOM_HEIGHT + 1 },
+        },
+      });
+      this.roomMaterials.push(material);
+      const box = new THREE.Mesh(new THREE.BoxGeometry(maxX - minX, ROOM_HEIGHT, maxZ - minZ), material);
+      box.position.set((minX + maxX) / 2, ROOM_HEIGHT / 2, (minZ + maxZ) / 2);
+      this.scene.add(box);
+      this.addCaps(room);
+    }
+    const hall = new THREE.Mesh(
+      new THREE.PlaneGeometry(HALL_WIDTH, APARTMENT.depth).rotateX(-Math.PI / 2),
+      new THREE.MeshStandardMaterial({ color: 0x8c8678, roughness: 0.9 }),
+    );
+    hall.position.set(HALL_WIDTH / 2, -0.002, APARTMENT.depth / 2);
+    this.scene.add(hall);
   }
 
-  private applyItemVisibility(): void {
-    for (const item of this.items) {
-      const live = this.live.get(item.uid);
-      if (live) live.group.visible = this.isShown(item.uid);
-    }
+  /** Thin wall tops that read as a section line when you look down into a room. */
+  private addCaps(room: Room): void {
+    const [minX, maxX, minZ, maxZ] = room.rect;
+    const material = new THREE.MeshBasicMaterial({ color: CAP_COLOR, toneMapped: false });
+    const T = 0.08;
+    const add = (width: number, depth: number, x: number, z: number) => {
+      const cap = new THREE.Mesh(new THREE.BoxGeometry(width, 0.015, depth), material);
+      cap.position.set(x, MODEL_WALL_HEIGHT, z);
+      cap.visible = false;
+      this.caps.push(cap);
+      this.scene.add(cap);
+    };
+    add(maxX - minX + T, T, (minX + maxX) / 2, minZ);
+    add(maxX - minX + T, T, (minX + maxX) / 2, maxZ);
+    add(T, maxZ - minZ + T, minX, (minZ + maxZ) / 2);
+    add(T, maxZ - minZ + T, maxX, (minZ + maxZ) / 2);
+  }
+
+  private setWallHeight(height: number): void {
+    for (const material of this.roomMaterials) material.uniforms.clipY.value = height;
+    for (const cap of this.caps) cap.visible = this.mode !== "room";
   }
 
   private syncTransforms(): void {
@@ -401,7 +413,7 @@ export class StudioEngine {
       const instance = (await this.template(data.model)).clone(true);
       instance.rotation.y = ((data.yawOffset ?? 0) * Math.PI) / 180;
       group.add(instance);
-      if (data.role !== "lamp") {
+      if (data.lift === undefined) {
         const shadow = new THREE.Mesh(
           new THREE.PlaneGeometry(width * 1.14, depth * 1.14).rotateX(-Math.PI / 2),
           new THREE.MeshBasicMaterial({ map: this.shadowTexture, transparent: true, opacity: 0.55, depthWrite: false, toneMapped: false }),
@@ -411,10 +423,7 @@ export class StudioEngine {
         group.add(shadow);
       }
     } else {
-      const rug = new THREE.Mesh(
-        new THREE.BoxGeometry(width, height, depth),
-        new THREE.MeshStandardMaterial({ map: rugTexture(), roughness: 0.95 }),
-      );
+      const rug = new THREE.Mesh(new THREE.BoxGeometry(width, height, depth), new THREE.MeshStandardMaterial({ map: rugTexture(), roughness: 0.95 }));
       rug.position.y = height / 2;
       rug.receiveShadow = true;
       group.add(rug);
@@ -428,144 +437,13 @@ export class StudioEngine {
     return { group, proxy };
   }
 
-  private loadPano(room: Room) {
-    let entry = this.panoCache.get(room.pano);
-    if (!entry) {
-      entry = (async () => {
-        const [background, hdr] = await Promise.all([
-          new THREE.TextureLoader().loadAsync(`/studio/rooms/${room.pano}.jpg`),
-          new RGBELoader().loadAsync(`/studio/rooms/${room.pano}.hdr`),
-        ]);
-        background.mapping = THREE.EquirectangularReflectionMapping;
-        background.colorSpace = THREE.SRGBColorSpace;
-        background.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
-        hdr.mapping = THREE.EquirectangularReflectionMapping;
-        const environment = this.pmrem.fromEquirectangular(hdr).texture;
-        hdr.dispose();
-        return { background, environment };
-      })();
-      this.panoCache.set(room.pano, entry);
-    }
-    return entry;
-  }
-
-  private loadSky(): Promise<THREE.Texture> {
-    if (!this.skyEnv) {
-      this.skyEnv = new RGBELoader().loadAsync("/studio/tex/sky.hdr").then((hdr) => {
-        hdr.mapping = THREE.EquirectangularReflectionMapping;
-        const texture = this.pmrem.fromEquirectangular(hdr).texture;
-        hdr.dispose();
-        return texture;
-      });
-    }
-    return this.skyEnv;
-  }
-
-  private floorMaterial(url: string): THREE.MeshStandardMaterial {
-    const texture = new THREE.TextureLoader().load(url, this.invalidate);
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
-    return new THREE.MeshStandardMaterial({ map: texture, roughness: 0.62, color: 0xd9d2c6 });
-  }
-
-  private buildApartment(): void {
-    const materials: Record<string, THREE.MeshStandardMaterial> = {};
-    const floorOf = (kind: string) => (materials[kind] ??= this.floorMaterial(`/studio/tex/${kind}.jpg`));
-    const floor = (minX: number, maxX: number, minZ: number, maxZ: number, kind: string) => {
-      const geometry = new THREE.PlaneGeometry(maxX - minX, maxZ - minZ).rotateX(-Math.PI / 2);
-      const position = geometry.attributes.position;
-      const uv = geometry.attributes.uv;
-      const cx = (minX + maxX) / 2;
-      const cz = (minZ + maxZ) / 2;
-      for (let index = 0; index < position.count; index += 1) {
-        uv.setXY(index, (position.getX(index) + cx) / TILE_M, (position.getZ(index) + cz) / TILE_M);
-      }
-      const mesh = new THREE.Mesh(geometry, floorOf(kind));
-      mesh.position.set(cx, 0, cz);
-      mesh.receiveShadow = true;
-      this.model.add(mesh);
-    };
-    for (const room of ROOMS) floor(HALL_WIDTH, APARTMENT.width, room.rect[2], room === ROOMS[2] ? APARTMENT.depth : room.rect[3], room.floor);
-    floor(0, HALL_WIDTH, 0, APARTMENT.depth, "stone");
-
-    this.model.add(this.walls);
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: WALL_COLOR, roughness: 0.9 });
-    const frameMaterial = new THREE.MeshStandardMaterial({ color: FRAME_COLOR, roughness: 0.5 });
-    const glassMaterial = new THREE.MeshStandardMaterial({ color: 0xcfdcd8, transparent: true, opacity: 0.22, roughness: 0.05, depthWrite: false });
-    for (const wall of WALLS) {
-      const meshes = this.buildWall(wall, wallMaterial, frameMaterial, glassMaterial);
-      if (wall.exterior) {
-        const center = new THREE.Vector3((wall.a[0] + wall.b[0]) / 2, WALL_HEIGHT / 2, (wall.a[1] + wall.b[1]) / 2);
-        this.exterior.push({ wall, meshes, center });
-      }
-    }
-  }
-
-  private buildWall(wall: WallDef, wallMaterial: THREE.Material, frameMaterial: THREE.Material, glass: THREE.Material): THREE.Mesh[] {
-    const thickness = wall.exterior ? EXTERIOR_WALL : INTERIOR_WALL;
-    const length = Math.hypot(wall.b[0] - wall.a[0], wall.b[1] - wall.a[1]);
-    const ux = (wall.b[0] - wall.a[0]) / length;
-    const uz = (wall.b[1] - wall.a[1]) / length;
-    const yaw = Math.atan2(-uz, ux);
-    const meshes: THREE.Mesh[] = [];
-    const piece = (from: number, to: number, bottom: number, top: number, material: THREE.Material, depth = thickness, cast = true) => {
-      if (to - from < 0.001 || top - bottom < 0.001) return;
-      const mesh = new THREE.Mesh(new THREE.BoxGeometry(to - from, top - bottom, depth), material.clone());
-      const middle = (from + to) / 2;
-      mesh.position.set(wall.a[0] + ux * middle, (bottom + top) / 2, wall.a[1] + uz * middle);
-      mesh.rotation.y = yaw;
-      mesh.castShadow = cast;
-      mesh.receiveShadow = true;
-      this.walls.add(mesh);
-      meshes.push(mesh);
-    };
-    let cursor = 0;
-    for (const opening of [...wall.openings].sort((p, q) => p.from - q.from)) {
-      piece(cursor, opening.from, 0, WALL_HEIGHT, wallMaterial);
-      const head = opening.head ?? 2.1;
-      piece(opening.from, opening.to, head, WALL_HEIGHT, wallMaterial);
-      if (opening.kind === "window") {
-        const sill = opening.sill ?? 0.45;
-        piece(opening.from, opening.to, 0, sill, wallMaterial);
-        piece(opening.from, opening.to, sill, head, glass, 0.012, false);
-        piece(opening.from - 0.03, opening.from + 0.03, sill, head, frameMaterial, thickness + 0.02);
-        piece(opening.to - 0.03, opening.to + 0.03, sill, head, frameMaterial, thickness + 0.02);
-        piece(opening.from, opening.to, head - 0.03, head + 0.03, frameMaterial, thickness + 0.02);
-        piece(opening.from, opening.to, sill - 0.03, sill + 0.03, frameMaterial, thickness + 0.02);
-      } else {
-        piece(opening.from - 0.03, opening.from, 0, head, frameMaterial, thickness + 0.03);
-        piece(opening.to, opening.to + 0.03, 0, head, frameMaterial, thickness + 0.03);
-        piece(opening.from - 0.03, opening.to + 0.03, head, head + 0.05, frameMaterial, thickness + 0.03);
-      }
-      cursor = opening.to;
-    }
-    piece(cursor, length, 0, WALL_HEIGHT, wallMaterial);
-    return meshes;
-  }
-
-  /** Hides exterior walls facing the camera, while they keep casting shadow. */
-  private updateCutaway(): void {
-    const camera = this.perspective.position;
-    for (const { wall, meshes, center } of this.exterior) {
-      const outward = wall.outward!;
-      const facing = this.mode === "model" && (camera.x - center.x) * outward[0] + (camera.z - center.z) * outward[1] > 0;
-      for (const mesh of meshes) {
-        const material = mesh.material as THREE.Material;
-        material.colorWrite = !facing;
-        material.depthWrite = !facing && !material.transparent;
-      }
-    }
-  }
-
   private refreshOutline(): void {
     const item = this.items.find((entry) => entry.uid === this.selected);
-    if (!item || !this.isShown(item.uid)) {
+    if (!item) {
       this.outline.visible = false;
       return;
     }
-    const points = itemPolygon(item).map(([x, z]) => new THREE.Vector3(x, 0.02, z));
-    this.outline.geometry.setFromPoints(points);
+    this.outline.geometry.setFromPoints(itemPolygon(item).map(([x, z]) => new THREE.Vector3(x, 0.02, z)));
     this.outlineMaterial.color.setHex(measureItem(item, this.items).overlaps.length ? BLOCKED : SELECT);
     this.outline.visible = true;
   }
@@ -575,7 +453,6 @@ export class StudioEngine {
     cancelAnimationFrame(this.frame);
     this.frame = requestAnimationFrame(() => {
       const moving = this.controls.update();
-      if (this.mode === "model") this.updateCutaway();
       this.renderer.render(this.scene, this.camera);
       this.placeLabels();
       if (moving) this.invalidate();
@@ -598,9 +475,7 @@ export class StudioEngine {
     this.perspective.aspect = width / height;
     this.perspective.updateProjectionMatrix();
     const aspect = width / height;
-    const halfZ = APARTMENT.depth / 2 + 1;
-    const halfX = APARTMENT.width / 2 + 1;
-    const half = Math.max(halfZ, halfX / aspect);
+    const half = Math.max(APARTMENT.depth / 2 + 0.7, (APARTMENT.width / 2 + 0.7) / aspect);
     Object.assign(this.ortho, { left: -half * aspect, right: half * aspect, top: half, bottom: -half });
     this.ortho.updateProjectionMatrix();
     this.invalidate();
@@ -618,13 +493,11 @@ export class StudioEngine {
 
   private pickItem(event: PointerEvent): string | null {
     this.raycaster.setFromCamera(this.pointerNdc(event), this.camera);
-    const proxies = this.items
-      .filter((item) => this.isShown(item.uid) && item.uid !== undefined)
-      .map((item) => this.live.get(item.uid)?.proxy)
-      .filter((proxy): proxy is THREE.Mesh => Boolean(proxy));
+    const proxies = [...this.live.values()].map((live) => live.proxy);
     const hits = this.raycaster.intersectObjects(proxies, false);
-    // A rug is under everything, so anything else at the same spot wins.
-    const solid = hits.find((hit) => CATALOG_BY_ID.get(this.items.find((item) => item.uid === hit.object.userData.uid)!.catalogId)?.role !== "rug");
+    // A rug lies under everything, so anything else at the same spot wins.
+    const roleOf = (uid: string) => CATALOG_BY_ID.get(this.items.find((item) => item.uid === uid)?.catalogId ?? "")?.role;
+    const solid = hits.find((hit) => roleOf(hit.object.userData.uid) !== "rug");
     return (solid ?? hits[0])?.object.userData.uid ?? null;
   }
 
@@ -650,8 +523,8 @@ export class StudioEngine {
     const next = hit.add(this.press.offset);
     const index = this.items.findIndex((entry) => entry.uid === this.press!.uid);
     const item = this.items[index];
-    // Stays in the room it is in when inside; between rooms only from the model and plan views.
-    const room = this.mode === "inside" ? this.room : roomAt(next.x, next.z) ?? roomAt(item.x, item.z) ?? this.room;
+    // Furniture stays on a measured floor: the room under the pointer, or the one it is already in.
+    const room = roomAt(next.x, next.z) ?? roomAt(item.x, item.z) ?? this.room;
     const placed = clampToRoom({ ...item, x: next.x, z: next.z }, room);
     this.items = this.items.map((entry, position) => (position === index ? { ...entry, ...placed } : entry));
     this.syncTransforms();
@@ -677,10 +550,4 @@ export class StudioEngine {
       this.select(null);
     }
   };
-
-  private onWheel = (event: WheelEvent) => {
-    event.preventDefault();
-    this.zoomBy(Math.sign(event.deltaY) * Math.min(Math.abs(event.deltaY) * 0.02, 3));
-  };
 }
-

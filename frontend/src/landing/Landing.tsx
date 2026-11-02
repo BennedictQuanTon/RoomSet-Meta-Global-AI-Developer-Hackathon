@@ -178,17 +178,17 @@ export function Landing() {
 
         <section className="lp-studio">
           <div className="lp-studio-media">
-            <img src="/landing/studio-poster.webp" alt="A bed and nightstands rendered into a photograph of a real apartment bedroom" loading="lazy" decoding="async" />
+            <img src="/landing/studio-poster.webp" alt="Furniture inside a 3D room built from real photographs" loading="lazy" decoding="async" />
           </div>
           <div className="lp-studio-copy">
             <Reveal>
               <Eyebrow>The studio</Eyebrow>
-              <h2 className="lp-title">Step inside a <em>real</em> three-room apartment.</h2>
-              <p className="lp-lede">Three rooms photographed in 360°, measured from the photos, and furnished at true scale. Look around, move anything, add or remove pieces, and ask for an architect's review.</p>
+              <h2 className="lp-title">Step inside <em>real</em> rooms, in true 3D.</h2>
+              <p className="lp-lede">A sample apartment built from real 360° photographs, measured wall to wall and furnished at true scale. Orbit it, look from above, move anything, add or remove pieces, and ask for an architect's review.</p>
               <ul className="lp-studio-points">
-                <li><Eye size={22} strokeWidth={1.3} />Inside the room</li>
+                <li><Eye size={22} strokeWidth={1.3} />In the room</li>
                 <li><Box size={22} strokeWidth={1.3} />Whole apartment</li>
-                <li><LayoutGrid size={22} strokeWidth={1.3} />Floor plan</li>
+                <li><LayoutGrid size={22} strokeWidth={1.3} />Top-down plan</li>
                 <li><Compass size={22} strokeWidth={1.3} />Architect's review</li>
               </ul>
               <a className="lp-button" href={APP_PATH} onClick={goToApp}>Enter the apartment <ArrowUpRight size={18} strokeWidth={1.5} /></a>

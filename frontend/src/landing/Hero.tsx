@@ -23,13 +23,13 @@ function Nav() {
   }, []);
   return (
     <nav className={solid ? "lp-nav is-solid" : "lp-nav"} aria-label="Main">
-      <div className="lp-nav-links">
-        {NAV_LINKS.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
-      </div>
       <a className="lp-nav-logo" href="/" aria-label="Roomset home">
         <img src="/brand/logo-light.png" alt="roomset" className="logo-on-photo" />
         <img src="/brand/logo-dark.png" alt="" aria-hidden="true" className="logo-on-canvas" />
       </a>
+      <div className="lp-nav-links">
+        {NAV_LINKS.map(([label, href]) => <a key={href} href={href}>{label}</a>)}
+      </div>
       <div className="lp-nav-end">
         <a className="lp-try" href={APP_PATH} onClick={goToApp}>Try Roomset</a>
       </div>

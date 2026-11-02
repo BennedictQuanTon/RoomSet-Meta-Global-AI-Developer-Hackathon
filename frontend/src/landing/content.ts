@@ -43,7 +43,7 @@ export const FEATURES: { icon: "ruler" | "move" | "gauge" | "compass" | "layers"
   { icon: "move", title: "Move, turn, add, remove", body: "Direct control by touch or mouse, in the browser, with no model call for each drag.", status: "Working" },
   { icon: "gauge", title: "Numbers on every piece", body: "Tap anything to see its floor share, nearest wall, and how much clear space it leaves in front.", status: "Working" },
   { icon: "compass", title: "An architect's checks", body: "Routes, seating distances and bed access reviewed against common planning rules.", status: "Working" },
-  { icon: "layers", title: "Inside, model and plan", body: "Stand in a photographed room, then pull back to the whole apartment or its floor plan.", status: "Working" },
+  { icon: "layers", title: "Room, model and plan", body: "Stand in a photographed room, orbit it, then pull back to the whole apartment or look straight down.", status: "Working" },
   { icon: "shield", title: "Private by default", body: "Location data is stripped from photos, sessions are isolated, and one tap deletes everything.", status: "Working" },
 ];
 

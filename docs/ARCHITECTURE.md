@@ -104,7 +104,6 @@ frontend/
 worker/
   blender_build.py                      Trusted Blender builders with the same geometry contract
   modal_app.py                          Modal functions, including the VGGT slot for issue #4
-  renders/render_room.py                Renders a furnished room into its real photo with Blender Cycles
 
 Dockerfile, render.yaml                 Single-container image and free Render blueprint
 .github/workflows/ci.yml                Tests, lint and image build

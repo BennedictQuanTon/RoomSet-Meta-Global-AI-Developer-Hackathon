@@ -37,11 +37,11 @@ html.lenis, html.lenis body { height: auto; }
 /* Nav */
 .lp-nav { position: fixed; z-index: 40; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 16px var(--pad); color: var(--canvas); transition: background 320ms ease, color 320ms ease, box-shadow 320ms ease; }
 .lp-nav.is-solid { background: var(--canvas); color: var(--ink); box-shadow: 0 1px 0 var(--hair); }
-.lp-nav-links { display: flex; gap: clamp(14px, 1.7vw, 28px); font-size: 16px; }
+.lp-nav-links { display: flex; justify-content: center; gap: clamp(14px, 2vw, 34px); font-size: 16px; }
 .lp-nav-links a { text-decoration: none; opacity: .92; }
 .lp-nav-links a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 1px; }
-.lp-nav-logo { position: relative; display: block; width: 158px; height: 36px; }
-.lp-nav-logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity 320ms ease; }
+.lp-nav-logo { position: relative; display: block; width: 158px; height: 36px; justify-self: start; }
+.lp-nav-logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: left center; transition: opacity 320ms ease; }
 .logo-on-canvas { opacity: 0; }
 .is-solid .logo-on-photo { opacity: 0; }
 .is-solid .logo-on-canvas { opacity: 1; }
@@ -144,9 +144,8 @@ html.lenis, html.lenis body { height: auto; }
 .lp-mq { overflow: hidden; }
 .lp-mq-track { display: flex; width: max-content; animation: lp-marquee linear infinite; will-change: transform; }
 .lp-mq-track.is-reverse { animation-direction: reverse; }
-.lp-mq:hover .lp-mq-track { animation-play-state: paused; }
-.lp-mq ul { display: flex; gap: 14px; padding-right: 14px !important; }
-.lp-mq li { display: flex; align-items: center; gap: 14px; padding: 18px 28px; border-radius: 8px; background: var(--rs-paper); font-size: 20px; font-weight: 500; white-space: nowrap; }
+.lp-mq ul { display: flex; gap: 22px; padding-right: 22px !important; }
+.lp-mq li { display: flex; align-items: center; gap: 14px; padding: 14px 34px 14px 0; font-size: 22px; font-weight: 500; white-space: nowrap; }
 .lp-mq-mono { display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--ink); border-radius: 6px; font-size: 13px; font-weight: 600; }
 @keyframes lp-marquee { to { transform: translateX(-50%); } }
 
@@ -232,7 +231,7 @@ html.lenis, html.lenis body { height: auto; }
   .lp-roadmap-row { grid-template-columns: 1fr auto; }
   .lp-roadmap-row p { grid-column: 1 / -1; grid-row: 2; }
   .lp-footer-meta { grid-template-columns: 1fr; }
-  .lp-mq li { padding: 14px 20px; font-size: 18px; }
+  .lp-mq li { padding: 10px 24px 10px 0; font-size: 18px; }
   .lp-studio-points { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: reduce) {

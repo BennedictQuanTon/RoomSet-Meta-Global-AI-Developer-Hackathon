@@ -11,7 +11,7 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 | Sofa GLB outer size equals confirmed dimensions; node scale stays 1 | Automated tests on trimesh output |
 | Blender builders match the same geometry contract | Run locally with `bpy` 4.2, not on Modal. They still output a box-style sofa; the default CPU builder uses the photoscanned model |
 | Landing page at `/`, Try button to `/studio`, curtain transition | Chromium browser run against the production bundle |
-| Studio at `/studio`: three real photographed rooms, model and plan views, drag kept on the measured floor, add, remove, reset, numbers per piece, rule-based review | Chromium browser run and unit tests; drag tested with a mouse |
+| Studio at `/studio`: 3D rooms with real photos projected on them, room, model and top-down views, drag kept on the measured floor, add, remove, reset, numbers per piece, rule-based review | Chromium browser run and unit tests; drag tested with a mouse |
 | One session cannot read another's data; uploads strip metadata; bad files fail safely | Automated tests |
 | Private addresses, redirects and DNS tricks are blocked by the URL guard | Automated tests with a mock network |
 
@@ -44,7 +44,7 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 - Photos are required and checked, but in the assisted path they do not change the geometry. Say so in the demo unless VGGT lands.
 - One instance only. Build jobs and rate limits live in that process.
 - The sofa is a photoscanned sample model stretched to the confirmed size. It is not the listed product, and the app says shape and materials may differ.
-- The studio is a sample apartment. Its rooms were measured by hand from photos with an assumed 1.45 m camera height, so sizes are close, not surveyed. Its floor plan is simplified: the real rooms were not necessarily adjacent.
-- In the studio, the inside view stays at each photo's capture point, because a single photo cannot show the room from elsewhere.
+- The studio is a sample. Its three rooms are one real room photographed in three finishes, placed side by side on a made-up plan. Size comes from fitting a box to the photo and a 2.05 m door, so it is close, not surveyed.
+- Studio rooms are boxes with the photo projected on them. Things in the photo, such as curtains, are flat on the walls, and detail softens away from the capture point.
 - User rooms in `/app` are still simple modelled geometry.
 - `Agent.MD` is now gitignored locally and untracked on this branch, but it remains in git history and in the upstream public repo.

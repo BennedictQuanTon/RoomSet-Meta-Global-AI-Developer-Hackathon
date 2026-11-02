@@ -6,20 +6,20 @@ const place = (catalogId: string, x: number, z: number, yaw = 0, uid = catalogId
 
 describe("measureItem", () => {
   it("reports the room, size and share", () => {
-    const sofa = place("sofa-fabric", 2.8, 2.3);
+    const sofa = place("sofa-fabric", 2.8, 2.0);
     const metrics = measureItem(sofa, [sofa]);
     expect(metrics.roomName).toBe("Living room");
     expect(metrics.footprintM2).toBeCloseTo(1.04, 2);
-    expect(metrics.roomSharePct).toBeCloseTo(6, 0);
+    expect(metrics.roomSharePct).toBeCloseTo(8, 0);
     expect(metrics.overlaps).toEqual([]);
   });
 
   it("measures clear floor in front of an item", () => {
     const sofa = place("sofa-fabric", 2.8, 1.0);
     const metrics = measureItem(sofa, [sofa]);
-    // The sofa's front is at z = 1.33 and the wall to the bedroom is at z = 3.25.
-    expect(metrics.frontClearCm).toBeGreaterThan(180);
-    expect(metrics.frontClearCm).toBeLessThan(200);
+    // The sofa's front is at z = 1.33 and the wall to the bedroom is at z = 2.74.
+    expect(metrics.frontClearCm).toBeGreaterThan(130);
+    expect(metrics.frontClearCm).toBeLessThan(150);
   });
 
   it("flags an item pushed through a wall", () => {
@@ -28,14 +28,14 @@ describe("measureItem", () => {
   });
 
   it("flags two pieces of furniture sharing floor", () => {
-    const sofa = place("sofa-fabric", 2.8, 2.3);
-    const table = place("coffee-long", 2.8, 2.3);
+    const sofa = place("sofa-fabric", 2.8, 2.0);
+    const table = place("coffee-long", 2.8, 2.0);
     expect(measureItem(sofa, [sofa, table]).overlaps).toContain("low coffee table");
   });
 
   it("ignores rugs for overlap", () => {
-    const sofa = place("sofa-fabric", 2.8, 2.3);
-    const rug = place("rug", 2.8, 2.3);
+    const sofa = place("sofa-fabric", 2.8, 2.0);
+    const rug = place("rug", 2.8, 2.0);
     expect(measureItem(sofa, [sofa, rug]).overlaps).toEqual([]);
   });
 });
@@ -48,9 +48,9 @@ describe("wall solids", () => {
       const zs = polygon.map((p) => p[1]);
       return x >= Math.min(...xs) && x <= Math.max(...xs) && z >= Math.min(...zs) && z <= Math.max(...zs);
     });
-    expect(covers(1.2, 2.6)).toBe(false); // Door from the hall to the living room.
-    expect(covers(6.6, 1.75)).toBe(true); // Living room window.
-    expect(covers(3, 3.3)).toBe(true); // Wall between living room and bedroom.
+    expect(covers(1.2, 0.5)).toBe(false); // Door from the hall to the living room.
+    expect(covers(5.94, 1.5)).toBe(true); // Living room window.
+    expect(covers(3, 2.79)).toBe(true); // Wall between living room and bedroom.
   });
 });
 
@@ -74,7 +74,7 @@ describe("reviewLayout", () => {
   });
 
   it("warns when furniture crowds a door", () => {
-    const notes = reviewLayout([place("drawers", 1.9, 2.65, Math.PI / 2)]);
+    const notes = reviewLayout([place("drawers", 1.7, 0.52, Math.PI / 2)]);
     expect(notes.some((note) => note.title.startsWith("Tight route"))).toBe(true);
   });
 
