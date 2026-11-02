@@ -1,0 +1,31 @@
+{
+  "schema_version": "scene.v1",
+  "units": "meters",
+  "up": "Y",
+  "floor": [[0, 0], [4.2, 0], [4.2, 3.4], [0, 3.4]],
+  "walls": [
+    { "id": "wall_a", "start": [0, 0], "end": [4.2, 0], "height": 2.6, "thickness": 0.1 },
+    { "id": "wall_b", "start": [0, 3.4], "end": [0, 0], "height": 2.6, "thickness": 0.1 }
+  ],
+  "obstacles": [
+    { "id": "obstacle_0", "label": "Plant", "center": [3.8, 0.3], "size": [0.45, 1.2, 0.45], "yaw": 0 }
+  ],
+  "calibration": { "status": "estimated", "method": "user_estimate", "reference_distance_m": null },
+  "provenance": {
+    "method": "sample",
+    "builder": "trimesh-cpu",
+    "reconstruction_model": null,
+    "created_at": "2026-11-02T00:00:00+00:00",
+    "notes": ["Contract fixture. Not made from photos."]
+  },
+  "furniture": {
+    "id": "sofa",
+    "name": "Fixture sofa",
+    "dimensions": [2.1, 0.84, 0.92],
+    "is_proxy": true,
+    "placement": { "position": [2.1, 0.51], "yaw": 0 }
+  },
+  "assets": { "room": "room.glb", "furniture": "sofa.glb" },
+  "source_photos": [],
+  "warnings": ["Room size is your estimate. Clearances are approximate."]
+}

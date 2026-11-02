@@ -1,0 +1,34 @@
+# Render Blueprint for the free web service. sync:false values are entered in the dashboard.
+services:
+  - type: web
+    name: roomset
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: test
+    healthCheckPath: /healthz
+    envVars:
+      - key: ROOMSET_ENV
+        value: prod
+      - key: MAX_CONCURRENT_JOBS
+        value: "1"
+      - key: STORAGE_BACKEND
+        value: s3
+      - key: SCENE_BUILDER
+        value: local
+      - key: DATABASE_URL
+        sync: false
+      - key: S3_ENDPOINT_URL
+        sync: false
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_REGION
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: BASETEN_API
+        sync: false
+      - key: MUSE_API
+        sync: false

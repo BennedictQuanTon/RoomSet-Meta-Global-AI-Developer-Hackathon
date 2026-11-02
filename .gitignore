@@ -1,3 +1,26 @@
 .env
 .env.*
 !.env.example
+
+# Dependencies and builds
+node_modules/
+frontend/dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Local runtime data (home photos live here)
+data/
+backend/data/
+
+# Internal notes and agent config: stay on this machine
+CLAUDE.md
+.claude/
+Agent.MD
+
+# Archives
+*.zip
+
+.DS_Store
