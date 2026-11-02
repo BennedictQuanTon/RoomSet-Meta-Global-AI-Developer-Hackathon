@@ -1,4 +1,23 @@
-# Deploying for free
+# Deploying
+
+## Quick preview on Vercel (free)
+
+Good for showing the landing page, the start page and the 3D sample apartment. These are static files.
+
+1. Vercel → Add New → Project → import this repository, and pick the branch to deploy.
+2. Leave the settings alone. `vercel.json` already sets the build. Deploy.
+
+What does not run there: planning your own room (`/app`) and the AI architect. They need the FastAPI server, whose build jobs run in background threads and write files, which does not fit serverless functions as written. `/app` says so and points to the sample apartment; the architect's review falls back to its built-in rules.
+
+To add them later, deploy the server as below, then add this as the first entry in `rewrites` in `vercel.json`:
+
+```json
+{ "source": "/api/:path*", "destination": "https://YOUR-APP.onrender.com/api/:path*" }
+```
+
+The Hobby plan is free and limited to non-commercial, personal use.
+
+## The full app
 
 | Piece | Service | Free-tier limit to expect |
 |---|---|---|

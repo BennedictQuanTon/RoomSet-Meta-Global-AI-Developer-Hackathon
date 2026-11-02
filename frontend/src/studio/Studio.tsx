@@ -204,9 +204,10 @@ export function Studio() {
             <button key={entry.id} className={mode === "room" && roomId === entry.id ? "is-active" : ""} onClick={() => go("room", entry.id)}>{entry.name}</button>
           ))}
         </nav>
-        <a className="st-own" href="/app" onClick={(event) => { event.preventDefault(); navigate("/app"); }}>
-          Plan my own room <ArrowUpRight size={16} strokeWidth={1.5} />
-        </a>
+        <div className="st-end">
+          <a href="/start" onClick={(event) => { event.preventDefault(); navigate("/start"); }}>All options</a>
+          <a href="/app" onClick={(event) => { event.preventDefault(); navigate("/app"); }}>Plan my own room <ArrowUpRight size={16} strokeWidth={1.5} /></a>
+        </div>
       </header>
 
       <aside className="st-rail" aria-label="Tools">
@@ -315,7 +316,7 @@ function Advisor({ notes, items, onClose, onSelect }: { notes: ReviewNote[]; ite
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(layoutFacts(items)),
       });
-      if (response.status === 503) {
+      if (response.status === 503 || response.status === 404 || response.status === 405) {
         setState("off");
         return;
       }

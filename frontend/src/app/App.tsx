@@ -1,11 +1,10 @@
 // Chooses the screen from server state, so a reload always lands in the right place.
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError, api, type Auth } from "../api/client";
 import type { Capabilities, SessionView } from "../api/contracts";
 import { CaptureStep } from "../features/capture/CaptureStep";
 import { ClarifyStep } from "../features/clarify/ClarifyStep";
-import { Landing } from "../features/landing/Landing";
 import { ProductStep } from "../features/product/ProductStep";
 import { ProgressStep } from "../features/progress/ProgressStep";
 import { ResultStep } from "../features/result/ResultStep";
@@ -21,9 +20,10 @@ export function App() {
   const [override, setOverride] = useState<Override>(null);
   const [restoring, setRestoring] = useState(Boolean(auth));
   const [error, setError] = useState<string | null>(null);
+  const [serverMissing, setServerMissing] = useState(false);
 
   useEffect(() => {
-    api.capabilities().then(setCapabilities).catch(() => setError("We can't reach Roomset right now."));
+    api.capabilities().then(setCapabilities).catch(() => setServerMissing(true));
   }, []);
 
   useEffect(() => {
@@ -39,10 +39,10 @@ export function App() {
       .finally(() => setRestoring(false));
   }, [auth, session]);
 
-  const begin = useCallback(async (create: typeof api.createSession) => {
+  const begin = useCallback(async () => {
     setError(null);
     try {
-      const created = await create();
+      const created = await api.createSession();
       const next = { id: created.session.id, token: created.token };
       saveAuth(next);
       setAuth(next);
@@ -52,12 +52,18 @@ export function App() {
     }
   }, []);
 
+  // Arriving here means starting a plan; the choice was made on the /start page.
+  const starting = useRef(false);
+  useEffect(() => {
+    if (auth || !capabilities || starting.current) return;
+    starting.current = true;
+    void begin();
+  }, [auth, capabilities, begin]);
+
   const startOver = useCallback(async () => {
     if (auth) await api.deleteSession(auth).catch(() => undefined);
     saveAuth(null);
-    setAuth(null);
-    setSession(null);
-    setOverride(null);
+    navigate("/start");
   }, [auth]);
 
   const update = useCallback((next: SessionView) => {
@@ -66,8 +72,17 @@ export function App() {
   }, []);
 
   const content = () => {
-    if (restoring || !capabilities) return <p className="rs-note">Loading…</p>;
-    if (!auth || !session) return <Landing onStart={() => begin(api.createSession)} onSample={() => navigate("/studio")} />;
+    if (serverMissing) {
+      return (
+        <section className="step app-offline">
+          <h2>Planning your own room needs the Roomset server.</h2>
+          <p className="rs-note">This preview runs without it. The 3D sample apartment works fully here.</p>
+          <button className="rs-button" onClick={() => navigate("/studio")}>Enter the sample apartment</button>
+        </section>
+      );
+    }
+    if (!auth && error) return <button className="rs-button" onClick={() => void begin()}>Try again</button>;
+    if (restoring || !capabilities || !auth || !session) return <p className="rs-note">Loading…</p>;
     if (override === "product" || !session.product?.confirmed) {
       return <ProductStep auth={auth} session={session} capabilities={capabilities} onDone={update} />;
     }
@@ -98,10 +113,14 @@ export function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <button className="logo-button" onClick={startOver} aria-label="Roomset, start over" disabled={!auth}>
+        <a className="app-logo" href="/start" onClick={(event) => { event.preventDefault(); navigate("/start"); }} aria-label="Back to all options">
           <img src="/brand/logo-dark.png" alt="roomset" height={32} />
-        </button>
-        <a className="app-about" href="/" onClick={(event) => { event.preventDefault(); navigate("/"); }}>About Roomset</a>
+        </a>
+        <nav className="app-links" aria-label="Pages">
+          <a href="/start" onClick={(event) => { event.preventDefault(); navigate("/start"); }}>All options</a>
+          <a href="/studio" onClick={(event) => { event.preventDefault(); navigate("/studio"); }}>Sample apartment</a>
+          {auth && <button onClick={startOver}>Start over</button>}
+        </nav>
       </header>
       <main className="app-main">
         {error && <p className="error-note" role="alert">{error}</p>}

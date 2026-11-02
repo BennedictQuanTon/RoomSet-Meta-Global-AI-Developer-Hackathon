@@ -1,7 +1,8 @@
-// Two pages: the landing page at / and the working app at /app, joined by one curtain transition.
+// The pages: landing at /, the start page at /start, the sample apartment at /studio and the planner at /app, joined by one curtain transition.
 
 import { MotionConfig, motion, useAnimationControls } from "motion/react";
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
+import { Hub } from "../features/hub/Hub";
 import { Landing } from "../landing/Landing";
 import { EASE_INOUT } from "../landing/motion";
 import { onNavigate } from "./nav";
@@ -19,10 +20,15 @@ export function Root() {
   const [path, setPath] = useState(window.location.pathname);
   const curtain = useAnimationControls();
   const busy = useRef(false);
+  // A click during a transition runs right after it, so no click is lost. The latest one wins.
+  const queued = useRef<{ next: string; push: boolean } | null>(null);
 
   const go = useCallback(
     async (next: string, push: boolean) => {
-      if (busy.current) return;
+      if (busy.current) {
+        queued.current = { next, push };
+        return;
+      }
       if (/^https?:/.test(next)) {
         window.location.href = next;
         return;
@@ -38,6 +44,9 @@ export function Root() {
       window.scrollTo(0, 0);
       if (!reduced) await curtain.start({ clipPath: GONE, transition: { duration: DURATION_S, ease: EASE_INOUT, delay: 0.12 } });
       busy.current = false;
+      const waiting = queued.current;
+      queued.current = null;
+      if (waiting && waiting.next !== window.location.pathname) void go(waiting.next, waiting.push);
     },
     [curtain],
   );
@@ -55,6 +64,8 @@ export function Root() {
         <Suspense fallback={null}>
           <AppPage />
         </Suspense>
+      ) : path.startsWith("/start") ? (
+        <Hub />
       ) : path.startsWith("/studio") ? (
         <Suspense fallback={null}>
           <StudioPage />

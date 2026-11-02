@@ -29,5 +29,5 @@ Without keys, manual product entry, assisted rooms, the 3D editor and saved layo
 ## Docs
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the system fits together and what every folder holds
-- [docs/DEPLOY.md](docs/DEPLOY.md): deploying end to end on free tiers
+- [docs/DEPLOY.md](docs/DEPLOY.md): a quick Vercel preview, and deploying end to end on free tiers
 - [docs/STATUS.md](docs/STATUS.md): verified and unverified behavior, and the remaining work

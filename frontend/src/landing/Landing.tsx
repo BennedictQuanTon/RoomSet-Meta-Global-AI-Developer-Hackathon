@@ -8,7 +8,7 @@ import {
   COMPARE_COLUMNS, COMPARE_REFS, COMPARE_ROWS, CREDITS, FEATURES, HERO_SLIDES, ROADMAP, STACK_ROWS, STATS, STAT_SOURCES, STEPS, TEAM,
   type Mark, type Status, type Tech,
 } from "./content";
-import { APP_PATH } from "../app/nav";
+import { APP_PATH, navigate } from "../app/nav";
 import { Hero, goToApp } from "./Hero";
 import { Intro, shouldPlayIntro } from "./Intro";
 import { Reveal } from "./motion";
@@ -191,7 +191,7 @@ export function Landing() {
                 <li><LayoutGrid size={22} strokeWidth={1.3} />Top-down plan</li>
                 <li><Compass size={22} strokeWidth={1.3} />Architect's review</li>
               </ul>
-              <a className="lp-button" href={APP_PATH} onClick={goToApp}>Enter the apartment <ArrowUpRight size={18} strokeWidth={1.5} /></a>
+              <a className="lp-button" href="/studio" onClick={(event) => { event.preventDefault(); navigate("/studio"); }}>Enter the apartment <ArrowUpRight size={18} strokeWidth={1.5} /></a>
             </Reveal>
           </div>
         </section>
