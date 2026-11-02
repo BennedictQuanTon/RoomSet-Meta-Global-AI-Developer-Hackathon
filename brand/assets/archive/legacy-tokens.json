@@ -1,0 +1,19 @@
+{
+  "name": "Roomset / Warm Habitat",
+  "colors": {
+    "ivory": "#F7F4ED",
+    "olive": "#273D32",
+    "terracotta": "#C66B48",
+    "clayText": "#A65030",
+    "sage": "#929B80",
+    "linen": "#D8D3C7",
+    "mutedText": "#687166"
+  },
+  "typography": {
+    "display": "Cormorant Garamond 500",
+    "body": "DM Sans 400",
+    "control": "DM Sans 500"
+  },
+  "spacing": { "phoneGutter": 25, "controlHeight": 51, "controlRadius": 9 },
+  "tagline": "A little more room for possibility."
+}

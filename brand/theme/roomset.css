@@ -1,0 +1,25 @@
+@import url('./fonts.css');
+:root {
+ --rs-ivory:#F7F4ED; --rs-paper:#FFFCF6; --rs-forest:#273D32;
+ --rs-terracotta:#C66B48; --rs-clay-text:#A65030; --rs-sage:#929B80;
+ --rs-linen:#D8D3C7; --rs-muted:#5C665B; --rs-error:#9D3E35;
+ --rs-font-body:'DM Sans',Arial,sans-serif;
+ --rs-font-display:'Cormorant Garamond',Georgia,serif;
+ --rs-radius-control:10px; --rs-radius-card:16px; --rs-radius-sheet:24px;
+ --rs-space-1:4px; --rs-space-2:8px; --rs-space-3:12px; --rs-space-4:16px;
+ --rs-space-6:24px; --rs-space-8:32px; --rs-space-12:48px; --rs-space-16:64px;
+ --rs-space-24:96px; --rs-max-width:1200px; --rs-touch-target:48px;
+ --rs-motion-fast:140ms; --rs-motion-normal:220ms;
+}
+.rs-button {font:500 16px/1.2 var(--rs-font-body);min-height:48px;padding:14px 22px;border:1px solid var(--rs-forest);border-radius:var(--rs-radius-control);background:var(--rs-forest);color:var(--rs-ivory);cursor:pointer;}
+.rs-button:hover {background:#344E40;}
+.rs-button--secondary {background:transparent;color:var(--rs-forest);}
+.rs-button--secondary:hover {background:var(--rs-linen);}
+.rs-button:disabled {opacity:.5;cursor:not-allowed;}
+.rs-button:focus-visible,.rs-input:focus-visible {outline:3px solid var(--rs-forest);outline-offset:4px;}
+.rs-input {box-sizing:border-box;width:100%;min-height:48px;border:1px solid var(--rs-muted);border-radius:10px;padding:12px 14px;background:var(--rs-paper);color:var(--rs-forest);font:400 16px var(--rs-font-body);}
+.rs-label {display:block;margin-bottom:8px;font:500 14px var(--rs-font-body);}
+.rs-card {background:var(--rs-paper);border:1px solid var(--rs-linen);border-radius:16px;padding:24px;}
+.rs-badge {display:inline-block;padding:6px 10px;border-radius:6px;background:#EFE3D8;color:var(--rs-clay-text);font:500 13px var(--rs-font-body);}
+.rs-note {font:400 14px/1.6 var(--rs-font-body);color:var(--rs-muted);}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}

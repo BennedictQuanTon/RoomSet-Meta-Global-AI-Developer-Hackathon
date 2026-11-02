@@ -1,0 +1,359 @@
+{
+  "version": "1.0",
+  "date": "2026-11-02",
+  "identity": "User-supplied Roomset logo preserved exactly; supporting system proposed",
+  "scopeSources": [
+    "https://github.com/khanhtuongnakitomo/RoomSet/issues/2",
+    "https://github.com/khanhtuongnakitomo/RoomSet/issues/3",
+    "https://github.com/khanhtuongnakitomo/RoomSet/issues/4"
+  ],
+  "notes": [
+    "No logo vector, transparency or app icon is claimed.",
+    "SVG room art and sample dimensions are illustrative, not pipeline outputs.",
+    "Legacy artwork is reference-only; check rights before reuse.",
+    "Generated files are local; no publication or deployment."
+  ],
+  "checks": {
+    "relativeReferences": "all present",
+    "originalLogoSHA256": "a77de5657a1973021278b1ac8e8aa62eb1765e2bacf5a71fd4222fc72d88b4e5",
+    "mobileViewport": "390px: no horizontal overflow; all images loaded; fonts loaded",
+    "pdfVisualReview": "5 proposal pages and 4 guide pages rendered and reviewed",
+    "colorContrast": "See theme/contrast-report.json; token calculations only"
+  },
+  "files": [
+    {
+      "path": "brand/assets/archive/legacy-mark.png",
+      "bytes": 738026,
+      "sha256": "b6195a1783290a5313e6248634e5ac27f2f49742880aedd2b609093973470eeb",
+      "provenance": "Legacy prototype reference; not approved current identity",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "path": "brand/assets/archive/legacy-room.png",
+      "bytes": 2512905,
+      "sha256": "8bc63dfdbc3c37d57be118d8f52d2186ea24363f049997162624779c5c626573",
+      "provenance": "Legacy prototype reference; not approved current identity",
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "path": "brand/assets/archive/legacy-tokens.json",
+      "bytes": 485,
+      "sha256": "abf5765171c91dac0dc9a4aad3538152409283b0b07d7f2842bd9335d531c865",
+      "provenance": "Legacy prototype reference; not approved current identity"
+    },
+    {
+      "path": "brand/assets/icons/camera.svg",
+      "bytes": 290,
+      "sha256": "8fcddca0e342874374dbe93ebcb84f706bfe417c6a2d773adcfdd40fa0fa378e",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/check.svg",
+      "bytes": 209,
+      "sha256": "10a0cf6d4d79d6f310fe3d8a61a236a5dba38c33166bf72ba4e897e6717d6b1b",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/dimensions.svg",
+      "bytes": 267,
+      "sha256": "98e82ec671c95eb25695f5af0ad449557f6559f1d8340219f167b4004a3c6f15",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/link.svg",
+      "bytes": 286,
+      "sha256": "20e31237ece23415acbc56d4e655290ae9653a62674a52d9bcedd98d9c099fe9",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/move.svg",
+      "bytes": 264,
+      "sha256": "a7f3f56d6829bd161577b46dbc7f9166a13d98925c6594bcbfb60114d695d1ab",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/reset.svg",
+      "bytes": 221,
+      "sha256": "70b0cb0f8e960bac35f3d476e70be36442dcf2e09e6f744e580bfc82202cba1e",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/room.svg",
+      "bytes": 234,
+      "sha256": "a014965805c40fc3ba9665a64645f0b183ba0874dd5faaa5232d3df41de2fca3",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/rotate.svg",
+      "bytes": 225,
+      "sha256": "53c0ceaeb689a884d5c8a59551ca5dbff204078806e38f324664ac125e04aa3e",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/save.svg",
+      "bytes": 251,
+      "sha256": "dceee8afcb54e7a61019535690e0a5ad45d3cee6bcde595691f576fc7541449c",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/top-view.svg",
+      "bytes": 316,
+      "sha256": "4e5c4a851c95034497bdc37569ecc38f0e287b67f564de48be2680166dad1ef5",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/upload.svg",
+      "bytes": 230,
+      "sha256": "369aee28c9c7712fbe166092af828699b4b57c2571f27b0be41e77c39b860870",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/icons/warning.svg",
+      "bytes": 242,
+      "sha256": "316be4efffef0adfa44ee6de2ba61f5314048fa5f50e79962a69720250063641",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/illustrations/floor-grid.svg",
+      "bytes": 302,
+      "sha256": "89649f270e7d4ddb1b0879da9dc86e484f6eebb6d0370684ba8e6dc8b4b00a05",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/illustrations/room-corner.svg",
+      "bytes": 1395,
+      "sha256": "ede4f09a37b3ca3f4608549573960b960d7e478e3715327264f7c5f18654b410",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/assets/logo/roomset-logo-original.png",
+      "bytes": 1391114,
+      "sha256": "a77de5657a1973021278b1ac8e8aa62eb1765e2bacf5a71fd4222fc72d88b4e5",
+      "provenance": "User-supplied logo; unmodified PNG",
+      "dimensions": [
+        2172,
+        724
+      ]
+    },
+    {
+      "path": "brand/brand-guide.html",
+      "bytes": 10573,
+      "sha256": "653f89d8e111cf17c8174093e2bdaab1d53c79b348db662ba6562d678725016d",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/brand-guide.md",
+      "bytes": 8332,
+      "sha256": "890789387a7394a12f30ba17f902653670c3e4ef5ba59f65c57c190cc854d9f0",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/exports/brand-overview.png",
+      "bytes": 157026,
+      "sha256": "4515a861cd40190d79bd30270653ce9849e7713ac6ecd36f3e66bc9c48cbe153",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual",
+      "dimensions": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "brand/exports/pitch-cover.png",
+      "bytes": 148229,
+      "sha256": "068b57900ee3486137480b0d7603a94134217e3cebb9f96b8404eb01d3d5c994",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual",
+      "dimensions": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "path": "brand/exports/roomset-brand-guide.pdf",
+      "bytes": 906844,
+      "sha256": "fa100bcc31385769bbd971b14e7471cda15292e8a779928d71031ae6af4f86c6",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/exports/social-card.png",
+      "bytes": 82028,
+      "sha256": "0688bbfbc21927e0d17bf7c70bdcd6d3b2a69876498c9fa00b7e0df344898b0e",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual",
+      "dimensions": [
+        1200,
+        630
+      ]
+    },
+    {
+      "path": "brand/exports/square-card.png",
+      "bytes": 111230,
+      "sha256": "681f5e3750d277a6661c46365d8f5188d965cdd8d8566df90da03cb974bfe897",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual",
+      "dimensions": [
+        1080,
+        1080
+      ]
+    },
+    {
+      "path": "brand/fonts/cormorant-garamond/cormorant-garamond-cyrillic-500-normal.woff2",
+      "bytes": 12920,
+      "sha256": "30aec8d9cdb4ea84534ffcd7c58b0f06069f63dc177b5aafd7438627dfe10fb8",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/cormorant-garamond/cormorant-garamond-cyrillic-ext-500-normal.woff2",
+      "bytes": 14096,
+      "sha256": "acab2d007aaa8b005a573cf1389f8f4f35bfb3413e2f6d59af49fbcc3668d925",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/cormorant-garamond/cormorant-garamond-latin-500-normal.woff2",
+      "bytes": 23312,
+      "sha256": "8197bf53615ddc8c423f444c7f0eec63b7fa0ba093fcfbec60dfdd28429b0fc8",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/cormorant-garamond/cormorant-garamond-latin-ext-500-normal.woff2",
+      "bytes": 20200,
+      "sha256": "3de1b0f23516d8ff77cc1a5af88b6c19037a375ec52729a8a5633998f58aa609",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/cormorant-garamond/cormorant-garamond-vietnamese-500-normal.woff2",
+      "bytes": 6756,
+      "sha256": "f245c41ee20c58be0acd85ac9e3060f8ff9a2dba455892ff37c1e11b9133eda0",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/cormorant-garamond/LICENSE.txt",
+      "bytes": 4504,
+      "sha256": "732f37009943e7f4378cf37113c9bcc4716af002a8583511aa91ed5d37683e73",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/dm-sans-latin-400-normal.woff2",
+      "bytes": 14200,
+      "sha256": "4ab51eb2cd7305d177187908d6397474d4520663f6c6e572feb0a64f4fa80006",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/dm-sans-latin-500-normal.woff2",
+      "bytes": 14304,
+      "sha256": "19bf1984956517c35c2bd35b6cdedac12a21d6fcd3596c614ecdfb88b648909d",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/dm-sans-latin-600-normal.woff2",
+      "bytes": 14144,
+      "sha256": "6bb2b2645ba5eeaecf56322c543fa3a75b87b927977b9c03b1dabc4205089120",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/dm-sans-latin-ext-400-normal.woff2",
+      "bytes": 7364,
+      "sha256": "962730c6ff7595f9499b0d963a3bccb2139d793f0fb31fbd87aed1881c020e0a",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/dm-sans-latin-ext-500-normal.woff2",
+      "bytes": 7432,
+      "sha256": "e0a1d21584ba00798a3dbe90ef5f8a162741d454f52ab66630f9dc41da372b3d",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/dm-sans-latin-ext-600-normal.woff2",
+      "bytes": 7420,
+      "sha256": "6406eb05e2eb50779cb95ee8745c98ad23cce7e67d752822782453da7f6b4491",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/fonts/dm-sans/LICENSE.txt",
+      "bytes": 4502,
+      "sha256": "6fbd040a29c2037a765dfb9f2561e9965b5c95c6dcb5dce516089d63d5f17af7",
+      "provenance": "Installed @fontsource package; bundled SIL license applies"
+    },
+    {
+      "path": "brand/messaging.md",
+      "bytes": 1777,
+      "sha256": "023005a31099bab2e2ecae87d9c49a99a120904925ba8be3490845e75840b10f",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/preview.html",
+      "bytes": 10944,
+      "sha256": "ecc500da95273c1b3e81d3ac4082bfeca5ecc2d9909c74ba388445fd1eecb0a8",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/README.md",
+      "bytes": 1715,
+      "sha256": "9fb3f8abe039691c1941a3d4252939ee7d9bf5ed6787c4913fc241e2d292a001",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/templates/pitch-cover.html",
+      "bytes": 1386,
+      "sha256": "96bbe776a1b03272cf14beb0f4ed85bd92b4ab5ee9a1acddd8e3b71a297d20c5",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/templates/social-card.html",
+      "bytes": 1384,
+      "sha256": "c2997c8ce14844eaf7be3ea8ccda2b2e1058490af47f6f200a39e22a8a3947fa",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/templates/square-card.html",
+      "bytes": 1535,
+      "sha256": "f5b135cadaed349c3756e0e5fc2d039d31e8aad271225f109967e2d904e4dd39",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/theme/contrast-report.json",
+      "bytes": 1413,
+      "sha256": "d1bf6513902fff94ad4e49ae8c76bd53487c5eadb01960028fdfa4d250830e31",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/theme/fonts.css",
+      "bytes": 4522,
+      "sha256": "a631814f0deee342bd1399652dc21d6cdb4c6dd318563f37420f11ba82842d2b",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/theme/roomset.css",
+      "bytes": 2035,
+      "sha256": "ee935f0852e6d60e9900e38af60918552aaec83be461fcbe33f2ef94ee94275a",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "brand/theme/tokens.json",
+      "bytes": 1445,
+      "sha256": "8b5076da10253e031e6384741e6660cb43ed38a8ec262ea785471b3b0d831d07",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "proposal/roomset-proposal.html",
+      "bytes": 13396,
+      "sha256": "d1096470abc460bd1d16c9cc6b63c027c9c3a5380ddb620da2cc2be020028235",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "proposal/roomset-proposal.md",
+      "bytes": 10567,
+      "sha256": "6b7b95826af09499d89abaf2b69c84f96c8860cdcc802d0a20acdaa1795a3cbd",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    },
+    {
+      "path": "proposal/roomset-proposal.pdf",
+      "bytes": 921881,
+      "sha256": "0862702cc74682af195b450ad6b2ce57642c2f880699918b9c457457b789297b",
+      "provenance": "Authored for this package; derived from issues #2\u2013#4 where factual"
+    }
+  ]
+}

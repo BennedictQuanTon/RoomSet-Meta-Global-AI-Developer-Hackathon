@@ -1,0 +1,61 @@
+{
+  "method": "WCAG relative luminance contrast; static token checks, not whole-product conformance",
+  "pairs": [
+    {
+      "foreground": "#273D32",
+      "background": "#F7F4ED",
+      "use": "Body text",
+      "ratio": 10.62,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#273D32",
+      "background": "#FFFCF6",
+      "use": "Card text",
+      "ratio": 11.39,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#5C665B",
+      "background": "#F7F4ED",
+      "use": "Secondary text",
+      "ratio": 5.45,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#A65030",
+      "background": "#F7F4ED",
+      "use": "Warm text",
+      "ratio": 5.02,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#F7F4ED",
+      "background": "#273D32",
+      "use": "Primary button",
+      "ratio": 10.62,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#9D3E35",
+      "background": "#F7F4ED",
+      "use": "Error text",
+      "ratio": 6.02,
+      "normalTextAA": true
+    },
+    {
+      "foreground": "#F7F4ED",
+      "background": "#C66B48",
+      "use": "Not approved for small text",
+      "ratio": 3.42,
+      "normalTextAA": false
+    },
+    {
+      "foreground": "#929B80",
+      "background": "#F7F4ED",
+      "use": "Decorative only",
+      "ratio": 2.65,
+      "normalTextAA": false
+    }
+  ]
+}
