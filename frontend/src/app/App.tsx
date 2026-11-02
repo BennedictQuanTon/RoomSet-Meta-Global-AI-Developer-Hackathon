@@ -67,7 +67,7 @@ export function App() {
 
   const content = () => {
     if (restoring || !capabilities) return <p className="rs-note">Loading…</p>;
-    if (!auth || !session) return <Landing onStart={() => begin(api.createSession)} onSample={() => begin(api.createSample)} />;
+    if (!auth || !session) return <Landing onStart={() => begin(api.createSession)} onSample={() => navigate("/studio")} />;
     if (override === "product" || !session.product?.confirmed) {
       return <ProductStep auth={auth} session={session} capabilities={capabilities} onDone={update} />;
     }
@@ -99,7 +99,7 @@ export function App() {
     <div className="app">
       <header className="app-header">
         <button className="logo-button" onClick={startOver} aria-label="Roomset, start over" disabled={!auth}>
-          <img src="/roomset-logo.png" alt="roomset" height={44} />
+          <img src="/brand/logo-dark.png" alt="roomset" height={32} />
         </button>
         <a className="app-about" href="/" onClick={(event) => { event.preventDefault(); navigate("/"); }}>About Roomset</a>
       </header>

@@ -8,6 +8,8 @@ import { onNavigate } from "./nav";
 
 const AppPage = lazy(() => import("./App").then((module) => ({ default: module.App })));
 
+const StudioPage = lazy(() => import("../studio/Studio").then((module) => ({ default: module.Studio })));
+
 const COVER = "inset(100% 0% 0% 0%)";
 const FULL = "inset(0% 0% 0% 0%)";
 const GONE = "inset(0% 0% 100% 0%)";
@@ -53,11 +55,15 @@ export function Root() {
         <Suspense fallback={null}>
           <AppPage />
         </Suspense>
+      ) : path.startsWith("/studio") ? (
+        <Suspense fallback={null}>
+          <StudioPage />
+        </Suspense>
       ) : (
         <Landing />
       )}
       <motion.div className="page-curtain" aria-hidden="true" initial={{ clipPath: COVER }} animate={curtain}>
-        <span>roomset</span>
+        <img src="/brand/logo-light.png" alt="" />
       </motion.div>
     </MotionConfig>
   );

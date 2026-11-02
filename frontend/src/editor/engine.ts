@@ -323,7 +323,8 @@ export class EditorEngine {
       uv[index * 2 + 1] = position.getZ(index) / FLOOR_TILE_M;
     }
     floor.geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
-    floor.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.62 });
+    // The room GLB carries no normals; this replaced material must not depend on them or it renders black.
+    floor.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.62, flatShading: true });
     this.invalidate();
   }
 

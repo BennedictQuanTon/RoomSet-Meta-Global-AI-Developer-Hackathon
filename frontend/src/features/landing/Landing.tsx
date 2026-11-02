@@ -7,7 +7,7 @@ export function Landing({ onStart, onSample }: { onStart: () => void; onSample: 
       </p>
       <div className="actions">
         <button className="rs-button" onClick={onStart}>Plan my space</button>
-        <button className="rs-button rs-button--secondary" onClick={onSample}>Try a sample room</button>
+        <button className="rs-button rs-button--secondary" onClick={onSample}>Explore the sample apartment</button>
       </div>
       <ol className="how-it-works">
         <li><strong>Add a sofa.</strong> Paste a listing and confirm its size.</li>

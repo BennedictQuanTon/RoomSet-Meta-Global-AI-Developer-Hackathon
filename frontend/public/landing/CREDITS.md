@@ -1,11 +1,14 @@
 # Image and model credits
 
-Everything here is built from CC0 assets from [Poly Haven](https://polyhaven.com/license). Attribution is not required; it is listed so the source stays traceable.
+All CC0. Attribution is not required; it is listed so the source stays traceable.
 
-| Asset | Poly Haven source | Author |
-|---|---|---|
-| Rooms (`hero-*`, `f-*`, `empty-room`, `demo/room.jpg`, `demo/env.hdr`) | [old_room](https://polyhaven.com/a/old_room), [studio_country_hall](https://polyhaven.com/a/studio_country_hall), [small_empty_house](https://polyhaven.com/a/small_empty_house) | See each asset page |
-| Sofas | [Sofa_01](https://polyhaven.com/a/Sofa_01), [sofa_02](https://polyhaven.com/a/sofa_02) | See each asset page |
-| Floor texture (`demo/floor.jpg`) | [wooden_floor_01](https://polyhaven.com/a/wooden_floor_01) | See the asset page |
+| Asset | Source |
+|---|---|
+| `hero-*` | Real interiors from Poly Haven panoramas: lythwood_lounge, hotel_room, studio_country_hall, reading_room |
+| `photo-*` | StockSnap photographs found through Openverse, CC0 |
+| `studio-poster` | Poly Haven panorama small_empty_room_1 with furniture rendered in using `worker/renders/render_room.py` |
+| `/studio/rooms` | Poly Haven panoramas small_empty_room_1, 2 and 4 by Sergej Majboroda |
+| `/studio/models`, `/studio/thumbs` | Poly Haven models |
+| `/studio/tex` | Poly Haven textures: herringbone_parquet, wooden_floor_01, marble_01, painted_plaster_wall, kloofendal_48d_partly_cloudy_puresky |
 
-The rooms are real photographed panoramas. The sofas are 3D models rendered into them with Blender Cycles, using `worker/renders/render_scene.py`. These images show samples, not results from a user's photos.
+Licenses: https://polyhaven.com/license and https://stocksnap.io/license

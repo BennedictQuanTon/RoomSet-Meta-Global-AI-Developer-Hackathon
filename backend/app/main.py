@@ -12,7 +12,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routes import assets, build, health, photos, product, renders, sessions
+from app.api.routes import assets, build, health, photos, product, renders, sessions, studio
 from app.core.config import get_settings
 from app.core.errors import AppError, NotFound
 from app.core.logging import configure_logging, request_id
@@ -134,7 +134,7 @@ def create_app() -> FastAPI:
         log.error("unhandled error", exc_info=exc)
         return _error(500, "internal_error", "Something went wrong on our side.")
 
-    for module in (health, sessions, product, photos, build, assets, renders):
+    for module in (health, sessions, product, photos, build, assets, renders, studio):
         app.include_router(module.router)
 
     dist = Path(settings.frontend_dist)

@@ -64,7 +64,7 @@ export function Intro({ image, onReveal, onDone }: { image: string; onReveal: ()
       aria-hidden="true"
     >
       <motion.img
-        src="/roomset-logo.png"
+        src="/brand/logo-dark.png"
         alt=""
         width={190}
         initial={{ opacity: 0, y: 10 }}

@@ -76,7 +76,7 @@ backend/
     api/
       deps.py                           Session ownership and upload limits
       presenters.py                     Rows into API views
-      routes/                           health, sessions, product, photos, build, assets, renders
+      routes/                           health, sessions, product, photos, build, assets, renders, studio
   tests/                                API flow, security, geometry, provider request shapes
 
 frontend/
@@ -85,8 +85,9 @@ frontend/
     main.tsx                            Entry point, loads brand tokens
     app/Root.tsx, app/nav.ts            Routes / and /app, with the curtain transition
     app/App.tsx                         The product flow; picks the screen from server state
-    landing/                            Landing page: content.ts (all copy and statuses), motion.tsx
-                                        (reveal vocabulary), Intro, Hero, LiveDemo, Landing, landing.css
+    landing/                            Landing page: content.ts (all copy and statuses), Intro, Hero, Landing
+    studio/                             Sample apartment: apartment.data.json (rooms, catalog, layout),
+                                        analysis.ts (metrics and planning rules), engine.ts (3D), Studio.tsx (UI)
     app/sessionStore.ts                 Remembers the session across reloads
     api/contracts.ts, client.ts         Types, contract check, typed calls
     editor/
@@ -103,7 +104,7 @@ frontend/
 worker/
   blender_build.py                      Trusted Blender builders with the same geometry contract
   modal_app.py                          Modal functions, including the VGGT slot for issue #4
-  renders/render_scene.py               Blender Cycles script for the landing page images
+  renders/render_room.py                Renders a furnished room into its real photo with Blender Cycles
 
 Dockerfile, render.yaml                 Single-container image and free Render blueprint
 .github/workflows/ci.yml                Tests, lint and image build
@@ -123,7 +124,8 @@ brand/, proposal/                       Existing brand kit and proposal
 | modal (optional) | Blender and GPU jobs |
 | React, Vite, TypeScript | App |
 | three | Editor |
-| motion | Landing page reveals and page transitions |
+| motion, lenis | Page transitions and smooth scrolling |
+| simple-icons, lucide-react | Tech logos and interface icons |
 
 ## API
 

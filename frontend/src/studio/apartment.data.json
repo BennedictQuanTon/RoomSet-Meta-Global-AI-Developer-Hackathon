@@ -1,0 +1,468 @@
+{
+ "rooms": [
+  {
+   "id": "living",
+   "name": "Living room",
+   "pano": "small_empty_room_2",
+   "captureHeight": 1.45,
+   "local": [
+    -2.7,
+    2.5,
+    -1.75,
+    1.55
+   ],
+   "origin": [
+    3.9,
+    1.75
+   ],
+   "floor": "parquet",
+   "look": [
+    -1,
+    0
+   ]
+  },
+  {
+   "id": "bedroom",
+   "name": "Bedroom",
+   "pano": "small_empty_room_1",
+   "captureHeight": 1.45,
+   "local": [
+    -3.1,
+    2.2,
+    -1.9,
+    1.6
+   ],
+   "origin": [
+    4.3,
+    5.2
+   ],
+   "floor": "wood",
+   "look": [
+    -1,
+    -0.42
+   ]
+  },
+  {
+   "id": "dining",
+   "name": "Dining room",
+   "pano": "small_empty_room_4",
+   "captureHeight": 1.45,
+   "local": [
+    -2.7,
+    2.7,
+    -1.8,
+    1.5
+   ],
+   "origin": [
+    3.9,
+    8.6
+   ],
+   "floor": "stone",
+   "look": [
+    -1,
+    -0.1
+   ]
+  }
+ ],
+ "catalog": [
+  {
+   "id": "sofa-fabric",
+   "name": "Linen sofa",
+   "category": "Seating",
+   "role": "sofa",
+   "size": [
+    1.57,
+    0.66,
+    0.8
+   ],
+   "model": "Sofa_01"
+  },
+  {
+   "id": "sofa-leather",
+   "name": "Tufted leather sofa",
+   "category": "Seating",
+   "role": "sofa",
+   "size": [
+    1.81,
+    0.82,
+    0.71
+   ],
+   "model": "sofa_02"
+  },
+  {
+   "id": "armchair",
+   "name": "Modern armchair",
+   "category": "Seating",
+   "role": "chair",
+   "size": [
+    0.82,
+    0.99,
+    1.02
+   ],
+   "model": "modern_arm_chair_01"
+  },
+  {
+   "id": "lounge",
+   "name": "Mid-century lounge",
+   "category": "Seating",
+   "role": "chair",
+   "size": [
+    1.01,
+    1.19,
+    1.17
+   ],
+   "model": "mid_century_lounge_chair"
+  },
+  {
+   "id": "ottoman",
+   "name": "Ottoman",
+   "category": "Seating",
+   "role": "chair",
+   "size": [
+    0.88,
+    0.62,
+    0.62
+   ],
+   "model": "Ottoman_01"
+  },
+  {
+   "id": "dining-chair",
+   "name": "Dining chair",
+   "category": "Seating",
+   "role": "chair",
+   "size": [
+    0.43,
+    0.58,
+    0.97
+   ],
+   "model": "dining_chair_02"
+  },
+  {
+   "id": "coffee-long",
+   "name": "Low coffee table",
+   "category": "Tables",
+   "role": "coffee",
+   "size": [
+    1.2,
+    0.6,
+    0.39
+   ],
+   "model": "modern_coffee_table_01",
+   "yawOffset": 90
+  },
+  {
+   "id": "coffee-round",
+   "name": "Round coffee table",
+   "category": "Tables",
+   "role": "coffee",
+   "size": [
+    1.3,
+    1.3,
+    0.49
+   ],
+   "model": "coffee_table_round_01"
+  },
+  {
+   "id": "side-table",
+   "name": "Side table",
+   "category": "Tables",
+   "role": "table",
+   "size": [
+    0.55,
+    0.45,
+    0.55
+   ],
+   "model": "side_table_01"
+  },
+  {
+   "id": "dining-table",
+   "name": "Oak dining table",
+   "category": "Tables",
+   "role": "dining",
+   "size": [
+    1.13,
+    0.71,
+    0.8
+   ],
+   "model": "wooden_table_02"
+  },
+  {
+   "id": "desk",
+   "name": "Writing desk",
+   "category": "Tables",
+   "role": "table",
+   "size": [
+    0.71,
+    0.55,
+    0.88
+   ],
+   "model": "SchoolDesk_01"
+  },
+  {
+   "id": "bed",
+   "name": "Carved double bed",
+   "category": "Sleep",
+   "role": "bed",
+   "size": [
+    1.49,
+    2.04,
+    1.53
+   ],
+   "model": "GothicBed_01"
+  },
+  {
+   "id": "nightstand",
+   "name": "Nightstand",
+   "category": "Sleep",
+   "role": "table",
+   "size": [
+    0.57,
+    0.42,
+    0.7
+   ],
+   "model": "ClassicNightstand_01"
+  },
+  {
+   "id": "sideboard",
+   "name": "Long sideboard",
+   "category": "Storage",
+   "role": "storage",
+   "size": [
+    2.44,
+    0.52,
+    0.68
+   ],
+   "model": "modern_wooden_cabinet"
+  },
+  {
+   "id": "drawers",
+   "name": "Tall drawers",
+   "category": "Storage",
+   "role": "tall",
+   "size": [
+    1.14,
+    0.49,
+    1.88
+   ],
+   "model": "drawer_cabinet"
+  },
+  {
+   "id": "display",
+   "name": "Display shelves",
+   "category": "Storage",
+   "role": "tall",
+   "size": [
+    1.08,
+    0.37,
+    1.56
+   ],
+   "model": "wooden_display_shelves_01",
+   "yawOffset": 90
+  },
+  {
+   "id": "shelf",
+   "name": "Open bookshelf",
+   "category": "Storage",
+   "role": "tall",
+   "size": [
+    1,
+    0.26,
+    2.08
+   ],
+   "model": "Shelf_01"
+  },
+  {
+   "id": "plant",
+   "name": "Potted plant",
+   "category": "Accents",
+   "role": "plant",
+   "size": [
+    0.7,
+    0.66,
+    0.84
+   ],
+   "model": "potted_plant_02"
+  },
+  {
+   "id": "rug",
+   "name": "Wool rug",
+   "category": "Accents",
+   "role": "rug",
+   "size": [
+    2.4,
+    1.7,
+    0.012
+   ]
+  },
+  {
+   "id": "lamp",
+   "name": "Arm lamp",
+   "category": "Accents",
+   "role": "lamp",
+   "size": [
+    0.61,
+    0.2,
+    0.89
+   ],
+   "model": "desk_lamp_arm_01",
+   "lift": 0.55,
+   "yawOffset": 90
+  }
+ ],
+ "start": [
+  {
+   "room": "living",
+   "id": "rug",
+   "x": -1.3,
+   "z": -0.05,
+   "yaw": 90
+  },
+  {
+   "room": "living",
+   "id": "sofa-fabric",
+   "x": -2.28,
+   "z": -0.05,
+   "yaw": 90
+  },
+  {
+   "room": "living",
+   "id": "coffee-long",
+   "x": -1.3,
+   "z": -0.05,
+   "yaw": 90
+  },
+  {
+   "room": "living",
+   "id": "side-table",
+   "x": -2.35,
+   "z": 1.2,
+   "yaw": 90
+  },
+  {
+   "room": "living",
+   "id": "lamp",
+   "x": -2.35,
+   "z": 1.2,
+   "yaw": 90
+  },
+  {
+   "room": "living",
+   "id": "plant",
+   "x": -2.3,
+   "z": -1.35,
+   "yaw": 0
+  },
+  {
+   "room": "living",
+   "id": "armchair",
+   "x": 1.45,
+   "z": -1.05,
+   "yaw": -40
+  },
+  {
+   "room": "living",
+   "id": "sideboard",
+   "x": 0.95,
+   "z": 1.26,
+   "yaw": 180
+  },
+  {
+   "room": "bedroom",
+   "id": "bed",
+   "x": -2.05,
+   "z": -0.82,
+   "yaw": 0
+  },
+  {
+   "room": "bedroom",
+   "id": "nightstand",
+   "x": -0.98,
+   "z": -1.65,
+   "yaw": 0
+  },
+  {
+   "room": "bedroom",
+   "id": "lounge",
+   "x": -2.2,
+   "z": 0.9,
+   "yaw": 170
+  },
+  {
+   "room": "bedroom",
+   "id": "drawers",
+   "x": 0.75,
+   "z": -1.62,
+   "yaw": 0
+  },
+  {
+   "room": "bedroom",
+   "id": "desk",
+   "x": 0.75,
+   "z": 1.3,
+   "yaw": 180
+  },
+  {
+   "room": "bedroom",
+   "id": "plant",
+   "x": 1.8,
+   "z": -1.5,
+   "yaw": 0
+  },
+  {
+   "room": "dining",
+   "id": "dining-table",
+   "x": -1.45,
+   "z": -0.3,
+   "yaw": 0
+  },
+  {
+   "room": "dining",
+   "id": "dining-chair",
+   "x": -1.75,
+   "z": -0.98,
+   "yaw": 0
+  },
+  {
+   "room": "dining",
+   "id": "dining-chair",
+   "x": -1.15,
+   "z": -0.98,
+   "yaw": 0
+  },
+  {
+   "room": "dining",
+   "id": "dining-chair",
+   "x": -1.75,
+   "z": 0.38,
+   "yaw": 180
+  },
+  {
+   "room": "dining",
+   "id": "dining-chair",
+   "x": -1.15,
+   "z": 0.38,
+   "yaw": 180
+  },
+  {
+   "room": "dining",
+   "id": "sofa-leather",
+   "x": 1.2,
+   "z": -1.3,
+   "yaw": 0
+  },
+  {
+   "room": "dining",
+   "id": "display",
+   "x": 0.8,
+   "z": 1.25,
+   "yaw": 180
+  },
+  {
+   "room": "dining",
+   "id": "plant",
+   "x": -2.35,
+   "z": 1.13,
+   "yaw": 0
+  }
+ ]
+}

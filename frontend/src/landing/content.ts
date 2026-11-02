@@ -1,6 +1,7 @@
 // All landing page copy and data. Statuses must stay truthful: move an item to "Working" only after it runs.
 
 export type Status = "Working" | "Testing" | "Next";
+export type Mark = "yes" | "part" | "no" | "unknown";
 
 export const NAV_LINKS = [
   ["Problem", "#problem"],
@@ -12,102 +13,110 @@ export const NAV_LINKS = [
 ] as const;
 
 export const HERO_SLIDES = [
-  { src: "/landing/hero-1.jpg", label: "Room 01 / Sample sofa", alt: "A pale fabric sofa in an old sunlit room with a brick-red floor" },
-  { src: "/landing/hero-2.jpg", label: "Room 02 / Sample sofa", alt: "The same sofa in front of a white tiled fireplace" },
-  { src: "/landing/hero-3.jpg", label: "Room 03 / Sample sofa", alt: "A dark leather sofa in a bright room with a pale wood floor" },
-  { src: "/landing/hero-4.jpg", label: "Room 04 / Sample sofa", alt: "A sofa on a tiled floor in a warm, empty house" },
+  { src: "/landing/hero-lounge.webp", label: "Sun lounge", alt: "A bright lounge with striped armchairs, a sofa, a chandelier and a wood stove" },
+  { src: "/landing/hero-suite.webp", label: "Hotel suite", alt: "A white bed framed by dark wood cabinets and pendant lights" },
+  { src: "/landing/hero-kitchen.webp", label: "Kitchen", alt: "A pale wood kitchen with open shelves and pendant lamps" },
+  { src: "/landing/hero-reading.webp", label: "Reading room", alt: "Leather armchairs on a terrazzo floor beside tall arched doors" },
 ];
 
 export const STATS = [
-  {
-    value: "62%",
-    text: "of furniture shoppers find it hard to picture how a piece will look at home.",
-    source: "3D Cloud / Provoke Insights",
-    href: "https://www.furnituretoday.com/technology/3d-cloud-release-study-linking-3d-visualization-and-customer-satisfaction",
-  },
-  {
-    value: "60%",
-    text: "say they have bought furniture online that turned out to be the wrong size.",
-    source: "Interiors Monthly",
-    href: "https://interiorsmonthly.co.uk/shoppers-expect-furniture-stores-to-pay-for-buy-try-return/",
-  },
-  {
-    value: "19–23%",
-    text: "is the reported return rate for furniture bought online.",
-    source: "Eightx benchmark",
-    href: "https://eightx.co/blog/average-furniture-and-home-return-rate-benchmarks",
-  },
+  { value: "62%", text: "of furniture shoppers find it hard to picture how a piece will look at home.", ref: 1 },
+  { value: "60%", text: "say they have bought furniture online that turned out to be the wrong size.", ref: 2 },
+  { value: "19–23%", text: "is the reported return rate for furniture bought online.", ref: 3 },
+];
+
+export const STAT_SOURCES = [
+  { label: "3D Cloud / Provoke Insights survey, Furniture Today", href: "https://www.furnituretoday.com/technology/3d-cloud-release-study-linking-3d-visualization-and-customer-satisfaction" },
+  { label: "Interiors Monthly", href: "https://interiorsmonthly.co.uk/shoppers-expect-furniture-stores-to-pay-for-buy-try-return/" },
+  { label: "Eightx 2025 benchmark", href: "https://eightx.co/blog/average-furniture-and-home-return-rate-benchmarks" },
 ];
 
 export const STEPS = [
-  {
-    number: "01",
-    title: "Start with the real sofa",
-    body: "Paste a listing or type the size from it. You confirm width, depth and height. Anything missing stays missing until you fill it in.",
-  },
-  {
-    number: "02",
-    title: "Show us the corner",
-    body: "Take three to six overlapping photos or one short video. Blurry, dark and duplicate shots get flagged with a specific retake.",
-  },
-  {
-    number: "03",
-    title: "Build the room",
-    body: "Your measurements and answers build a simple floor, walls and obstacles. Turning the photos directly into geometry is the piece we are building next.",
-  },
-  {
-    number: "04",
-    title: "Move it until it works",
-    body: "Drag and rotate a model held to the confirmed size. See what it overlaps and how much room is left, then save the layout that works.",
-  },
+  { title: "Start with the real piece", body: "Paste a listing or type the size from it. You confirm width, depth and height. Anything missing stays missing until you fill it in.", image: "/landing/photo-living.webp", alt: "A bright living room with a blue sofa and a parquet floor" },
+  { title: "Show us the room", body: "Take a few overlapping photos or one short video. Blurry, dark and duplicate shots get flagged with a specific retake.", image: "/landing/photo-bedroom.webp", alt: "A sunlit bedroom with sheer curtains" },
+  { title: "Set the true scale", body: "Your measurements build the floor, walls and obstacles. Turning your own photos straight into geometry is what we are building next.", image: "/landing/photo-table.webp", alt: "A long dining table with white chairs in a bright room" },
+  { title: "Move it until it works", body: "Drag and rotate pieces held to their true size. See what they overlap and how much room is left, then keep the layout that works.", image: "/landing/photo-warm.webp", alt: "A bed framed by warm wooden panels and a sheer curtain" },
 ];
 
-export const FEATURES: { title: string; body: string; status: Status; image: string; alt: string }[] = [
-  { title: "True to size", body: "The sofa model always matches the width, depth and height you confirmed, however you move it.", status: "Working", image: "/landing/f-size.jpg", alt: "Front view of a pale sofa" },
-  { title: "Drag and rotate", body: "Move it across the floor by touch or mouse. Dragging runs in the browser and costs no model call.", status: "Working", image: "/landing/f-move.jpg", alt: "A sofa turned at an angle in an empty room" },
-  { title: "Overlap and clearance", body: "See when it hits a wall or radiator, and how far it sits from the nearest known object.", status: "Working", image: "/landing/f-clearance.jpg", alt: "A sofa close to a wall and window" },
-  { title: "Layouts that stay", body: "Save an arrangement and come back to it. Reloading restores it without building anything again.", status: "Working", image: "/landing/f-save.jpg", alt: "A sofa turned toward a window, seen from a standing height" },
-  { title: "Guided capture", body: "Plain instructions for each shot, with checks for blur, darkness and duplicates as you go.", status: "Working", image: "/landing/f-capture.jpg", alt: "An empty corner of a room with a window" },
-  { title: "Honest labels", body: "Estimated, assisted and approximate are always marked. Space we have not seen is never shown as free.", status: "Working", image: "/landing/f-labels.jpg", alt: "Close view of a sofa's carved frame and fabric" },
-  { title: "Private by default", body: "Location data is stripped from photos, sessions are isolated, and one tap deletes everything.", status: "Working", image: "/landing/f-private.jpg", alt: "Light falling through a window in an empty room" },
-  { title: "Any sofa", body: "Manual entry already works with any listing. Automatic reading of a pasted link is built and being tested on real shops.", status: "Testing", image: "/landing/f-any.jpg", alt: "A dark leather sofa in a bright room" },
+export const FEATURES: { icon: "ruler" | "move" | "gauge" | "compass" | "layers" | "shield"; title: string; body: string; status: Status }[] = [
+  { icon: "ruler", title: "True to size", body: "Every piece keeps its real width, depth and height however you move it.", status: "Working" },
+  { icon: "move", title: "Move, turn, add, remove", body: "Direct control by touch or mouse, in the browser, with no model call for each drag.", status: "Working" },
+  { icon: "gauge", title: "Numbers on every piece", body: "Tap anything to see its floor share, nearest wall, and how much clear space it leaves in front.", status: "Working" },
+  { icon: "compass", title: "An architect's checks", body: "Routes, seating distances and bed access reviewed against common planning rules.", status: "Working" },
+  { icon: "layers", title: "Inside, model and plan", body: "Stand in a photographed room, then pull back to the whole apartment or its floor plan.", status: "Working" },
+  { icon: "shield", title: "Private by default", body: "Location data is stripped from photos, sessions are isolated, and one tap deletes everything.", status: "Working" },
 ];
 
 export const ROADMAP: { title: string; body: string; status: Status }[] = [
-  { title: "Style previews", body: "Ask for a look, such as warm Japandi, and see your current view restyled by Muse Image. Decoration only; size still comes from the plan.", status: "Testing" },
-  { title: "AI questions about your photos", body: "Muse Spark reads the photos and asks about the boundaries, obstacles and orientation it finds unclear.", status: "Testing" },
-  { title: "Photos to 3D", body: "VGGT recovers cameras, depth and points from your photos, so walls and floor come from the room itself.", status: "Next" },
-  { title: "Object segmentation", body: "SAM picks out furniture and obstacles in the photos.", status: "Next" },
-  { title: "Your sofa's real shape", body: "SAM 3D Objects could rebuild the listed product instead of using a sample shape held to its size.", status: "Next" },
+  { title: "AI architect", body: "Muse Spark reads the measured layout and writes advice in an architect's voice.", status: "Testing" },
+  { title: "Reading any listing", body: "A pasted link becomes a confirmed size. Manual entry already works; shops are being tested.", status: "Testing" },
+  { title: "Style previews", body: "Ask for a look and see the current view restyled by Muse Image. Decoration only.", status: "Testing" },
+  { title: "Your photos to 3D", body: "VGGT recovers cameras and depth, so walls and floor come from your own room.", status: "Next" },
+  { title: "Object segmentation", body: "SAM picks out the furniture and obstacles already standing in your photos.", status: "Next" },
 ];
 
-export const STACK: { layer: string; tool: string; role: string; status: Status }[] = [
-  { layer: "Interface", tool: "React, TypeScript, Vite", role: "Phone-first product flow", status: "Working" },
-  { layer: "3D editor", tool: "Three.js", role: "Dragging, rotation, views and placement checks", status: "Working" },
-  { layer: "API", tool: "FastAPI", role: "Sessions, guarded uploads, background builds", status: "Working" },
-  { layer: "Geometry", tool: "trimesh, Blender", role: "Room and sofa assets held to real dimensions", status: "Working" },
-  { layer: "Storage", tool: "Postgres, S3 API", role: "Private session data and files", status: "Working" },
-  { layer: "Reading", tool: "Muse Spark Open on Baseten", role: "Listings, photos and useful questions", status: "Testing" },
-  { layer: "Rendering", tool: "Muse Image on Meta Model API", role: "Style previews on request", status: "Testing" },
-  { layer: "Reconstruction", tool: "VGGT on Modal", role: "Cameras, depth and points from photos", status: "Next" },
-  { layer: "Segmentation", tool: "SAM 3.1 on Meta Model API", role: "Objects in the room", status: "Next" },
+export interface Tech { name: string; icon?: "react" | "typescript" | "vite" | "three" | "python" | "fastapi" | "postgres" | "docker" | "blender" | "meta" | "supabase" | "render"; mono?: string }
+
+export const STACK_ROWS: Tech[][] = [
+  [
+    { name: "Muse Spark", icon: "meta" },
+    { name: "Muse Image", icon: "meta" },
+    { name: "SAM 3.1", icon: "meta" },
+    { name: "VGGT", mono: "Vg" },
+    { name: "Baseten", mono: "Ba" },
+    { name: "Modal", mono: "Mo" },
+    { name: "Blender", icon: "blender" },
+    { name: "trimesh", mono: "Tm" },
+    { name: "Poly Haven", mono: "PH" },
+  ],
+  [
+    { name: "React", icon: "react" },
+    { name: "TypeScript", icon: "typescript" },
+    { name: "Three.js", icon: "three" },
+    { name: "Vite", icon: "vite" },
+    { name: "Python", icon: "python" },
+    { name: "FastAPI", icon: "fastapi" },
+    { name: "PostgreSQL", icon: "postgres" },
+    { name: "Supabase", icon: "supabase" },
+    { name: "Docker", icon: "docker" },
+    { name: "Render", icon: "render" },
+  ],
 ];
 
-export const COMPARE_COLUMNS = ["Roomset", "IKEA Kreativ", "Wayfair View in Room", "Planner 5D", "RoomGPT"];
+export const COMPARE_COLUMNS = ["Any listing", "Your real room", "True product size", "Move it in 3D", "Overlap and clearance", "Stand inside the room", "Layout advice", "Phone browser"];
 
-export const COMPARE_ROWS: { label: string; cells: string[] }[] = [
-  { label: "Which furniture", cells: ["Any sofa you can get the size of", "IKEA range", "Wayfair range", "Its own catalog", "Generated, not a chosen product"] },
-  { label: "Your room comes from", cells: ["Your measurements. Photos next", "A scan in the IKEA app", "A photo or live camera", "A plan you draw", "One photo"] },
-  { label: "Real product size", cells: ["Yes, confirmed by you", "Yes", "Yes", "Yes", "No"] },
-  { label: "Move it afterwards", cells: ["Yes, in 3D", "Yes", "Yes", "Yes, in 3D", "No, generate again"] },
-  { label: "Shows overlap and clearance", cells: ["Yes", "Not its focus", "Not its focus", "By eye, against your plan", "No"] },
-  { label: "Runs in a phone browser", cells: ["Yes", "Scanning needs the app", "Needs the app", "Web and app", "Yes"] },
+export const COMPARE_ROWS: { name: string; detail: string; refs: number[]; marks: Mark[]; us?: boolean }[] = [
+  { name: "Roomset", detail: "Any sofa you can get the size of", refs: [], marks: ["yes", "part", "yes", "yes", "yes", "part", "part", "yes"], us: true },
+  { name: "IKEA Kreativ", detail: "Scan a room, place IKEA furniture", refs: [1, 2], marks: ["no", "yes", "yes", "yes", "unknown", "unknown", "unknown", "part"] },
+  { name: "Wayfair View in Room", detail: "AR and room photos for its own range", refs: [3, 4], marks: ["no", "yes", "yes", "yes", "unknown", "no", "unknown", "part"] },
+  { name: "Planner 5D", detail: "Measurement-first floor planning", refs: [5], marks: ["no", "no", "yes", "yes", "part", "unknown", "unknown", "yes"] },
+  { name: "RoomGPT", detail: "One photo, generated restyles", refs: [6], marks: ["no", "yes", "no", "no", "no", "no", "no", "yes"] },
 ];
 
-export const COMPARE_NOTE =
-  "Based on public product pages and reviews read in November 2026. These products change, so check them before relying on this table.";
+export const COMPARE_REFS = [
+  { label: "IKEA: scanning a room in Kreativ", href: "https://www.ikea.com/gb/en/customer-service/knowledge/articles/250fg37g-2498-40gg-916c-f27d354683f0.html" },
+  { label: "Pickr: IKEA Kreativ", href: "https://www.pickr.com.au/news/2024/ikea-takes-augmented-reality-to-2-0-with-kreativ-ai/" },
+  { label: "About Wayfair: augmented reality", href: "https://aboutwayfair.com/augmented-reality-with-a-purpose" },
+  { label: "Engadget: Wayfair AR and 3D tools", href: "https://www.engadget.com/2019/11/14/wayfair-shopping-app-ar/" },
+  { label: "Krea: AI interior tools compared", href: "https://www.krea.ai/blog/8-best-ai-interior-design-tools-in-2026-compared" },
+  { label: "Toolradar: RoomGPT", href: "https://toolradar.com/tools/roomgpt" },
+];
 
 export const TEAM = [
-  { name: "Huỳnh Khánh Tường", role: "Software engineering", focus: "Product flow, backend, hosting and submission", github: "khanhtuongnakitomo" },
-  { name: "Long Quan (Bennedict) Ton", role: "AI and 3D engineering", focus: "Photo analysis, reconstruction, geometry and the 3D editor", github: "BennedictQuanTon" },
+  {
+    name: "Long Quan Ton",
+    role: "AI and 3D engineering",
+    focus: "Photo analysis, reconstruction, geometry and the 3D studio.",
+    photo: "/team/quan.jpg",
+    links: [["GitHub", "https://github.com/BennedictQuanTon"], ["LinkedIn", "https://linkedin.com/in/bennedictquanton"]],
+  },
+  {
+    name: "Khanh Tuong Huynh",
+    role: "Software engineering",
+    focus: "Product flow, backend, hosting and submission.",
+    photo: "/team/tuong.jpg",
+    links: [["GitHub", "https://github.com/khanhtuongnakitomo"]],
+  },
 ];
+
+export const CREDITS = "Rooms, sofas and furniture: Poly Haven, CC0. Interior photographs: StockSnap, CC0. Furniture is rendered into the room photographs.";

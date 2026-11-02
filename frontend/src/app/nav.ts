@@ -2,7 +2,7 @@
 
 const EVENT = "roomset:navigate";
 
-export const APP_PATH = import.meta.env.VITE_TRY_URL ?? "/app";
+export const APP_PATH = import.meta.env.VITE_TRY_URL ?? "/studio";
 
 export function navigate(path: string): void {
   window.dispatchEvent(new CustomEvent(EVENT, { detail: path }));
