@@ -27,7 +27,8 @@ export function useSheetDrag(onDown: () => void, onUp?: () => void): SheetDrag {
 
   return {
     onPointerDown: (event) => {
-      if (event.pointerType === "mouse" || (event.target as HTMLElement).closest("button")) return;
+      if (!window.matchMedia("(max-width: 760px) and (orientation: portrait)").matches) return;
+      if ((event.target as HTMLElement).closest("button")) return;
       start.current = event.clientY;
       event.currentTarget.setPointerCapture(event.pointerId);
       const panel = panelOf(event);

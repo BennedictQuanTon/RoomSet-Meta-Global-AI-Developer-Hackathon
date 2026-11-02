@@ -22,7 +22,7 @@ img { max-width: 100%; display: block; }
 .plan-nav > a { display: block; padding: 5px 0; }
 .plan-nav > a img { height: 34px; width: auto; }
 .plan-steps { grid-row: 2; grid-column: 1 / -1; justify-self: center; display: flex; gap: 2px; margin: 0; padding: 4px; list-style: none; border-radius: 999px; background: var(--rs-linen); }
-.plan-steps li { display: flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 12px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--rs-muted); }
+.plan-steps li { white-space: nowrap; display: flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 12px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--rs-muted); }
 .plan-steps li span { display: none; }
 .plan-steps .is-done { color: var(--rs-clay-text); }
 .plan-steps .is-active { padding: 0 16px; background: var(--rs-forest); color: var(--rs-ivory); }
@@ -187,7 +187,8 @@ img { max-width: 100%; display: block; }
 /* A phone on its side: the room and its controls sit next to each other. */
 @media (max-width: 999px) and (orientation: landscape) {
   .plan-nav { grid-template-columns: auto 1fr auto; padding-block: 4px; }
-  .plan-steps { grid-row: auto; grid-column: 2; width: auto; }
+  .plan-steps { grid-row: auto; grid-column: 2; width: auto; justify-self: center; }
+  .plan-steps li:not(.is-active) span { display: none; }
   .plan-stage { min-height: 120px; }
   .result { flex-direction: row; }
   .editor-frame { flex: 1; height: auto; min-height: 0; min-width: 0; }

@@ -186,7 +186,7 @@ export function Studio() {
     if (!instance || !ready) return;
     if (!selectedUid) setExpanded(false);
     const sheet = document.querySelector<HTMLElement>(".st-inspector");
-    const onPhone = window.matchMedia("(max-width: 760px)").matches;
+    const onPhone = window.matchMedia("(max-width: 760px) and (orientation: portrait)").matches;
     instance.revealAbove(selectedUid, sheet && onPhone ? window.innerHeight - sheet.offsetHeight : null);
   }, [selectedUid, expanded, panel, ready]);
 

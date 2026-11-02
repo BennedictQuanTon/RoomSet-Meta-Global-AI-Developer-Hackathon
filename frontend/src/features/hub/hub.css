@@ -39,12 +39,20 @@
   .hub-door { flex: none; display: block; min-height: max(84svh, 620px); }
   .hub-door:last-child { min-height: max(76svh, 520px); }
   /* The whole apartment stays in view above the text, on the image's own background. */
-  .hub-door:first-child img { inset: calc(44px + env(safe-area-inset-top)) 0 auto; height: auto; aspect-ratio: 8 / 9; max-width: 100%; object-fit: contain; object-position: top; transform: none; }
+  .hub-door:first-child img { inset: calc(44px + env(safe-area-inset-top)) auto auto 50%; width: min(100%, 58svh); height: auto; aspect-ratio: 8 / 9; object-fit: contain; object-position: top; transform: translateX(-50%); }
   .hub-shade { background: linear-gradient(to top, rgba(14, 22, 18, .94) 0%, rgba(14, 22, 18, .82) 42%, rgba(14, 22, 18, .12) 68%, rgba(14, 22, 18, .12) 100%); }
   .hub-index, .hub-line { display: none; }
   .hub-points { flex-wrap: wrap; gap: 8px 22px; }
   .hub-body { white-space: normal; }
   .hub-action { width: 100%; justify-content: space-between; }
+}
+/* A phone on its side: the picture moves beside the text. */
+@media (max-width: 999px) and (orientation: landscape) {
+  .hub-door, .hub-door:last-child { min-height: 460px; }
+  .hub-door:first-child img { inset: 0 0 auto auto; width: 46%; transform: none; }
+  .hub-title { font-size: 44px; }
+  .hub-action { width: auto; justify-content: flex-start; }
+  .hub-copy { gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hub-door, .hub-door img { animation: none; transition: none; transform: none; }

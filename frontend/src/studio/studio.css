@@ -100,7 +100,7 @@
 @keyframes st-sheet-in { from { transform: translateY(100%); } to { transform: none; } }
 
 /* Phones held upright: rooms on top, a tool bar under the thumb, panels as sheets. */
-@media (max-width: 760px) {
+@media (max-width: 760px) and (orientation: portrait) {
   .st-top { grid-template-columns: 1fr auto; padding: calc(6px + env(safe-area-inset-top)) 12px 18px; gap: 4px 10px; }
   .st-rooms { grid-column: 1 / -1; grid-row: 2; justify-self: stretch; }
   .st-rooms button { flex: 1; min-height: 44px; padding: 0 4px; font-size: 14px; white-space: nowrap; }
@@ -136,6 +136,14 @@
 /* A phone on its side: one thin top bar, tools on the left, panels on the right. */
 @media (max-height: 500px) {
   .st-top { padding: calc(4px + env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 12px max(12px, env(safe-area-inset-left)); }
+  .st-logo { display: block; padding: 7px 0; }
+  .st-logo img { height: 26px; }
+  .st-rooms button { min-height: 40px; padding: 0 12px; }
+  .st-end { gap: 0; }
+  .st-end a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
+  .st-end a span, .st-end-arrow { display: none; }
+  .st-end-icon { display: block; }
+  .st-label span { display: none; }
   .st-rail { left: max(10px, env(safe-area-inset-left)); top: 54px; transform: none; display: grid; grid-template-columns: 1fr 1fr; padding: 3px; }
   .st-rail-gap, .st-zoom, .st-rail .st-icon[aria-label^="Zoom"] { display: none; }
   .st-rail .st-icon { width: 44px; height: 44px; }
