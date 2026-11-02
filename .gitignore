@@ -17,10 +17,33 @@ backend/data/
 
 # Internal notes and agent config: stay on this machine
 CLAUDE.md
+AGENTS.md
+GEMINI.md
 .claude/
+.cursor/
 Agent.MD
-DESIGN.md
-DESIGN 2.md
+agent.md
+DESIGN*.md
+*.private.md
+*.local.md
+PR_DESCRIPTION.md
+NOTES.md
+notes/
+private/
+
+# Keys and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+secrets*
+credentials*
+service-account*.json
+.modal.toml
+.vercel/
+.netrc
+*.log
 
 # Archives
 *.zip
