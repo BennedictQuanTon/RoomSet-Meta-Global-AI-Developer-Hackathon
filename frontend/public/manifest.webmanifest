@@ -1,0 +1,17 @@
+{
+  "name": "Roomset",
+  "short_name": "Roomset",
+  "description": "Plan furniture in your space with an editable 3D room plan.",
+  "id": "/start",
+  "start_url": "/start",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#273D32",
+  "theme_color": "#273D32",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

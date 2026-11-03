@@ -1,0 +1,5 @@
+# Versions this converter was last run with.
+usd-core==26.11
+trimesh==5.2.0
+pillow==13.0.0
+numpy==2.4.6

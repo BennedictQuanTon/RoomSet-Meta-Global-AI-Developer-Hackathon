@@ -1,0 +1,25 @@
+.env
+.env.*
+.git
+.claude
+.venv
+node_modules
+data
+frontend/dist
+*.zip
+backend
+worker
+docs
+proposal
+contracts/*.md
+brand/assets
+brand/exports
+brand/templates
+Dockerfile
+render.yaml
+Makefile
+Agent.MD
+CLAUDE.md
+DESIGN.md
+DESIGN 2.md
+tools

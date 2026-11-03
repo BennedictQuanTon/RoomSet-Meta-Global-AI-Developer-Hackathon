@@ -1,3 +1,53 @@
 .env
 .env.*
 !.env.example
+
+# Dependencies and builds
+node_modules/
+frontend/dist/
+/dist/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Local runtime data (home photos live here)
+.run/
+data/
+backend/data/
+
+# Internal notes and agent config: stay on this machine
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.claude/
+.cursor/
+Agent.MD
+agent.md
+DESIGN*.md
+*.private.md
+*.local.md
+PR_DESCRIPTION.md
+NOTES.md
+notes/
+private/
+
+# Keys and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+secrets*
+credentials*
+service-account*.json
+.modal.toml
+.vercel/
+.netrc
+*.log
+
+# Archives
+*.zip
+
+.DS_Store

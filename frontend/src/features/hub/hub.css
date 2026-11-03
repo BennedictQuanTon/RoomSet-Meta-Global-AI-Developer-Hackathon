@@ -1,0 +1,64 @@
+/* Two doors, edge to edge, with matching lines of text. The hovered photograph settles. */
+
+.hub { position: fixed; inset: 0; overflow: hidden; background: var(--rs-forest); color: var(--rs-ivory); font-family: var(--rs-font-body); }
+.hub em { font-style: italic; color: #eeb398; }
+
+.hub-title-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.hub-line { position: absolute; z-index: 3; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(247, 244, 237, .35); pointer-events: none; }
+.hub-top { position: absolute; z-index: 5; inset: 0 0 auto; display: flex; align-items: center; padding: calc(14px + env(safe-area-inset-top)) clamp(20px, 4vw, 64px) 40px; pointer-events: none; }
+.hub-top > * { pointer-events: auto; }
+.hub-top a { display: block; padding: 6px 0; }
+.hub-top img { display: block; height: 36px; width: auto; }
+/* The third way in: furniture placed in your own room through the camera. */
+.hub-top .hub-ar { display: inline-flex; align-items: center; gap: 9px; margin-left: auto; min-height: 44px; padding: 0 8px 0 16px; border: 1px solid rgba(247, 244, 237, .5); border-radius: 999px; background: rgba(20, 30, 25, .35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--rs-ivory); font-size: 15px; font-weight: 500; text-decoration: none; transition: background 300ms, color 300ms, border-color 300ms; }
+.hub-ar span { padding: 4px 9px; border-radius: 999px; background: #eeb398; color: var(--rs-forest); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+.hub-ar:focus-visible { outline: 3px solid #eeb398; outline-offset: 3px; }
+
+.hub-doors { height: 100%; display: flex; }
+.hub-door { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; color: var(--rs-ivory); text-decoration: none; background: var(--rs-forest); animation: hub-enter 1.1s cubic-bezier(.16, 1, .3, 1) both; }
+.hub-door:nth-child(2) { animation-delay: 90ms; }
+.hub-door img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); filter: brightness(.74); transition: transform 1.6s cubic-bezier(.16, 1, .3, 1); will-change: transform; }
+.hub-door:first-child { background: rgb(27, 42, 35); }
+.hub-door:first-child img { filter: brightness(.92); }
+.hub-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14, 22, 18, .9) 0%, rgba(14, 22, 18, .55) 42%, rgba(14, 22, 18, .24) 70%, rgba(14, 22, 18, .34) 100%); transition: opacity 700ms ease; }
+.hub-index { position: absolute; top: calc(92px + env(safe-area-inset-top)); right: clamp(20px, 4vw, 64px); font: 500 22px var(--rs-font-display); font-variant-numeric: lining-nums; opacity: .9; }
+.hub-copy { position: absolute; left: clamp(20px, 4vw, 64px); right: clamp(20px, 3vw, 48px); bottom: calc(clamp(28px, 6svh, 60px) + env(safe-area-inset-bottom)); display: grid; justify-items: start; gap: 14px; }
+.hub-kicker { font-size: 15px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: #eeb398; }
+.hub-title { white-space: nowrap; font: 500 clamp(44px, 5.4vw, 88px)/1 var(--rs-font-display); letter-spacing: -.015em; }
+.hub-body { white-space: nowrap; font-size: clamp(18px, 1.4vw, 21px); line-height: 1.4; color: rgba(247, 244, 237, .88); }
+.hub-points { display: flex; gap: 22px; padding-top: 14px; margin-top: 4px; border-top: 1px solid rgba(247, 244, 237, .3); font-size: 15px; }
+.hub-points > span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.hub-action { display: inline-flex; align-items: center; gap: 12px; margin-top: 12px; padding: 14px 22px; border: 1px solid rgba(247, 244, 237, .75); border-radius: 8px; font-size: 17px; font-weight: 500; transition: background 300ms, color 300ms, border-color 300ms; }
+
+.hub-door:focus-visible { outline: 3px solid #eeb398; outline-offset: -6px; }
+@media (hover: hover) {
+  .hub-ar:hover { background: var(--rs-ivory); border-color: var(--rs-ivory); color: var(--rs-forest); }
+  .hub-door:hover img { transform: scale(1); }
+  .hub-door:hover .hub-action { background: var(--rs-ivory); border-color: var(--rs-ivory); color: var(--rs-forest); }
+}
+@keyframes hub-enter { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 999px) {
+  .hub { position: relative; inset: auto; min-height: 100svh; overflow: visible; }
+  .hub-doors { flex-direction: column; height: auto; }
+  .hub-door { flex: none; display: block; min-height: max(84svh, 620px); }
+  .hub-door:last-child { min-height: max(76svh, 520px); }
+  /* The whole apartment stays in view above the text, on the image's own background. */
+  .hub-door:first-child img { inset: calc(44px + env(safe-area-inset-top)) auto auto 50%; width: min(100%, 58svh); height: auto; aspect-ratio: 8 / 9; object-fit: contain; object-position: top; transform: translateX(-50%); }
+  .hub-shade { background: linear-gradient(to top, rgba(14, 22, 18, .94) 0%, rgba(14, 22, 18, .82) 42%, rgba(14, 22, 18, .12) 68%, rgba(14, 22, 18, .12) 100%); }
+  .hub-index, .hub-line { display: none; }
+  .hub-points { flex-wrap: wrap; gap: 8px 22px; }
+  .hub-body { white-space: normal; }
+  .hub-action { width: 100%; justify-content: space-between; }
+}
+/* A phone on its side: the picture moves beside the text. */
+@media (max-width: 999px) and (orientation: landscape) {
+  .hub-door, .hub-door:last-child { min-height: 460px; }
+  .hub-door:first-child img { inset: 0 0 auto auto; width: 46%; transform: none; }
+  .hub-title { font-size: 44px; }
+  .hub-action { width: auto; justify-content: flex-start; }
+  .hub-copy { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-door, .hub-door img { animation: none; transition: none; transform: none; }
+}
