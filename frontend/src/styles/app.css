@@ -216,3 +216,42 @@ img { max-width: 100%; display: block; }
 @media (prefers-reduced-motion: reduce) {
   .plan-stage img, .plan-work-inner, .spin, .progress-bar span { animation: none; }
 }
+
+/* Product-specific furniture and room confirmation. */
+.sofa-options { border: 0; padding: 0; margin: 16px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.sofa-options legend { font-size: 1.1rem; margin-bottom: 16px; }
+.sofa-options label { display: flex; flex-direction: column; gap: 8px; font-size: .85rem; }
+.sofa-options .sofa-color { flex-direction: row; align-items: center; gap: 18px; grid-column: 1 / -1; }
+.sofa-color input { width: 70px; height: 42px; border: 1px solid #b4b9ab; border-radius: 6px; padding: 3px; background: transparent; cursor: pointer; }
+.product-preview, .product-reference, .room-diagram { margin: 20px 0; }
+.product-preview-stage { width: 100%; height: 300px; border-radius: 14px; overflow: hidden; touch-action: none; }
+.product-preview-stage canvas { display: block; }
+.product-preview figcaption, .product-reference figcaption, .room-diagram figcaption { font-size: .78rem; line-height: 1.5; color: #656c60; margin-top: 9px; }
+.product-reference img { display: block; max-width: 100%; max-height: 230px; object-fit: contain; border-radius: 10px; }
+.variant-history { display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #c9cebf; padding-top: 16px; }
+.room-diagram { max-width: 480px; background: #f4f0e7; padding: 14px; border-radius: 14px; }
+.room-diagram svg { width: 100%; display: block; }
+.room-diagram text { fill: #384535; font-family: inherit; font-size: 12px; }
+.room-photo-strip { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0; }
+.room-photo-strip img { width: 110px; height: 90px; object-fit: cover; border-radius: 8px; flex: 0 0 auto; }
+.obstacle-row { flex-wrap: wrap; }
+.obstacle-row .field { min-width: 110px; }
+@media (max-width: 600px) {
+  .product-preview-stage { height: 250px; }
+  .sofa-options { gap: 14px; }
+  .editor-panel .rs-button { white-space: normal; text-align: left; }
+}
+.photo-draft { border: 1px solid #b5bdab; padding: 18px; border-radius: 12px; margin: 20px 0; }
+.photo-draft summary { cursor: pointer; font-weight: 600; }
+.photo-draft > * + * { margin-top: 14px; }
+.anchor-photo { position: relative; cursor: crosshair; width: 100%; touch-action: manipulation; }
+.anchor-photo img { display: block; width: 100%; border-radius: 8px; }
+.anchor-marker { position: absolute; transform: translate(-50%, -50%); border-radius: 50%; background: #d9ae5f; border: 2px solid #fff; color: #18271d; width: 28px; height: 28px; display: grid; place-items: center; font-weight: 700; pointer-events: none; }
+.demo-steps { padding-left: 1.2rem; line-height: 1.7; }
+.demo-steps li + li { margin-top: 12px; }
+.nudge-controls { display: flex; gap: 10px; margin: 18px 0 8px; }
+.nudge-controls button { font-size: 24px; }
+.obstacle-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.obstacle-row > :first-child { grid-column: 1 / -1; }
+.obstacle-row .field { min-width: 0; }
+@media (min-width: 900px) { .obstacle-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
