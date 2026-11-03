@@ -21,7 +21,9 @@ The Hobby plan is free and limited to non-commercial, personal use.
 
 ## Testing on a phone through ngrok
 
-Point the tunnel at the production server, not the Vite dev server: `npm run build` in `frontend`, then `ngrok http 8000`. The dev server sends hundreds of unbundled files, which made pages hang through the tunnel. Rebuild after each change; the page caches files, so pull to refresh on the phone.
+Run `make phone` (or `./scripts/phone.sh`). It builds the app, starts the server on port 8000, opens an ngrok tunnel and prints the link to open on the phone. Run it again after changing code: it stops the previous run first. `make stop` (or `./scripts/stop.sh`) stops everything the project started, including `make dev`, and leaves other programs alone. Logs go to `.run/`.
+
+You need ngrok with an authtoken (`brew install ngrok`, then `ngrok config add-authtoken <token>`). The tunnel points at the production build, not the Vite dev server, because the dev server sends hundreds of unbundled files and pages hung through the tunnel. The page caches files, so pull to refresh on the phone after a new run.
 
 ## The full app
 

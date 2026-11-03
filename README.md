@@ -156,6 +156,8 @@ Everything under "Working, no keys needed" runs at this point. To turn on the AI
 | `make lint` | Ruff and TypeScript checks |
 | `make build` | Production frontend bundle |
 | `make image` | Single-container Docker image |
+| `make phone` | Build, start on :8000 and print an ngrok link for testing on a phone |
+| `make stop` | Stop everything the project started, including `make dev` and ngrok |
 
 ## Privacy
 

@@ -1,4 +1,4 @@
-.PHONY: setup dev backend frontend test lint build image
+.PHONY: setup dev backend frontend test lint build image phone stop
 
 setup:
 	cd backend && uv venv --python 3.11 .venv && uv pip install -e ".[dev]"
@@ -27,3 +27,11 @@ build:
 
 image:
 	docker build -t roomset .
+
+# Production build on :8000 with an ngrok link for testing on a phone.
+phone:
+	./scripts/phone.sh
+
+# Stops everything this project started, including make dev and ngrok.
+stop:
+	./scripts/stop.sh
