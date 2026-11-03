@@ -19,6 +19,10 @@ To add them later, deploy the server as below, then add this as the first entry 
 
 The Hobby plan is free and limited to non-commercial, personal use.
 
+## Testing on a phone through ngrok
+
+Point the tunnel at the production server, not the Vite dev server: `npm run build` in `frontend`, then `ngrok http 8000`. The dev server sends hundreds of unbundled files, which made pages hang through the tunnel. Rebuild after each change; the page caches files, so pull to refresh on the phone.
+
 ## The full app
 
 | Piece | Service | Free-tier limit to expect |
@@ -53,6 +57,8 @@ The container was measured at about 115 MB of RAM during a full session, with a 
 | `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | Supabase S3 key |
 | `BASETEN_API` | Optional. Enables AI reading |
 | `MUSE_API` | Optional. Enables style previews, $0.01 each on Meta credits |
+| `SPEND_LIMIT_USD` | Hard cap on all paid model calls, $10 by default. The ledger lives in `backend/data/spend.json`; on Render it resets when the disk does, so keep the cap low there |
+| `ASSEMBLYAI_API` | Optional. With `BASETEN_API`, turns on the voice assistant on `/ar`. Each question is one transcription and one Muse Spark call, capped at 6 a minute per person and 60 an hour in total |
 
 4. Deploy. Migrations run on start. Then check:
 

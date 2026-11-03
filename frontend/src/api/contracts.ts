@@ -106,6 +106,30 @@ export interface Capabilities {
   reconstruction: string;
   max_photos: number;
   min_photos: number;
+  /** Voice assistant on /ar: needs both speech and Muse Spark keys. Older servers omit it. */
+  assistant?: boolean;
+}
+
+export interface AssistantSuggestion {
+  kind: "set" | "piece";
+  id: string;
+  reason: string;
+}
+
+export interface AssistantHeard {
+  question: string;
+  language: string | null;
+  timings_ms: Record<string, number>;
+}
+
+export interface AssistantReply {
+  question: string;
+  language: string | null;
+  answer: string;
+  seen: string[];
+  suggestions: AssistantSuggestion[];
+  model: string;
+  timings_ms: Record<string, number>;
 }
 
 /** Rejects a scene that breaks the geometric contract, before the editor touches it. */

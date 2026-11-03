@@ -147,6 +147,7 @@ Everything under "Working, no keys needed" runs at this point. To turn on the AI
 |---|---|
 | `BASETEN_API` | AI listing and screenshot reading, and the AI architect |
 | `MUSE_API` | Style previews |
+| `ASSEMBLYAI_API` | With `BASETEN_API`, the voice assistant on `/ar` |
 
 | Command | What it does |
 |---|---|

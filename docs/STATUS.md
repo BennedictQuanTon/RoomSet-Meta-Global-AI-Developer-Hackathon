@@ -13,11 +13,16 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 | Install files, and the sample apartment and start page opening offline after one visit | Chromium with the network switched off |
 | AR at true size on iPhone: one converted catalog model opened in AR Quick Look and placed on a real floor | Opened by the owner on an iPhone 15 Pro through an ngrok tunnel, 3 Nov 2026 |
 | All 19 catalog models converted to USDZ within 3% of their catalog size; `/ar` and the studio link to them | `tools/usdz/build_usdz.py` size check, and a Chromium run with AR Quick Look support simulated |
+| Three room sets (8, 7 and 8 pieces) built as single USDZ scenes from the sample layouts, with name and size shown in the AR Quick Look banner | Converter output and a Chromium run with AR Quick Look support simulated. Not yet opened on the iPhone |
 | Same flow in the Docker image, with Postgres and S3 API, at 512 MB and 0.5 CPU | Local containers; S3 was the moto emulator |
 | Sofa GLB outer size equals confirmed dimensions; node scale stays 1 | Automated tests on trimesh output |
 | Blender builders match the same geometry contract | Run locally with `bpy` 4.2, not on Modal. They still output a box-style sofa; the default CPU builder uses the photoscanned model |
 | Landing page at `/`, Try button to the `/start` page, which leads to the studio and the planner, curtain transition | Chromium browser run against the production bundle |
 | Studio at `/studio`, opening on the whole apartment: 3D rooms with real photos projected on them, room, model and top-down views, drag kept on the measured floor, add, remove, reset, numbers per piece, rule-based review | Chromium browser run and unit tests; drag tested with a mouse |
+| Muse Spark on Baseten, live: the AI architect endpoint (7.6 s), and a photo plus a Vietnamese question with the assistant's prompt (10.8 s, answered in Vietnamese, suggestions all from the catalog, no sizes invented) | Real calls on 3 Nov 2026 from the dev machine |
+| Muse Image, live: one style preview from a screenshot (13.7 s) | Real call on 3 Nov 2026. The test image included the app's interface, which the model redrew with misspelt text; the app sends only the 3D view |
+| Voice assistant on `/ar`, live in Vietnamese and English: AssemblyAI heard both and detected the language; Muse Spark answered in the same language from a camera photo; the answer was read aloud with a matching voice | Real calls on 3 Nov 2026, including a phone browser through the ngrok tunnel with a recorded Vietnamese question: question on screen after 5.5 s, full answer after 12 to 13.6 s. Before tuning it took 23 to 34 s. Muse Spark varies from about 5 s to over 30 s on Baseten's side. Speech came from macOS text to speech, not a person, and no real iPhone yet |
+| Spending cap: every paid call reserves a cautious estimate first and stops at $10 in total, with daily call limits; ledger kept in `backend/data/spend.json` | Automated tests; the three live calls above were recorded at $0.08 |
 | One session cannot read another's data; uploads strip metadata; bad files fail safely | Automated tests |
 | Private addresses, redirects and DNS tricks are blocked by the URL guard | Automated tests with a mock network |
 
@@ -25,8 +30,6 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 
 | Piece | Note |
 |---|---|
-| Muse Spark on Baseten, including the AI architect | Request and parsing tested against a mock only. No key on the dev machine |
-| Muse Image edits | Request shape follows Meta's docs read on 2 Nov 2026. Tested against a mock only |
 | Real listing fetch over the internet | Only tested with a mock network. Shops may block it |
 | `SCENE_BUILDER=modal` and `worker/modal_app.py` | Never run on Modal |
 | Render and Supabase | Never deployed. Supabase's S3 endpoint is untested |

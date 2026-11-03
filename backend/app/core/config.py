@@ -29,6 +29,16 @@ class Settings(BaseSettings):
     muse_api: str = ""
     meta_base_url: str = "https://api.meta.ai/v1"
     muse_image_model: str = "muse-image-1.0"
+    assemblyai_api: str = ""
+    assemblyai_base_url: str = "https://api.assemblyai.com"
+    speech_timeout_s: float = 40.0
+
+    # Spending guard for every paid model, across restarts. See app/core/budget.py.
+    spend_limit_usd: float = Field(default=10.0, ge=0)
+    budget_file: str = "./data/spend.json"
+    daily_spark_calls: int = Field(default=200, ge=0)
+    daily_speech_calls: int = Field(default=150, ge=0)
+    daily_image_calls: int = Field(default=40, ge=0)
 
     scene_builder: Literal["local", "modal"] = "local"
     modal_app_name: str = "roomset-worker"
@@ -51,6 +61,10 @@ class Settings(BaseSettings):
     @property
     def image_enabled(self) -> bool:
         return bool(self.muse_api)
+
+    @property
+    def assistant_enabled(self) -> bool:
+        return bool(self.assemblyai_api and self.baseten_api)
 
 
 @lru_cache

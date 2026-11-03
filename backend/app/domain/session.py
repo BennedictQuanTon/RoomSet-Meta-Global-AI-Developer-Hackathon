@@ -54,3 +54,4 @@ class Capabilities(BaseModel):
     reconstruction: Literal["assisted"] = "assisted"
     max_photos: int
     min_photos: int
+    assistant: bool = False
