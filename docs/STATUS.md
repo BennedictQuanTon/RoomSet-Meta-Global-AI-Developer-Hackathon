@@ -11,6 +11,8 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 | Phone layouts on every page at 320, 375, 390 and 412 wide and held sideways: no sideways scroll, tap targets, 16 px inputs | Chromium device profiles, plus page loads in the WebKit engine |
 | Touch in the studio: tap to select, drag only a selected piece, finger orbit, sheets that swipe | Simulated touch in Chromium |
 | Install files, and the sample apartment and start page opening offline after one visit | Chromium with the network switched off |
+| AR at true size on iPhone: one converted catalog model opened in AR Quick Look and placed on a real floor | Opened by the owner on an iPhone 15 Pro through an ngrok tunnel, 3 Nov 2026 |
+| All 19 catalog models converted to USDZ within 3% of their catalog size; `/ar` and the studio link to them | `tools/usdz/build_usdz.py` size check, and a Chromium run with AR Quick Look support simulated |
 | Same flow in the Docker image, with Postgres and S3 API, at 512 MB and 0.5 CPU | Local containers; S3 was the moto emulator |
 | Sofa GLB outer size equals confirmed dimensions; node scale stays 1 | Automated tests on trimesh output |
 | Blender builders match the same geometry contract | Run locally with `bpy` 4.2, not on Modal. They still output a box-style sofa; the default CPU builder uses the photoscanned model |
@@ -30,6 +32,7 @@ Last updated 2 Nov 2026. Add a line here when a real provider call or job first 
 | Render and Supabase | Never deployed. Supabase's S3 endpoint is untested |
 | Vercel | `vercel.json` built from only the files Vercel would receive and tested locally against a stand-in for its routing rules. Never deployed |
 | Short-video capture | Code exists; not exercised in the browser run |
+| Scene Viewer AR on Android | Links are generated; never opened on an Android phone |
 | Camera and real-phone behavior | Touch was simulated in Chromium. No real iPhone or Android, so GPU memory, frame rate, home screen install and pinch are unconfirmed |
 
 ## Not built

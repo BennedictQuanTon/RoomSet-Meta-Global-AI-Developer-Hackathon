@@ -1,6 +1,6 @@
 // The doorway after "Try": two full-height rooms to walk into. Every part of the product starts here.
 
-import { ArrowUpRight, Box, Compass, Move, Ruler, ScanLine, Sofa, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, Box, Compass, Move, Ruler, ScanEye, ScanLine, Sofa, type LucideIcon } from "lucide-react";
 import { useEffect, type MouseEvent, type ReactNode } from "react";
 import { navigate } from "../../app/nav";
 import { loadAuth } from "../../app/sessionStore";
@@ -65,7 +65,10 @@ export function Hub() {
       <h1 className="hub-title-hidden">Where would you like to begin?</h1>
       <header className="hub-top">
         <a href="/" onClick={go("/")} aria-label="Roomset home"><img src="/brand/logo-light.png" alt="roomset" /></a>
-              </header>
+        <a className="hub-ar" href="/ar" onClick={go("/ar")}>
+          <ScanEye size={18} strokeWidth={1.5} aria-hidden="true" />In your room<span>AR</span>
+        </a>
+      </header>
       <span className="hub-line" aria-hidden="true" />
       <main className="hub-doors">
         <Door

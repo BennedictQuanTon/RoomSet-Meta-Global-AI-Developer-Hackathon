@@ -1,6 +1,7 @@
 """Application wiring: middleware, routes, startup recovery, and the built frontend."""
 
 import logging
+import mimetypes
 import threading
 import time
 import uuid
@@ -19,6 +20,9 @@ from app.core.logging import configure_logging, request_id
 from app.core.rate_limit import RateLimiter
 from app.services.pipeline import fail_interrupted_builds
 from app.services.retention import purge_expired, start_sweeper
+
+# AR Quick Look opens USDZ only with its own media type.
+mimetypes.add_type("model/vnd.usdz+zip", ".usdz")
 
 log = logging.getLogger("roomset")
 
