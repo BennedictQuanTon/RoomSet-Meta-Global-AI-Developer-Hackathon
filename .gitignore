@@ -13,6 +13,7 @@ __pycache__/
 .ruff_cache/
 
 # Local runtime data (home photos live here)
+.run/
 data/
 backend/data/
 

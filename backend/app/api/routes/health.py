@@ -42,4 +42,5 @@ def capabilities() -> Capabilities:
         scene_builder=settings.scene_builder,
         max_photos=settings.max_photos,
         min_photos=settings.min_photos,
+        assistant=settings.assistant_enabled,
     )

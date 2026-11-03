@@ -19,6 +19,12 @@ To add them later, deploy the server as below, then add this as the first entry 
 
 The Hobby plan is free and limited to non-commercial, personal use.
 
+## Testing on a phone through ngrok
+
+Run `make phone` (or `./scripts/phone.sh`). It builds the app, starts the server on port 8000, opens an ngrok tunnel and prints the link to open on the phone. Run it again after changing code: it stops the previous run first. `make stop` (or `./scripts/stop.sh`) stops everything the project started, including `make dev`, and leaves other programs alone. Logs go to `.run/`.
+
+You need ngrok with an authtoken (`brew install ngrok`, then `ngrok config add-authtoken <token>`). The tunnel points at the production build, not the Vite dev server, because the dev server sends hundreds of unbundled files and pages hung through the tunnel. The page caches files, so pull to refresh on the phone after a new run.
+
 ## The full app
 
 | Piece | Service | Free-tier limit to expect |
@@ -53,6 +59,8 @@ The container was measured at about 115 MB of RAM during a full session, with a 
 | `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | Supabase S3 key |
 | `BASETEN_API` | Optional. Enables AI reading |
 | `MUSE_API` | Optional. Enables style previews, $0.01 each on Meta credits |
+| `SPEND_LIMIT_USD` | Hard cap on all paid model calls, $10 by default. The ledger lives in `backend/data/spend.json`; on Render it resets when the disk does, so keep the cap low there |
+| `ASSEMBLYAI_API` | Optional. With `BASETEN_API`, turns on the voice assistant on `/ar`. Each question is one transcription and one Muse Spark call, capped at 6 a minute per person and 60 an hour in total |
 
 4. Deploy. Migrations run on start. Then check:
 

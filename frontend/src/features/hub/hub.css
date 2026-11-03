@@ -9,6 +9,10 @@
 .hub-top > * { pointer-events: auto; }
 .hub-top a { display: block; padding: 6px 0; }
 .hub-top img { display: block; height: 36px; width: auto; }
+/* The third way in: furniture placed in your own room through the camera. */
+.hub-top .hub-ar { display: inline-flex; align-items: center; gap: 9px; margin-left: auto; min-height: 44px; padding: 0 8px 0 16px; border: 1px solid rgba(247, 244, 237, .5); border-radius: 999px; background: rgba(20, 30, 25, .35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: var(--rs-ivory); font-size: 15px; font-weight: 500; text-decoration: none; transition: background 300ms, color 300ms, border-color 300ms; }
+.hub-ar span { padding: 4px 9px; border-radius: 999px; background: #eeb398; color: var(--rs-forest); font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+.hub-ar:focus-visible { outline: 3px solid #eeb398; outline-offset: 3px; }
 
 .hub-doors { height: 100%; display: flex; }
 .hub-door { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; color: var(--rs-ivory); text-decoration: none; background: var(--rs-forest); animation: hub-enter 1.1s cubic-bezier(.16, 1, .3, 1) both; }
@@ -17,7 +21,7 @@
 .hub-door:first-child { background: rgb(27, 42, 35); }
 .hub-door:first-child img { filter: brightness(.92); }
 .hub-shade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14, 22, 18, .9) 0%, rgba(14, 22, 18, .55) 42%, rgba(14, 22, 18, .24) 70%, rgba(14, 22, 18, .34) 100%); transition: opacity 700ms ease; }
-.hub-index { position: absolute; top: calc(24px + env(safe-area-inset-top)); right: clamp(20px, 4vw, 64px); font: 500 22px var(--rs-font-display); font-variant-numeric: lining-nums; opacity: .9; }
+.hub-index { position: absolute; top: calc(92px + env(safe-area-inset-top)); right: clamp(20px, 4vw, 64px); font: 500 22px var(--rs-font-display); font-variant-numeric: lining-nums; opacity: .9; }
 .hub-copy { position: absolute; left: clamp(20px, 4vw, 64px); right: clamp(20px, 3vw, 48px); bottom: calc(clamp(28px, 6svh, 60px) + env(safe-area-inset-bottom)); display: grid; justify-items: start; gap: 14px; }
 .hub-kicker { font-size: 15px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: #eeb398; }
 .hub-title { white-space: nowrap; font: 500 clamp(44px, 5.4vw, 88px)/1 var(--rs-font-display); letter-spacing: -.015em; }
@@ -28,6 +32,7 @@
 
 .hub-door:focus-visible { outline: 3px solid #eeb398; outline-offset: -6px; }
 @media (hover: hover) {
+  .hub-ar:hover { background: var(--rs-ivory); border-color: var(--rs-ivory); color: var(--rs-forest); }
   .hub-door:hover img { transform: scale(1); }
   .hub-door:hover .hub-action { background: var(--rs-ivory); border-color: var(--rs-ivory); color: var(--rs-forest); }
 }

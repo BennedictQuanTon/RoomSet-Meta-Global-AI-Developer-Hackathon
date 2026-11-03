@@ -1,0 +1,60 @@
+[
+  {
+    "id": "living",
+    "name": "Living room set",
+    "count": 8,
+    "pieces": [
+      "Wool rug",
+      "Linen sofa",
+      "Low coffee table",
+      "Modern armchair",
+      "Side table",
+      "Arm lamp",
+      "Potted plant",
+      "Long sideboard"
+    ],
+    "size": [
+      4.116,
+      2.645,
+      1.443
+    ],
+    "kb": 5637
+  },
+  {
+    "id": "bedroom",
+    "name": "Bedroom set",
+    "count": 7,
+    "pieces": [
+      "Carved double bed",
+      "2 × Nightstand",
+      "Display shelves",
+      "Writing desk",
+      "Mid-century lounge",
+      "Potted plant"
+    ],
+    "size": [
+      4.701,
+      2.673,
+      1.556
+    ],
+    "kb": 4036
+  },
+  {
+    "id": "dining",
+    "name": "Dining room set",
+    "count": 8,
+    "pieces": [
+      "Oak dining table",
+      "4 × Dining chair",
+      "Tufted leather sofa",
+      "Display shelves",
+      "Potted plant"
+    ],
+    "size": [
+      4.554,
+      2.608,
+      1.556
+    ],
+    "kb": 4425
+  }
+]

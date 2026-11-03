@@ -1,8 +1,9 @@
 // The studio page: step into three real rooms, or see the whole apartment as a model.
 
-import { Armchair, ArrowUpRight, Box, Compass, Copy, Eye, LayoutGrid, Minus, Plus, RotateCcw, RotateCw, Trash2, Undo2, X } from "lucide-react";
+import { Armchair, ArrowUpRight, Box, Compass, Copy, Eye, LayoutGrid, Minus, Plus, RotateCcw, RotateCw, ScanEye, Trash2, Undo2, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { afterTransition, navigate } from "../app/nav";
+import { arHref, arSupport } from "../features/ar/ar";
 import { useSheetDrag } from "./Sheet";
 import { layoutFacts, measureItem, reviewLayout, itemOf, summarizeRooms, type ReviewNote } from "./analysis";
 import { CATALOG, CATEGORIES, ROOMS, ROOM_BY_ID, clampToRoom, startingLayout, type CatalogItem, type PlacedItem } from "./apartment";
@@ -232,6 +233,9 @@ export function Studio() {
           ))}
         </nav>
         <div className="st-end">
+          <a href="/ar" aria-label="See furniture in your room" title="In your room (AR)" onClick={(event) => { event.preventDefault(); navigate("/ar"); }}>
+            <ScanEye className="st-end-icon" size={20} strokeWidth={1.4} /><span>In your room</span>
+          </a>
           <a href="/start" aria-label="All options" title="All options" onClick={(event) => { event.preventDefault(); navigate("/start"); }}>
             <LayoutGrid className="st-end-icon" size={20} strokeWidth={1.4} /><span>All options</span>
           </a>
@@ -290,6 +294,16 @@ export function Studio() {
               <div key={label}><dd>{Math.round(itemOf(selected).size[index] * 100)}</dd><dt>{label} cm</dt></div>
             ))}
           </dl>
+          {(() => {
+            const href = arHref(itemOf(selected), arSupport());
+            return href && (
+              <div className="st-ar">
+                <a rel="ar" href={href}><img src={`/studio/thumbs/${itemOf(selected).model}.webp`} alt={`Place the ${itemOf(selected).name.toLowerCase()} in your room`} /></a>
+                <ScanEye size={20} strokeWidth={1.4} aria-hidden="true" />
+                <span><b>See it in your room</b><small>True size, through your camera</small></span>
+              </div>
+            );
+          })()}
           <dl className="st-metrics">
             <div><dt>Floor it takes</dt><dd>{metrics.footprintM2} m² · {metrics.roomSharePct}%</dd></div>
             <div><dt>Nearest wall</dt><dd>{metrics.nearestWallCm} cm</dd></div>

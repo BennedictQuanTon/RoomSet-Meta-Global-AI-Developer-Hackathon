@@ -45,6 +45,15 @@
           "value": "public, max-age=86400"
         }
       ]
+    },
+    {
+      "source": "/(.*)\\.usdz",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "model/vnd.usdz+zip"
+        }
+      ]
     }
   ]
 }

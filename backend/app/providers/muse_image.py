@@ -9,6 +9,7 @@ import logging
 
 import httpx
 
+from app.core import budget
 from app.core.config import get_settings
 from app.core.errors import ProviderUnavailable
 
@@ -40,6 +41,7 @@ def edit_image(
             "enable_shell": False,
         },
     }
+    budget.reserve("image", budget.IMAGE_PER_CALL)
     http = client or httpx.Client(timeout=settings.provider_timeout_s)
     try:
         response = http.post(

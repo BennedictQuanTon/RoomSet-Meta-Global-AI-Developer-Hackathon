@@ -9,6 +9,8 @@ import { onNavigate, trackTransition } from "./nav";
 
 const AppPage = lazy(() => import("./App").then((module) => ({ default: module.App })));
 
+const ArPage = lazy(() => import("../features/ar/ArGallery").then((module) => ({ default: module.ArGallery })));
+
 const StudioPage = lazy(() => import("../studio/Studio").then((module) => ({ default: module.Studio })));
 
 const COVER = "inset(100% 0% 0% 0%)";
@@ -16,7 +18,7 @@ const FULL = "inset(0% 0% 0% 0%)";
 const GONE = "inset(0% 0% 100% 0%)";
 const DURATION_S = 0.7;
 const TOUCH_DURATION_S = 0.4;
-const THEME: [string, string][] = [["/app", "#F7F4ED"], ["/studio", "#1d2e26"]];
+const THEME: [string, string][] = [["/app", "#F7F4ED"], ["/studio", "#1d2e26"], ["/ar", "#273D32"]];
 const THEME_DEFAULT = "#273D32";
 
 export function Root() {
@@ -80,6 +82,10 @@ export function Root() {
         </Suspense>
       ) : path.startsWith("/start") ? (
         <Hub />
+      ) : path.startsWith("/ar") ? (
+        <Suspense fallback={<div className="page-hold" />}>
+          <ArPage />
+        </Suspense>
       ) : path.startsWith("/studio") ? (
         <Suspense fallback={<div className="page-hold" />}>
           <StudioPage />

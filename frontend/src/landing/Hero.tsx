@@ -59,7 +59,7 @@ export function Hero({ play }: { play: boolean }) {
       <div className="lp-hero">
         {HERO_SLIDES.map((slide, index) => (
           <div key={slide.src} className={index === active ? "lp-slide is-active" : "lp-slide"} aria-hidden={index !== active}>
-            <img src={slide.src} alt={slide.alt} fetchPriority={index === 0 ? "high" : "low"} />
+            <img src={slide.src} alt={slide.alt} {...{ fetchpriority: index === 0 ? "high" : "low" }} />
           </div>
         ))}
         <div className="lp-hero-title">

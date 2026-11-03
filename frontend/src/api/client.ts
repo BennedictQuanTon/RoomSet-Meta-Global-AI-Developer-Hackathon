@@ -1,7 +1,7 @@
 // Typed API calls. The session token stays in memory and localStorage for this browser only.
 
 import type {
-  Capabilities, Placement, ProductDraft, RenderView, RoomAnswers, SessionView, PhotoView,
+  AssistantHeard, AssistantReply, Capabilities, Placement, ProductDraft, RenderView, RoomAnswers, SessionView, PhotoView,
 } from "./contracts";
 
 export class ApiError extends Error {
@@ -44,6 +44,20 @@ const upload = (fields: Record<string, Blob | string>): RequestInit => {
 
 export const api = {
   capabilities: () => request<Capabilities>("/api/capabilities"),
+  warmAssistant: () => request<void>("/api/assistant/warm", { method: "POST" }),
+  hearQuestion: (audio: Blob) => {
+    const form = new FormData();
+    form.append("audio", audio, audio.type.includes("mp4") ? "question.m4a" : "question.webm");
+    return request<AssistantHeard>("/api/assistant/hear", { method: "POST", body: form });
+  },
+  askAssistant: (heard: AssistantHeard, photo: Blob | null, catalog: string) => {
+    const form = new FormData();
+    form.append("question", heard.question);
+    if (heard.language) form.append("language", heard.language);
+    if (photo) form.append("photo", photo, "view.jpg");
+    form.append("catalog", catalog);
+    return request<AssistantReply>("/api/assistant/ask", { method: "POST", body: form });
+  },
   createSession: () => request<{ session: SessionView; token: string }>("/api/sessions", { method: "POST" }),
   createSample: () => request<{ session: SessionView; token: string }>("/api/sessions/sample", { method: "POST" }),
   getSession: (auth: Auth) => request<SessionView>(base(auth), {}, auth),

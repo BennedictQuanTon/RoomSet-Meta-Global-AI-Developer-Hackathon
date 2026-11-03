@@ -1,6 +1,7 @@
 """Application wiring: middleware, routes, startup recovery, and the built frontend."""
 
 import logging
+import mimetypes
 import threading
 import time
 import uuid
@@ -12,13 +13,26 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from app.api.routes import assets, build, health, photos, product, renders, sessions, studio
+from app.api.routes import (
+    assets,
+    assistant,
+    build,
+    health,
+    photos,
+    product,
+    renders,
+    sessions,
+    studio,
+)
 from app.core.config import get_settings
 from app.core.errors import AppError, NotFound
 from app.core.logging import configure_logging, request_id
 from app.core.rate_limit import RateLimiter
 from app.services.pipeline import fail_interrupted_builds
 from app.services.retention import purge_expired, start_sweeper
+
+# AR Quick Look opens USDZ only with its own media type.
+mimetypes.add_type("model/vnd.usdz+zip", ".usdz")
 
 log = logging.getLogger("roomset")
 
@@ -134,7 +148,7 @@ def create_app() -> FastAPI:
         log.error("unhandled error", exc_info=exc)
         return _error(500, "internal_error", "Something went wrong on our side.")
 
-    for module in (health, sessions, product, photos, build, assets, renders, studio):
+    for module in (health, sessions, product, photos, build, assets, renders, studio, assistant):
         app.include_router(module.router)
 
     dist = Path(settings.frontend_dist)

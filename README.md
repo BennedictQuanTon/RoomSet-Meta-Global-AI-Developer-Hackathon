@@ -147,6 +147,7 @@ Everything under "Working, no keys needed" runs at this point. To turn on the AI
 |---|---|
 | `BASETEN_API` | AI listing and screenshot reading, and the AI architect |
 | `MUSE_API` | Style previews |
+| `ASSEMBLYAI_API` | With `BASETEN_API`, the voice assistant on `/ar` |
 
 | Command | What it does |
 |---|---|
@@ -155,6 +156,8 @@ Everything under "Working, no keys needed" runs at this point. To turn on the AI
 | `make lint` | Ruff and TypeScript checks |
 | `make build` | Production frontend bundle |
 | `make image` | Single-container Docker image |
+| `make phone` | Build, start on :8000 and print an ngrok link for testing on a phone |
+| `make stop` | Stop everything the project started, including `make dev` and ngrok |
 
 ## Privacy
 
