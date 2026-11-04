@@ -23,8 +23,10 @@ export function Demo() {
         <li>Move it into the marked door clearance, rotate it, then save a better layout.</li>
       </ol>
       <p className="plan-note">The quick demo uses prepared room dimensions. It is not reconstructed from your photos.</p>
-      <div className="plan-actions"><button className="rs-button" disabled={busy} onClick={() => void start(true)}>{busy ? "Opening…" : "Open the 60-second demo"}</button></div>
-      <div className="plan-actions"><button className="link-button" disabled={busy} onClick={() => void start(false)}>Start with my own sofa and room</button></div>
+      <div className="plan-actions plan-actions--stack">
+        <button className="rs-button" disabled={busy} onClick={() => void start(true)}>{busy ? "Opening…" : "Open the 60-second demo"}</button>
+        <button className="link-button" disabled={busy} onClick={() => void start(false)}>Start with my own sofa and room</button>
+      </div>
       {error && <p className="error-note" role="alert">{error}</p>}
     </StepLayout>
   </main></div>;

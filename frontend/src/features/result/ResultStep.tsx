@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ApiError, api, type Auth } from "../../api/client";
 import type { Capabilities, Placement, SessionView } from "../../api/contracts";
 import { SceneEditor, type SceneEditorHandle } from "../../editor/SceneEditor";
-import { checkPlacement } from "../../editor/geometry";
+import { checkPlacement, keepInsideWalls } from "../../editor/geometry";
 import { StylePanel } from "./StylePanel";
 import { ProductReference } from "../product/ProductReference";
 
@@ -54,7 +54,8 @@ export function ResultStep({ auth, session, capabilities, onSession, onStartOver
   };
 
   const rotate = (degrees: number) => {
-    const next = { ...placement, yaw: Math.round(((degrees / RAD_TO_DEG)) * 1000) / 1000 };
+    // Turning next to a wall steps the sofa away from it instead of swinging into it.
+    const next = keepInsideWalls(scene, { ...placement, yaw: Math.round(((degrees / RAD_TO_DEG)) * 1000) / 1000 });
     editor.current?.setPlacement(next);
     place(next);
   };
@@ -82,7 +83,7 @@ export function ResultStep({ auth, session, capabilities, onSession, onStartOver
   };
 
   const nudge = (x: number, z: number) => {
-    const next: Placement = { ...placement, position: [Math.round((placement.position[0] + x) * 1000) / 1000, Math.round((placement.position[1] + z) * 1000) / 1000] };
+    const next = keepInsideWalls(scene, { ...placement, position: [placement.position[0] + x, placement.position[1] + z] });
     editor.current?.setPlacement(next);
     place(next);
   };
