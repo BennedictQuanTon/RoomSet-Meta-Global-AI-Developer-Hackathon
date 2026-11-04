@@ -95,8 +95,8 @@ export function Hub() {
           index="02"
           kicker="Your room"
           title={<>Plan <em>your</em><br /><em>own</em> space</>}
-          body={!hasServer ? "Will this sofa fit? See it in 60 seconds." : hasPlan ? "Your plan is saved on this device." : "Your sofa, your room, your layout."}
-          points={[[Sofa, "Confirm a sofa"], [ScanLine, "Show the room"], [Ruler, "Check the fit"]]}
+          body={!hasServer ? "Will it fit? See it in 60 seconds." : hasPlan ? "Your plan is saved on this device." : "Your furniture, your room, your layout."}
+          points={[[Sofa, "Confirm the piece"], [ScanLine, "Show the room"], [Ruler, "Check the fit"]]}
           action={!hasServer ? "Try the fit demo" : hasPlan ? "Continue your plan" : "Start a plan"}
         />
       </main>

@@ -91,7 +91,7 @@ export function ProductStep({ auth, session, capabilities, onDone }: Props) {
   };
 
   return (
-    <StepLayout image="/landing/hero-lounge.webp" title={session.scene ? "Try another sofa variant" : "Bring your sofa into the room"} lead="A link, a product photo, or the dimensions from the shop. You confirm every measurement.">
+    <StepLayout image="/landing/hero-lounge.webp" title={session.scene ? "Try another sofa variant" : "Bring your sofa into the room"} lead="A link, a product photo, or the shop's dimensions. You confirm every measurement. The planner starts with sofas; the apartment and AR cover more furniture.">
       <form className="plan-group" onSubmit={readLink}>
         <div className="plan-field">
           <label className="plan-label" htmlFor="listing"><Link2 size={20} strokeWidth={1.5} />Sofa listing link</label>

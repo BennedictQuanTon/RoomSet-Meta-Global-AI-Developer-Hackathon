@@ -26,7 +26,7 @@ export function Demo() {
     } catch (cause) { setError((cause as Error).message); setBusy(false); }
   };
   return <div className="app"><main className="app-main">
-    <StepLayout image="/landing/hero-lounge.webp" title="Will this sofa fit?" lead="See the decision in a minute, then try your own room.">
+    <StepLayout image="/landing/hero-lounge.webp" title="Will it fit?" lead="See the decision in a minute, then try your own room.">
       <ol className="demo-steps">
         <li>A 250 cm sofa in a sample corner with a 240 cm wall.</li>
         <li>Try the 210 cm variant and see the available length change.</li>

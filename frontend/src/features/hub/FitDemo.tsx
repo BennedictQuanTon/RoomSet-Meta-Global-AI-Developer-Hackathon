@@ -83,7 +83,7 @@ export function FitDemo() {
     <div className="app fit">
       <header className="fit-top">
         <a href="/start" aria-label="All options" onClick={(event) => { event.preventDefault(); navigate("/start"); }}><img src="/brand/logo-light.png" alt="roomset" /></a>
-        <span>Will this sofa fit?</span>
+        <span>Will it fit?</span>
       </header>
       <section className="result">
         <div className="editor-frame">

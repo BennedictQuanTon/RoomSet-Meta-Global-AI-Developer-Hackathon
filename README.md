@@ -6,7 +6,7 @@
 
 <p align="center">
   <b>Make room for what fits.</b><br/>
-  Put the exact sofa you are considering into an editable 3D plan.<br/>
+  Put the exact piece of furniture you are considering into your space, in 3D and AR.<br/>
   Real dimensions, moved by hand, in the browser on your phone.
 </p>
 
@@ -51,7 +51,7 @@ and the verified boundary between measured rooms and experimental photo reconstr
 | **See if it fits** | A 250 cm sofa against a 240 cm wall, then a 210 cm option in the same room. A one-minute demo with no setup. |
 | **Stand it on your real floor** | Open any piece, or a whole furnished room, in AR on an iPhone at its true size. |
 | **Ask out loud** | Point the camera at a space and ask in English or Vietnamese. Roomset answers, reads it aloud and suggests pieces. It does not measure your room. |
-| **Plan your own room** | Confirm a sofa's size, add photos, answer a few questions, then drag a true-size sofa and save the layout. |
+| **Plan your own room** | Sofas first, more types to come. Confirm the size, add photos, answer a few questions, then drag a true-size sofa and save the layout. |
 | **Use it on your phone** | Touch gestures, swipeable sheets and home screen install. The sample apartment also opens offline after one visit. |
 
 <table>

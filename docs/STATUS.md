@@ -20,6 +20,8 @@ Last updated 4 Nov 2026. Add a line here when a real provider call or job first 
 | Fit demo with no server at `/demo/sample`: 250 and 210 cm sofas in a prebuilt sample room, with placement checks in the browser | Chromium at phone and desktop sizes, under the same routing rules as Vercel |
 | Parametric sofa, product preview, size variants, keep-clear areas, room diagram, Windows scripts | Automated tests (91 backend, 44 frontend at merge). PR #7 records the phone demo over ngrok and one live IKEA listing read |
 | Landing page at `/`, Try button to the `/start` page, which leads to the studio and the planner, curtain transition | Chromium browser run against the production bundle |
+| Demo film on the landing page: silent autoplay in view, pause out of view, one sound button, loaded only when reached | Chrome at phone and desktop sizes against the production bundle. Not opened on a real iPhone |
+| AI architect endpoint asks Muse Spark for `reasoning_effort="minimal"`, which fixed empty replies shown as "not switched on" | Real call while recording the film, plus an updated test |
 | Studio at `/studio`, opening on the whole apartment: 3D rooms with real photos projected on them, room, model and top-down views, drag kept on the measured floor, add, remove, reset, numbers per piece, rule-based review | Chromium browser run and unit tests; drag tested with a mouse |
 | Muse Spark on Baseten, live: the AI architect endpoint (7.6 s), and a photo plus a Vietnamese question with the assistant's prompt (10.8 s, answered in Vietnamese, suggestions all from the catalog, no sizes invented) | Real calls on 3 Nov 2026 from the dev machine |
 | Muse Image, live: one style preview from a screenshot (13.7 s) | Real call on 3 Nov 2026. The test image included the app's interface, which the model redrew with misspelt text; the app sends only the 3D view |
@@ -60,5 +62,5 @@ Last updated 4 Nov 2026. Add a line here when a real provider call or job first 
 - The sofa is a parametric model at the confirmed size. It is not the listed product, and the app says shape and materials may differ.
 - The studio is a sample. Its three rooms are one real room photographed in three finishes, placed side by side on a made-up plan. Size comes from fitting a box to the photo and a 2.05 m door, so it is close, not surveyed.
 - Studio rooms are boxes with the photo projected on them. Things in the photo, such as curtains, are flat on the walls, and detail softens away from the capture point.
-- User rooms in `/app` are still simple modelled geometry.
+- User rooms in `/app` are still simple modelled geometry, and the planner builds sofas only. The studio and AR cover 19 catalog pieces across seating, tables, beds, storage and accents.
 - `Agent.MD` is now gitignored locally and untracked on this branch, but it remains in git history and in the upstream public repo.
