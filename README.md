@@ -11,6 +11,7 @@
 </p>
 
 <p align="center">
+  <a href="docs/TESTING.md"><b>Try it</b></a> ·
   <a href="#quick-start"><b>Quick start</b></a> ·
   <a href="#what-you-can-do"><b>What you can do</b></a> ·
   <a href="#architecture"><b>Architecture</b></a> ·
@@ -47,6 +48,9 @@ and the verified boundary between measured rooms and experimental photo reconstr
 | **Move anything** | Drag, turn, add, remove and reset furniture. Each drag runs in your browser, with no model call. |
 | **See the numbers** | Tap a piece for its size, floor share, nearest wall and clear space in front. |
 | **Get a layout review** | Built-in checks flag tight routes, seating distances and bed access, measured from your layout. |
+| **See if it fits** | A 250 cm sofa against a 240 cm wall, then a 210 cm option in the same room. A one-minute demo with no setup. |
+| **Stand it on your real floor** | Open any piece, or a whole furnished room, in AR on an iPhone at its true size. |
+| **Ask out loud** | Point the camera at a space and ask in English or Vietnamese. Roomset answers, reads it aloud and suggests pieces. It does not measure your room. |
 | **Plan your own room** | Confirm a sofa's size, add photos, answer a few questions, then drag a true-size sofa and save the layout. |
 | **Use it on your phone** | Touch gestures, swipeable sheets and home screen install. The sample apartment also opens offline after one visit. |
 
@@ -86,15 +90,16 @@ Roomset says what it knows and what it does not. The app labels every room by ho
 
 | Status | What |
 |---|---|
-| **Working, no keys needed** | Landing page, sample apartment, planner, saved layouts, rule-based review, phone layouts, offline sample apartment |
-| **Built, tested against mocks only** | Muse Spark reading and AI architect, Muse Image style previews, live listing fetches, Blender on Modal |
-| **Not built yet** | VGGT reconstruction, SAM segmentation, reference-distance calibration |
+| **Working, no keys needed** | Landing page, fit demo, sample apartment, AR on iPhone, planner, saved layouts, rule-based review, phone layouts |
+| **Working with your keys, run live** | Muse Spark reading and AI architect, Muse Image style previews, voice assistant in Vietnamese and English |
+| **Built, not yet proven on the real service** | Photo corner draft with VGGT on Modal (off by default), Blender on Modal, Android AR |
+| **Not built yet** | Fully automatic room reconstruction, SAM segmentation |
 
 Three limits worth knowing:
 
 - Your photos are checked, but they do not shape the room yet. Your measurements do, and the app labels those rooms as assisted.
 - The sample apartment is one real room photographed in three finishes, placed on a made-up plan. Its sizes are close estimates.
-- Touch has been tested in simulation, not yet on a real iPhone or Android phone.
+- AR has been opened on a real iPhone. Android AR and most touch behavior have only been tested in simulation.
 
 The full record is in [docs/STATUS.md](docs/STATUS.md).
 
@@ -137,7 +142,7 @@ Two rules hold the design together:
 
 ## Quick start
 
-You need Python 3.11, Node 22+, [uv](https://docs.astral.sh/uv/) and make.
+You need Python 3.11, Node 22+, [uv](https://docs.astral.sh/uv/) and make. Windows setup is in [docs/DEMO_GUIDE.md](docs/DEMO_GUIDE.md). What to try, and what to expect, is in [docs/TESTING.md](docs/TESTING.md).
 
 ```bash
 cp .env.example .env     # Provider keys are optional
@@ -171,6 +176,8 @@ Photos are re-encoded to remove location data and stored privately. Each session
 
 - [Architecture](docs/ARCHITECTURE.md): how the system fits together and what every folder holds
 - [Deploying](docs/DEPLOY.md): a quick Vercel preview, and the full app on free tiers
+- [Testing](docs/TESTING.md): what to try on the hosted preview and locally
+- [Demo guide](docs/DEMO_GUIDE.md): running and presenting the demo
 - [Status](docs/STATUS.md): verified and unverified behavior, and the remaining work
 - [Project plan](https://github.com/khanhtuongnakitomo/RoomSet/issues/2): product scope and contracts
 

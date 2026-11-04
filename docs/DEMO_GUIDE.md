@@ -1,15 +1,15 @@
 # Roomset: run it and demonstrate it
 
-This guide covers the local Windows demo built on 3 November 2026. The dependable presentation is the measured-room flow. Photo-derived room drafts are a separate experimental feature and must pass a real Modal run before being presented as working.
+This guide covers the local demo on Windows. On macOS or Linux, use `make phone` and `make stop` instead of the Windows scripts. The dependable presentation is the measured-room flow. Photo-derived room drafts are a separate experimental feature and must pass a real Modal run before being presented as working.
 
 ## Start, open on a phone, and stop
 
-From `D:\Code\Project\Meta-hack`, double-click `scripts\phone.cmd`. It builds the frontend, applies database migrations, starts the backend on localhost, then starts ngrok with traffic inspection disabled. Both processes run in the background.
+From the repository folder, double-click `scripts\phone.cmd`. It builds the frontend, applies database migrations, starts the backend on localhost, then starts ngrok with traffic inspection disabled. Both processes run in the background.
 
 Or run in PowerShell:
 
 ```powershell
-& "D:\Code\Project\Meta-hack\scripts\phone.cmd"
+& ".\scripts\phone.cmd"
 ```
 
 The terminal prints the current HTTPS demo address. The same address is saved in `.run\url.txt`; its QR code is `.run\phone-demo-qr.png`. Open the address on your phone, or scan the QR code with the phone camera. If ngrok shows a free-service warning page, select **Visit Site**. The phone may use Wi-Fi or mobile data. Keep the laptop awake and connected to the internet.

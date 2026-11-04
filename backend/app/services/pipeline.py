@@ -195,8 +195,8 @@ def run_build(session_id: str) -> None:
                 row.error = SessionError(code=code, message=message).model_dump()
 
 
-def build_sample(session_id: str) -> None:
-    """A labelled example, so people can try the editor without photos."""
+def sample_inputs() -> tuple[Product, RoomAnswers]:
+    """The prepared corner behind the fit demo: a 250 cm sofa against a 240 cm wall."""
     product = Product(
         name="Demo sofa — 250 cm",
         width=MeasuredField(value_m=2.5, source="user", confidence="high"),
@@ -220,6 +220,12 @@ def build_sample(session_id: str) -> None:
             ),
         ],
     )
+    return product, answers
+
+
+def build_sample(session_id: str) -> None:
+    """A labelled example, so people can try the editor without photos."""
+    product, answers = sample_inputs()
     scene = compose_scene(session_id, product, answers, [], method="sample")
     with session_scope() as db:
         row = db.get(SessionRow, session_id)

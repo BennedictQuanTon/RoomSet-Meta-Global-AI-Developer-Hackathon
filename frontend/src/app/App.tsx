@@ -77,11 +77,12 @@ export function App() {
   const content = () => {
     if (serverMissing) {
       return (
-        <StepLayout image="/landing/hero-kitchen.webp" title="Planning your own room needs the Roomset server." lead="This preview runs without it.">
+        <StepLayout image="/landing/hero-kitchen.webp" title="Your own room needs the full app." lead="This preview runs without a server.">
           <div className="plan-group">
-            <p className="plan-note">The 3D sample apartment works fully here.</p>
+            <p className="plan-note">You can still try the fit demo, walk through the 3D apartment, and place furniture in your real room with AR.</p>
             <div className="plan-actions">
-              <button className="rs-button" onClick={() => navigate("/studio")}>Enter the sample apartment<ArrowRight size={20} strokeWidth={1.5} /></button>
+              <button className="rs-button" onClick={() => navigate("/demo")}>Try the fit demo<ArrowRight size={20} strokeWidth={1.5} /></button>
+              <button className="rs-button rs-button--secondary" onClick={() => navigate("/studio")}>Sample apartment</button>
             </div>
           </div>
         </StepLayout>

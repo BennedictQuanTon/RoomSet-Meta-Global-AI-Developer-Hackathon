@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../api/client";
 import { navigate } from "../../app/nav";
 import { saveAuth } from "../../app/sessionStore";
 import { StepLayout } from "../planner/StepLayout";
+import { REPO_URL } from "./links";
 
 export function Demo() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
+  // Without a server (a static preview) the demo runs from prebuilt files in the browser.
+  const [hasServer, setHasServer] = useState(true);
+  useEffect(() => {
+    api.capabilities().catch(() => setHasServer(false));
+  }, []);
   const start = async (sample: boolean) => {
+    if (sample && !hasServer) {
+      navigate("/demo/sample");
+      return;
+    }
     setBusy(true); setError(undefined);
     try {
       const result = await (sample ? api.createSample() : api.createSession());
@@ -25,7 +35,9 @@ export function Demo() {
       <p className="plan-note">The quick demo uses prepared room dimensions. It is not reconstructed from your photos.</p>
       <div className="plan-actions plan-actions--stack">
         <button className="rs-button" disabled={busy} onClick={() => void start(true)}>{busy ? "Opening…" : "Open the 60-second demo"}</button>
-        <button className="link-button" disabled={busy} onClick={() => void start(false)}>Start with my own sofa and room</button>
+        {hasServer
+          ? <button className="link-button" disabled={busy} onClick={() => void start(false)}>Start with my own sofa and room</button>
+          : <a className="link-button" href={REPO_URL} target="_blank" rel="noreferrer noopener">Your own room needs the full app: how to run it</a>}
       </div>
       {error && <p className="error-note" role="alert">{error}</p>}
     </StepLayout>

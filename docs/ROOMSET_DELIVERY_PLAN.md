@@ -281,7 +281,7 @@ Coding assistance can implement the schemas, deterministic builders, API/UI inte
 
 ### Existing implementation areas to change
 
-Paths below are relative to `D:\Code\Project\Meta-hack`. New filenames mentioned here are proposed, not present artifacts.
+Paths below are relative to the repository root. New filenames mentioned here are proposed, not present artifacts.
 
 - Product: `backend/app/domain/product.py`, `services/product_intake.py`, `api/routes/product.py`, `frontend/src/features/product/ProductStep.tsx`; add a focused furniture-template builder alongside `geometry/sofa.py`.
 - Capture/room: `features/capture/CaptureStep.tsx`, `features/clarify/ClarifyStep.tsx`, `domain/clarification.py`, `services/clarifications.py`; add a room-draft confirmation component and reconstruction service.

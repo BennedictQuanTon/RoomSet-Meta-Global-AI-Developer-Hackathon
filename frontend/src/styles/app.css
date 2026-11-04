@@ -130,6 +130,17 @@ img { max-width: 100%; display: block; }
 .progress-bar span { display: block; height: 100%; width: 40%; background: #eeb398; animation: slide 1.6s cubic-bezier(.65, 0, .35, 1) infinite; }
 @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
 
+/* Fit demo */
+.fit-top { flex: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: calc(8px + env(safe-area-inset-top)) 16px 8px; background: var(--rs-forest); color: var(--rs-ivory); font: 500 20px var(--rs-font-display); }
+.fit-top img { display: block; height: 30px; width: auto; }
+.fit .result { flex: 1; min-height: 0; }
+.fit-center { min-height: 100dvh; display: grid; place-content: center; padding: 24px; text-align: center; color: var(--rs-muted); }
+.fit-verdict { margin: 0; font: 500 clamp(34px, 4vw, 44px)/1.05 var(--rs-font-display); }
+.fit-verdict.is-over { color: var(--rs-error); }
+.fit-verdict.is-ok { color: var(--rs-forest); }
+.fit-variants { display: flex; gap: 8px; }
+.fit-variants .chip { flex: 1; min-height: 48px; font-size: 17px; }
+
 /* Result */
 .result { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .editor-frame { position: relative; flex: none; height: 52dvh; min-height: 280px; background: var(--rs-ivory); overflow: hidden; }
@@ -264,3 +275,4 @@ img { max-width: 100%; display: block; }
 .obstacle-row > :first-child { grid-column: 1 / -1; }
 .obstacle-row .field { min-width: 0; }
 @media (min-width: 900px) { .obstacle-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.sofa-color input { font-size: 16px; }
